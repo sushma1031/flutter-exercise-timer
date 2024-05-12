@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 class ExerciseProgressIndicator extends StatefulWidget {
-  const ExerciseProgressIndicator({Key key, @required this.duration})
+  const ExerciseProgressIndicator({Key? key, required this.duration})
       : super(key: key);
   final Duration duration;
   @override
@@ -12,8 +12,8 @@ class ExerciseProgressIndicator extends StatefulWidget {
 
 class _ExerciseProgressIndicatorState extends State<ExerciseProgressIndicator>
     with TickerProviderStateMixin {
-  Timer timer;
-  Duration _timeLeft;
+  late Timer timer;
+  late Duration _timeLeft;
   @override
   void initState() {
     print(widget.duration);
