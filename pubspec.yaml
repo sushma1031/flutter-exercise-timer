@@ -3,18 +3,19 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # In Android, build-name is used as versionName while build-number used as versionCode.
 # Read more about Android versioning at https://developer.android.com/studio/publish/versioning
 version: 1.0.0+1
 
 environment:
-  sdk: '>2.12.0 <=3.0.0'
+  sdk: ">2.12.0 <=3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  audioplayers: ^0.19.1
 
   cupertino_icons: ^1.0.1
 
@@ -25,5 +26,7 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   uses-material-design: true
+  assets:
+    - assets/audio/
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

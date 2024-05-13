@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class ExerciseProgressIndicator extends StatefulWidget {
   const ExerciseProgressIndicator({Key? key, required this.duration})
@@ -10,17 +11,21 @@ class ExerciseProgressIndicator extends StatefulWidget {
       _ExerciseProgressIndicatorState();
 }
 
-class _ExerciseProgressIndicatorState extends State<ExerciseProgressIndicator>
-    with TickerProviderStateMixin {
+class _ExerciseProgressIndicatorState extends State<ExerciseProgressIndicator> {
   late Timer timer;
   late Duration _timeLeft;
+  late AudioCache player;
   @override
   void initState() {
-    print(widget.duration);
     _timeLeft = widget.duration;
+    player = AudioCache();
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
+        print(_timeLeft.inSeconds);
         _timeLeft -= Duration(seconds: 1);
+        if (_timeLeft.inSeconds == 4) {
+          playSound(player);
+        }
         if (_timeLeft.inSeconds == 0) {
           timer.cancel();
           print("time's up");
@@ -28,6 +33,10 @@ class _ExerciseProgressIndicatorState extends State<ExerciseProgressIndicator>
       });
     });
     super.initState();
+  }
+
+  void playSound(AudioCache player) async {
+    await player.play('audio/exercise_change.mp3');
   }
 
   @override
