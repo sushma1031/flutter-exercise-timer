@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './timer.dart' as timer;
+import '../state/exercise_provider.dart' as exercise_provider;
 
 void main() {
   runApp(MyApp());
@@ -37,10 +37,7 @@ class HomePage extends StatelessWidget {
         ),
         title: const Text('Exercise Timer'),
       ),
-      body: Center(
-          child: timer.ExerciseProgressIndicator(
-        duration: Duration(seconds: 15),
-      )),
+      body: Center(child: exercise_provider.WorkoutManager()),
     );
   }
 }
