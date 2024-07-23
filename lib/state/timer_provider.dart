@@ -23,6 +23,8 @@ class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
   late Duration _timeLeft;
   late AudioCache player;
   late AudioPlayer playerInstance;
+  bool _isPaused = false;
+  bool isAudioPlaying = false;
   @override
   void initState() {
     super.initState();
@@ -47,9 +49,19 @@ class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
     });
   }
 
+  void pauseTimer() {
+    timer.cancel();
+    print("Paused.");
+  }
+
+  void resumeTimer() {
+    print("Resumed.");
+    startTimer();
+  }
   void playSound() async {
     print("Playing audio...");
     playerInstance = await player.play('audio/exercise_change.mp3');
+    isAudioPlaying = true;
   }
 
   @override
