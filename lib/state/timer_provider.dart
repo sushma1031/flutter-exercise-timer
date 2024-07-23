@@ -105,17 +105,47 @@ class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
   Widget build(BuildContext context) {
     return SizedBox(
         height: 300,
-        child: Center(
-            child: Stack(
-                alignment: AlignmentDirectional.center,
-                children: <Widget>[
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
               Center(
-                child: Text('${format(_timeLeft)}',
-                    style: TextStyle(
-                      fontSize: 55,
-                      fontWeight: FontWeight.w300,
-                    )),
+                  child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: <Widget>[
+                    Center(
+                      child: Text('${format(_timeLeft)}',
+                          style: TextStyle(
+                            fontSize: 55,
+                            fontWeight: FontWeight.w300,
+                          )),
+                    )
+                  ])),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                      tooltip: 'Pause/Resume',
+                      onPressed: () {
+                        setState(() {
+                          _isPaused = !_isPaused;
+                          if (_isPaused) {
+                            pauseTimer();
+                          } else {
+                            resumeTimer();
+                          }
+                        });
+                      },
+                      icon: Icon((_isPaused ? Icons.play_arrow : Icons.pause),
+                          color: Colors.blueGrey)),
+                  IconButton(
+                      tooltip: 'Replay',
+                      onPressed: () {
+                        restartTimer();
+                      },
+                      icon: Icon(Icons.replay, color: Colors.blueGrey)),
+                ],
               )
-            ])));
+            ]));
   }
 }
