@@ -11,6 +11,8 @@
 .buildlog/
 .history
 .svn/
+test*
+ic_launcher.png
 
 # IntelliJ related
 *.iml
