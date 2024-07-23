@@ -22,6 +22,7 @@ class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
   late Timer timer;
   late Duration _timeLeft;
   late AudioCache player;
+  late AudioPlayer playerInstance;
   @override
   void initState() {
     super.initState();
@@ -34,20 +35,21 @@ class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _timeLeft -= Duration(seconds: 1);
-        if (_timeLeft.inSeconds == 4) {
-          playSound(player);
+        if (_timeLeft.inSeconds == 3) {
+          playSound();
         }
         if (_timeLeft.inSeconds <= -1) {
           timer.cancel();
-          print("time's up!");
+          print("Finished");
           widget.nextExercise(null);
         }
       });
     });
   }
 
-  void playSound(AudioCache player) async {
-    await player.play('audio/exercise_change.mp3');
+  void playSound() async {
+    print("Playing audio...");
+    playerInstance = await player.play('audio/exercise_change.mp3');
   }
 
   @override
@@ -63,6 +65,7 @@ class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
   @override
   void dispose() {
     timer.cancel();
+    playerInstance.stop();
     super.dispose();
   }
 
