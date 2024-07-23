@@ -3,6 +3,7 @@ import '../services/storage_service.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
 import './timer_provider.dart' as timer;
+import '../widgets/workout_complete.dart' as workout_complete;
 
 class WorkoutManager extends StatefulWidget {
   WorkoutManager({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class _WorkoutManagerState extends State<WorkoutManager> {
   final StorageService _storageService = StorageService();
   List<Exercise> _exercises = [];
   late int _currentIndex;
+  bool _isWorkoutComplete = false;
 
   @override
   void initState() {
@@ -33,9 +35,9 @@ class _WorkoutManagerState extends State<WorkoutManager> {
 
   void nextExercise(_) {
     setState(() {
-      if (_currentIndex == _exercises.length - 1)
-        _currentIndex = 0;
-      else
+      if (_currentIndex >= _exercises.length - 1) {
+        _isWorkoutComplete = true;
+      } else
         _currentIndex++;
       printIndex();
     });
@@ -44,6 +46,9 @@ class _WorkoutManagerState extends State<WorkoutManager> {
   void previousExercise(_) {
     setState(() {
       _currentIndex--;
+      if (_currentIndex < _exercises.length && _isWorkoutComplete) {
+        _isWorkoutComplete = false;
+      }
       printIndex();
     });
   }
@@ -60,11 +65,13 @@ class _WorkoutManagerState extends State<WorkoutManager> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: timer.ExerciseTimerManager(
-      duration: Duration(seconds: _exercises[_currentIndex].duration),
-      currentIndex: _currentIndex,
-      nextExercise: nextExercise,
-      previousExercise: previousExercise,
-    ));
+        child: _isWorkoutComplete
+            ? workout_complete.WorkoutComplete()
+            : timer.ExerciseTimerManager(
+                duration: Duration(seconds: _exercises[_currentIndex].duration),
+                currentIndex: _currentIndex,
+                nextExercise: nextExercise,
+                previousExercise: previousExercise,
+              ));
   }
 }

@@ -34,7 +34,7 @@ class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _timeLeft -= Duration(seconds: 1);
-        if (_timeLeft.inSeconds == 3) {
+        if (_timeLeft.inSeconds == 4) {
           playSound(player);
         }
         if (_timeLeft.inSeconds <= -1) {
