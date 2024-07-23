@@ -58,6 +58,20 @@ class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
     print("Resumed.");
     startTimer();
   }
+
+  void restartTimer() async {
+    if (isAudioPlaying) {
+      await playerInstance.stop();
+      isAudioPlaying = false;
+    }
+    if (!_isPaused) timer.cancel();
+    print("Restarting...");
+    setState(() {
+      _timeLeft = widget.duration;
+    });
+    if (!_isPaused) startTimer();
+  }
+
   void playSound() async {
     print("Playing audio...");
     playerInstance = await player.play('audio/exercise_change.mp3');
