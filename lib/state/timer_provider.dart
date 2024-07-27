@@ -78,6 +78,12 @@ class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
     isAudioPlaying = true;
   }
 
+  void stopAudio() async {
+    if (isAudioPlaying) {
+      await playerInstance.stop();
+    }
+  }
+
   @override
   void didUpdateWidget(old) {
     super.didUpdateWidget(old);
@@ -91,7 +97,7 @@ class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
   @override
   void dispose() {
     timer.cancel();
-    playerInstance.stop();
+    stopAudio();
     super.dispose();
   }
 
