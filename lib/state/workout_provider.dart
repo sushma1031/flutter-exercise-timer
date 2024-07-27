@@ -1,37 +1,26 @@
 import 'package:flutter/material.dart';
-import '../services/storage_service.dart';
 import '../models/exercise.dart';
 import './timer_provider.dart' as timer;
 import '../widgets/workout_complete.dart' as workout_complete;
 
 class WorkoutManager extends StatefulWidget {
-  final String name;
-  WorkoutManager({Key? key, required this.name}) : super(key: key);
+  final List<Exercise> exercises;
+  WorkoutManager({Key? key, required this.exercises}) : super(key: key);
 
   @override
   State<WorkoutManager> createState() => _WorkoutManagerState();
 }
 
 class _WorkoutManagerState extends State<WorkoutManager> {
-  final StorageService _storageService = StorageService();
   List<Exercise> _exercises = [];
   int _currentIndex = 0;
   bool _isWorkoutComplete = false;
 
   @override
   void initState() {
-    loadExerciseList();
+    _exercises = widget.exercises;
+    _currentIndex = 0;
     super.initState();
-  }
-
-  void loadExerciseList() async {
-    List<Exercise> e =
-        await _storageService.getWorkoutExercises(name: widget.name);
-    setState(() {
-      _exercises = e;
-      _currentIndex = 0;
-      printIndex();
-    });
   }
 
   void nextExercise(_) {
@@ -40,7 +29,6 @@ class _WorkoutManagerState extends State<WorkoutManager> {
         _isWorkoutComplete = true;
       } else
         _currentIndex++;
-      printIndex();
     });
   }
 
@@ -50,7 +38,6 @@ class _WorkoutManagerState extends State<WorkoutManager> {
       if (_currentIndex < _exercises.length && _isWorkoutComplete) {
         _isWorkoutComplete = false;
       }
-      printIndex();
     });
   }
 
