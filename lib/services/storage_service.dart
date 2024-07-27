@@ -1,32 +1,28 @@
-// import 'dart:convert';
-// import 'dart:io';
 import '../models/exercise.dart';
 import '../models/workout.dart';
 
 class StorageService {
-//   Future<void> addExerciseList(ExerciseList exerciseList) async {
-//     await _exerciseListBox.add(exerciseList);
-//   }
-
-  Future<List<Workout>> getWorkouts() async {
-    // var input = await File("lib/models/test_data.json").readAsString();
-    // var map = jsonDecode(input);
-    // return map['workouts'];
-    await Future.delayed(Duration(seconds: 1));
-    return [];
+  Future<List<Workout>> getAllWorkouts() async {
+    // have a function that returns only names of workouts
+    List<Exercise> e = [
+      new Exercise('Plank', 10),
+      new Exercise('Crunches', 5),
+    ];
+    await Future.delayed(Duration(seconds: 5));
+    return [
+      new Workout('Abs', e),
+      new Workout('Thighs', e),
+      new Workout('Biceps', e)
+    ];
   }
 
-  Future<Workout> getSingleWorkout({String name = 'default'}) async {
+  Future<List<Exercise>> getWorkoutExercises(String name) async {
     // or should I use index/id?
     List<Exercise> e = [
       new Exercise('Plank', 10),
       new Exercise('Crunches', 5),
     ];
-    await Future.delayed(Duration(seconds: 1));
-    return new Workout('Abs', e);
+    await Future.delayed(Duration(seconds: 3));
+    return e;
   }
-
-//   Future<void> deleteExerciseList(int index) async {
-//     await _exerciseListBox.deleteAt(index);
-//   }
 }
