@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import '../utils/duration_format.dart';
 
 class TimerProvider extends StatefulWidget {
   final Duration duration;
@@ -101,12 +102,6 @@ class _TimerProviderState extends State<TimerProvider> {
     super.dispose();
   }
 
-  String format(Duration d) {
-    if (d.inMinutes == 0) return _timeLeft.inSeconds.toString();
-    int seconds = d.inSeconds - (d.inMinutes * Duration.secondsPerMinute);
-    return '${_timeLeft.inMinutes.toString().padLeft(2, '0')} : ${seconds.toString().padLeft(2, '0')}';
-  }
-
   @override
   Widget build(BuildContext context) {
     // all this should go into other widgets, including ReverseCircular...
@@ -121,7 +116,7 @@ class _TimerProviderState extends State<TimerProvider> {
                       alignment: AlignmentDirectional.center,
                       children: <Widget>[
                     Center(
-                      child: Text('${format(_timeLeft)}',
+                      child: Text('${formatDuration(_timeLeft)}',
                           style: TextStyle(
                             fontSize: 55,
                             fontWeight: FontWeight.w300,
