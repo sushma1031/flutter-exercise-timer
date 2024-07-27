@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-class ExerciseTimerManager extends StatefulWidget {
+class TimerProvider extends StatefulWidget {
   final Duration duration;
   final int currentIndex;
   final ValueChanged<void> nextExercise;
   final ValueChanged<void> previousExercise;
-  const ExerciseTimerManager(
+  const TimerProvider(
       {Key? key,
       required this.duration,
       required this.currentIndex,
@@ -15,10 +15,10 @@ class ExerciseTimerManager extends StatefulWidget {
       required this.previousExercise})
       : super(key: key);
   @override
-  State<ExerciseTimerManager> createState() => _ExerciseTimerManagerState();
+  State<TimerProvider> createState() => _TimerProviderState();
 }
 
-class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
+class _TimerProviderState extends State<TimerProvider> {
   late Timer timer;
   late Duration _timeLeft;
   late AudioCache player;
@@ -109,6 +109,7 @@ class _ExerciseTimerManagerState extends State<ExerciseTimerManager> {
 
   @override
   Widget build(BuildContext context) {
+    // all this should go into other widgets, including ReverseCircular...
     return SizedBox(
         height: 300,
         child: Column(

@@ -1,6 +1,6 @@
 import 'package:exercise_timer/models/exercise.dart';
 import 'package:flutter/material.dart';
-import '../state/workout_provider.dart' as workout_provider;
+import '../state/workout_provider.dart';
 
 class TimerScreen extends StatelessWidget {
   final List<Exercise> e;
@@ -11,7 +11,7 @@ class TimerScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Timer'),
       ),
-      body: Center(child: workout_provider.WorkoutManager(exercises: e)),
+      body: Center(child: WorkoutProvider(exercises: e)),
     );
   }
 }

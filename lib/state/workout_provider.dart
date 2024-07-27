@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import '../models/exercise.dart';
-import './timer_provider.dart' as timer;
-import '../widgets/workout_complete.dart' as workout_complete;
+import './timer_provider.dart';
+import '../widgets/workout_complete.dart';
 
-class WorkoutManager extends StatefulWidget {
+class WorkoutProvider extends StatefulWidget {
   final List<Exercise> exercises;
-  WorkoutManager({Key? key, required this.exercises}) : super(key: key);
+  WorkoutProvider({Key? key, required this.exercises}) : super(key: key);
 
   @override
-  State<WorkoutManager> createState() => _WorkoutManagerState();
+  State<WorkoutProvider> createState() => _WorkoutProviderState();
 }
 
-class _WorkoutManagerState extends State<WorkoutManager> {
+class _WorkoutProviderState extends State<WorkoutProvider> {
   List<Exercise> _exercises = [];
   int _currentIndex = 0;
   bool _isWorkoutComplete = false;
@@ -54,8 +54,8 @@ class _WorkoutManagerState extends State<WorkoutManager> {
   Widget build(BuildContext context) {
     return Center(
         child: _isWorkoutComplete
-            ? workout_complete.WorkoutComplete()
-            : timer.ExerciseTimerManager(
+            ? WorkoutComplete()
+            : TimerProvider(
                 duration: Duration(seconds: _exercises[_currentIndex].duration),
                 currentIndex: _currentIndex,
                 nextExercise: nextExercise,
