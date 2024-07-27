@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../services/storage_service.dart';
 import '../models/exercise.dart';
-import '../models/workout.dart';
 import './timer_provider.dart' as timer;
 import '../widgets/workout_complete.dart' as workout_complete;
 
 class WorkoutManager extends StatefulWidget {
-  WorkoutManager({Key? key}) : super(key: key);
+  final String name;
+  WorkoutManager({Key? key, required this.name}) : super(key: key);
 
   @override
   State<WorkoutManager> createState() => _WorkoutManagerState();
@@ -15,7 +15,7 @@ class WorkoutManager extends StatefulWidget {
 class _WorkoutManagerState extends State<WorkoutManager> {
   final StorageService _storageService = StorageService();
   List<Exercise> _exercises = [];
-  late int _currentIndex;
+  int _currentIndex = 0;
   bool _isWorkoutComplete = false;
 
   @override
@@ -25,9 +25,10 @@ class _WorkoutManagerState extends State<WorkoutManager> {
   }
 
   void loadExerciseList() async {
-    Workout w = await _storageService.getSingleWorkout();
+    List<Exercise> e =
+        await _storageService.getWorkoutExercises(name: widget.name);
     setState(() {
-      _exercises = w.exercises;
+      _exercises = e;
       _currentIndex = 0;
       printIndex();
     });
