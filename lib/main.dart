@@ -1,43 +1,60 @@
 import 'package:flutter/material.dart';
-import '../state/exercise_provider.dart' as exercise_provider;
+import 'models/workout.dart';
+import 'screens/workouts_screen.dart';
+import 'services/storage_service.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final StorageService storageService = StorageService();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-          primarySwatch: Colors.blue,
-          accentColor: Colors.teal,
-          scaffoldBackgroundColor: const Color(0x0A0A0AFF),
-          textTheme: Theme.of(context)
-              .textTheme
-              .apply(bodyColor: Colors.white, displayColor: Colors.white)),
-      home: HomePage(),
-    );
+        title: 'Exercise Timer',
+        theme: ThemeData(
+            primarySwatch: Colors.blue,
+            accentColor: Colors.teal,
+            scaffoldBackgroundColor: const Color(0x0A0A0AFF),
+            textTheme: Theme.of(context)
+                .textTheme
+                .apply(bodyColor: Colors.white, displayColor: Colors.white)),
+        home: FutureBuilder<List<Workout>>(
+          future: storageService.getAllWorkouts(),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Workout>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Scaffold(
+                body: Center(
+                    child: Text(
+                  'Loading...',
+                  style: TextStyle(fontSize: 20),
+                )),
+              );
+            } else if (snapshot.hasError) {
+              return Scaffold(
+                body: Center(child: Text('Error: ${snapshot.error}')),
+              );
+            } else if (snapshot.hasData) {
+              return HomePage(workouts: snapshot.data!);
+            } else {
+              return Scaffold(
+                body: Center(child: Text('No Workouts Found.')),
+              );
+            }
+          },
+        ));
   }
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final List<Workout> workouts;
+  const HomePage({Key? key, required this.workouts}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: const IconButton(
-          icon: Icon(Icons.menu),
-          tooltip: 'Navigation menu',
-          onPressed: null,
-        ),
-        title: const Text('Exercise Timer'),
-      ),
-      body: Center(child: exercise_provider.WorkoutManager()),
-    );
+    return WorkoutsScreen(workouts: workouts);
   }
 }
