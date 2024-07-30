@@ -61,10 +61,7 @@ class _TimerProviderState extends State<TimerProvider> {
   }
 
   void restartTimer() async {
-    if (isAudioPlaying) {
-      await playerInstance.stop();
-      isAudioPlaying = false;
-    }
+    stopAudioIfPlaying();
     if (!_isPaused) timer.cancel();
     print("Restarting...");
     setState(() {
@@ -79,9 +76,10 @@ class _TimerProviderState extends State<TimerProvider> {
     isAudioPlaying = true;
   }
 
-  void stopAudio() async {
+  void stopAudioIfPlaying() async {
     if (isAudioPlaying) {
       await playerInstance.stop();
+      isAudioPlaying = false;
     }
   }
 
@@ -98,7 +96,7 @@ class _TimerProviderState extends State<TimerProvider> {
   @override
   void dispose() {
     timer.cancel();
-    stopAudio();
+    stopAudioIfPlaying();
     super.dispose();
   }
 
