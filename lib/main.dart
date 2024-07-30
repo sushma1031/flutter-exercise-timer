@@ -4,11 +4,13 @@ import 'screens/workouts_screen.dart';
 import 'services/storage_service.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MyApp(storageService: StorageService()));
 }
 
 class MyApp extends StatelessWidget {
-  final StorageService storageService = StorageService();
+  final StorageService storageService;
+
+  MyApp({required this.storageService});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
