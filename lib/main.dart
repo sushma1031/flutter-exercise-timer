@@ -4,13 +4,13 @@ import 'screens/workouts_screen.dart';
 import 'services/storage_service.dart';
 
 void main() {
-  runApp(MyApp(storageService: StorageService()));
+  runApp(MyApp(db: StorageService()));
 }
 
 class MyApp extends StatelessWidget {
-  final StorageService storageService;
+  final StorageService db;
 
-  MyApp({required this.storageService});
+  MyApp({required this.db});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
                 .textTheme
                 .apply(bodyColor: Colors.white, displayColor: Colors.white)),
         home: FutureBuilder<List<Workout>>(
-          future: storageService.getAllWorkouts(),
+          future: db.getAllWorkouts(),
           builder:
               (BuildContext context, AsyncSnapshot<List<Workout>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
                 body: Center(child: Text('Error: ${snapshot.error}')),
               );
             } else if (snapshot.hasData) {
-              return HomePage(workouts: snapshot.data!);
+              return HomePage(workouts: snapshot.data!, db: db);
             } else {
               return Scaffold(
                 body: Center(child: Text('No Workouts Found.')),
@@ -53,10 +53,12 @@ class MyApp extends StatelessWidget {
 
 class HomePage extends StatelessWidget {
   final List<Workout> workouts;
-  const HomePage({Key? key, required this.workouts}) : super(key: key);
+  final StorageService db;
+  const HomePage({Key? key, required this.workouts, required this.db})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return WorkoutsScreen(workouts: workouts);
+    return WorkoutsScreen(workouts: workouts, db: db);
   }
 }

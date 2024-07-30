@@ -6,9 +6,11 @@ import '../services/storage_service.dart';
 
 class WorkoutsScreen extends StatelessWidget {
   final List<Workout> workouts;
+  final StorageService db;
 
-  WorkoutsScreen({Key? key, required this.workouts}) : super(key: key);
-  final StorageService db = new StorageService();
+  WorkoutsScreen({Key? key, required this.workouts, required this.db})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

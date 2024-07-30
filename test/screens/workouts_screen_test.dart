@@ -4,7 +4,7 @@ import '../services/mock_storage_service.dart';
 import 'package:exercise_timer/main.dart';
 
 void main() {
-  var app = MyApp(storageService: MockStorageService());
+  var app = MyApp(db: MockStorageService());
   group('Workouts Screen loads correctly', () {
     testWidgets('- shows "Loading..." when loading workouts', (tester) async {
       await tester.pumpWidget(app);
