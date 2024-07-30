@@ -5,13 +5,13 @@ import 'package:exercise_timer/main.dart';
 
 void main() {
   var app = MyApp(db: MockStorageService());
-  group('Workouts Screen loads correctly', () {
-    testWidgets('- shows "Loading..." when loading workouts', (tester) async {
+  group('Workouts Screen loads correctly:', () {
+    testWidgets('shows "Loading..." when loading workouts', (tester) async {
       await tester.pumpWidget(app);
       expect(find.text('Loading...'), findsOneWidget);
     });
 
-    testWidgets('- displays workouts from StorageService correctly',
+    testWidgets('displays workouts from StorageService correctly',
         (tester) async {
       await tester.pumpWidget(app);
       await tester.pumpAndSettle();
