@@ -35,7 +35,7 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
 
   void previousExercise(_) {
     setState(() {
-      _currentIndex--;
+      if (_currentIndex > 0) _currentIndex--;
       if (_currentIndex < _exercises.length && _isWorkoutComplete) {
         _isWorkoutComplete = false;
       }
