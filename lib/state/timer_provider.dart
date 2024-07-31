@@ -61,7 +61,6 @@ class _TimerProviderState extends State<TimerProvider> {
   }
 
   void restartTimer() async {
-    stopAudioIfPlaying();
     if (!_isPaused) _timer.cancel();
     print("Restarting...");
     setState(() {
@@ -76,10 +75,31 @@ class _TimerProviderState extends State<TimerProvider> {
     _isAudioPlaying = true;
   }
 
-  void stopAudioIfPlaying() async {
+  void stopSoundIfPlaying() async {
     if (_isAudioPlaying) {
       await _playerInstance.stop();
       _isAudioPlaying = false;
+    }
+  }
+
+  void goPrevious() async {
+    stopSoundIfPlaying();
+    if (widget.duration.inSeconds - _timeLeft.inSeconds > 2) {
+      restartTimer();
+    } else {
+      _timer.cancel();
+      widget.previousExercise(null);
+    }
+  }
+
+  void goNext() async {
+    stopSoundIfPlaying();
+    _timer.cancel();
+    widget.nextExercise(null);
+    if (_isPaused) {
+      setState(() {
+        _isPaused = !_isPaused;
+      });
     }
   }
 
@@ -96,7 +116,7 @@ class _TimerProviderState extends State<TimerProvider> {
   @override
   void dispose() {
     _timer.cancel();
-    stopAudioIfPlaying();
+    stopSoundIfPlaying();
     super.dispose();
   }
 
@@ -125,6 +145,12 @@ class _TimerProviderState extends State<TimerProvider> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   IconButton(
+                      tooltip: 'Previous',
+                      onPressed: () {
+                        goPrevious();
+                      },
+                      icon: Icon(Icons.skip_previous, color: Colors.blueGrey)),
+                  IconButton(
                       tooltip: 'Pause/Resume',
                       onPressed: () {
                         if (_isPaused) {
@@ -139,11 +165,11 @@ class _TimerProviderState extends State<TimerProvider> {
                       icon: Icon((_isPaused ? Icons.play_arrow : Icons.pause),
                           color: Colors.blueGrey)),
                   IconButton(
-                      tooltip: 'Replay',
+                      tooltip: 'Next',
                       onPressed: () {
-                        restartTimer();
+                        goNext();
                       },
-                      icon: Icon(Icons.replay, color: Colors.blueGrey)),
+                      icon: Icon(Icons.skip_next, color: Colors.blueGrey))
                 ],
               )
             ]));
