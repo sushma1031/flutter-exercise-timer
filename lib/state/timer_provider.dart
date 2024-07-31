@@ -127,13 +127,13 @@ class _TimerProviderState extends State<TimerProvider> {
                   IconButton(
                       tooltip: 'Pause/Resume',
                       onPressed: () {
+                        if (_isPaused) {
+                          resumeTimer();
+                        } else {
+                          pauseTimer();
+                        }
                         setState(() {
                           _isPaused = !_isPaused;
-                          if (_isPaused) {
-                            pauseTimer();
-                          } else {
-                            resumeTimer();
-                          }
                         });
                       },
                       icon: Icon((_isPaused ? Icons.play_arrow : Icons.pause),
