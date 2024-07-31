@@ -22,11 +22,11 @@ class TimerProvider extends StatefulWidget {
 }
 
 class _TimerProviderState extends State<TimerProvider> {
-  late Timer timer;
+  late Timer _timer;
   late Duration _timeLeft;
-  late AudioPlayer playerInstance;
+  late AudioPlayer _playerInstance;
   bool _isPaused = false;
-  bool isAudioPlaying = false;
+  bool _isAudioPlaying = false;
   @override
   void initState() {
     super.initState();
@@ -35,7 +35,7 @@ class _TimerProviderState extends State<TimerProvider> {
   }
 
   void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _timeLeft -= Duration(seconds: 1);
         if (_timeLeft.inSeconds == 3) {
@@ -51,7 +51,7 @@ class _TimerProviderState extends State<TimerProvider> {
   }
 
   void pauseTimer() {
-    timer.cancel();
+    _timer.cancel();
     print("Paused.");
   }
 
@@ -62,7 +62,7 @@ class _TimerProviderState extends State<TimerProvider> {
 
   void restartTimer() async {
     stopAudioIfPlaying();
-    if (!_isPaused) timer.cancel();
+    if (!_isPaused) _timer.cancel();
     print("Restarting...");
     setState(() {
       _timeLeft = widget.duration;
@@ -72,14 +72,14 @@ class _TimerProviderState extends State<TimerProvider> {
 
   void playSound() async {
     print("Playing audio...");
-    playerInstance = await widget.player.play('audio/exercise_change.mp3');
-    isAudioPlaying = true;
+    _playerInstance = await widget.player.play('audio/exercise_change.mp3');
+    _isAudioPlaying = true;
   }
 
   void stopAudioIfPlaying() async {
-    if (isAudioPlaying) {
-      await playerInstance.stop();
-      isAudioPlaying = false;
+    if (_isAudioPlaying) {
+      await _playerInstance.stop();
+      _isAudioPlaying = false;
     }
   }
 
@@ -95,7 +95,7 @@ class _TimerProviderState extends State<TimerProvider> {
 
   @override
   void dispose() {
-    timer.cancel();
+    _timer.cancel();
     stopAudioIfPlaying();
     super.dispose();
   }
