@@ -5,8 +5,8 @@ import 'package:exercise_timer/main.dart';
 
 void main() {
   var app = MyApp(db: MockStorageService());
-  group('Exercises Screen loads correctly:', () {
-    testWidgets('loads and displays exercises correctly', (tester) async {
+  group('Exercises Screen loads correctly', () {
+    testWidgets('load and display exercises', (tester) async {
       await tester.pumpWidget(app);
       await tester.pumpAndSettle();
 
