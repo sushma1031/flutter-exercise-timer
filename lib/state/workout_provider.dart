@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import '../models/exercise.dart';
 import './timer_provider.dart';
@@ -60,6 +61,7 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
                 currentIndex: _currentIndex,
                 nextExercise: nextExercise,
                 previousExercise: previousExercise,
+                player: AudioCache(),
               ));
   }
 }

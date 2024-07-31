@@ -8,12 +8,14 @@ class TimerProvider extends StatefulWidget {
   final int currentIndex;
   final ValueChanged<void> nextExercise;
   final ValueChanged<void> previousExercise;
+  final AudioCache player;
   const TimerProvider(
       {Key? key,
       required this.duration,
       required this.currentIndex,
       required this.nextExercise,
-      required this.previousExercise})
+      required this.previousExercise,
+      required this.player})
       : super(key: key);
   @override
   State<TimerProvider> createState() => _TimerProviderState();
@@ -22,7 +24,6 @@ class TimerProvider extends StatefulWidget {
 class _TimerProviderState extends State<TimerProvider> {
   late Timer timer;
   late Duration _timeLeft;
-  late AudioCache player;
   late AudioPlayer playerInstance;
   bool _isPaused = false;
   bool isAudioPlaying = false;
@@ -30,7 +31,6 @@ class _TimerProviderState extends State<TimerProvider> {
   void initState() {
     super.initState();
     _timeLeft = widget.duration;
-    player = AudioCache();
     startTimer();
   }
 
@@ -72,7 +72,7 @@ class _TimerProviderState extends State<TimerProvider> {
 
   void playSound() async {
     print("Playing audio...");
-    playerInstance = await player.play('audio/exercise_change.mp3');
+    playerInstance = await widget.player.play('audio/exercise_change.mp3');
     isAudioPlaying = true;
   }
 
