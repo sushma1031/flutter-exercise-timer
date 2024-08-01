@@ -54,12 +54,14 @@ class _TimerProviderState extends State<TimerProvider> {
 
   void pauseTimer() {
     _timer.cancel();
+    pauseSoundIfPlaying();
     print("Paused.");
   }
 
   void resumeTimer() {
     print("Resumed.");
     startTimer();
+    resumeSoundIfPaused();
   }
 
   void restartTimer() async {
@@ -75,6 +77,20 @@ class _TimerProviderState extends State<TimerProvider> {
     print("Playing audio...");
     _playerInstance = await widget.player.play('audio/exercise_change.mp3');
     _isAudioPlaying = true;
+  }
+
+  void pauseSoundIfPlaying() async {
+    if (_isAudioPlaying) {
+      await _playerInstance.pause();
+      _isAudioPlaying = false;
+    }
+  }
+
+  void resumeSoundIfPaused() async {
+    if (_timeLeft.inSeconds <= 3 && !_isAudioPlaying) {
+      await _playerInstance.resume();
+      _isAudioPlaying = true;
+    }
   }
 
   void stopSoundIfPlaying() async {
