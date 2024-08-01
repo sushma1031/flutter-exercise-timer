@@ -72,18 +72,6 @@ void main() {
     expect(find.text('3'), findsOneWidget); // Timer should resume
   });
 
-  testWidgets('restart timer', (WidgetTester tester) async {
-    await tester.pumpWidget(createWidgetUnderTest(Duration(seconds: 5)));
-
-    await tester.pump(Duration(seconds: 3));
-    expect(find.text('2'), findsOneWidget);
-
-    // Restart the timer
-    await tester.tap(find.byIcon(Icons.replay));
-    await tester.pump();
-    expect(find.text('5'), findsOneWidget);
-  });
-
   testWidgets('play sound at 3 seconds remaining', (WidgetTester tester) async {
     final GlobalKey<State<TimerProvider>> timerProviderKey =
         GlobalKey(); // create unique key to identify widget
@@ -97,4 +85,5 @@ void main() {
     await tester.pump(Duration(seconds: 1));
     expect(ac.soundPlayed, true); // Ensure sound played
   });
+
 }

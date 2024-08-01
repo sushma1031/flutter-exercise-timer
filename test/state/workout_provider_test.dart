@@ -5,22 +5,49 @@ import 'package:exercise_timer/widgets/workout_complete.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final exercises = [Exercise('Plank', 10), Exercise('Crunches', 5)];
+  final exercises = [Exercise('Plank', 6), Exercise('Crunches', 5)];
   final Widget testWidget =
       MaterialApp(home: Scaffold(body: WorkoutProvider(exercises: exercises)));
   testWidgets('initial exercise and timer duration',
       (WidgetTester tester) async {
     await tester.pumpWidget(testWidget);
 
-    expect(find.text('10'), findsOneWidget);
+    expect(find.text('6'), findsOneWidget);
   });
 
   testWidgets('progress to next exercise', (WidgetTester tester) async {
     await tester.pumpWidget(testWidget);
 
     // advance by duration of first exercise
-    await tester.pump(Duration(seconds: 11));
+    await tester.pump(Duration(seconds: 7));
     expect(find.text('5'), findsOneWidget);
+  });
+
+  testWidgets('navigate to next exercise', (WidgetTester tester) async {
+    await tester.pumpWidget(testWidget);
+
+    await tester.tap(find.byIcon(Icons.skip_next));
+    await tester.pump();
+    expect(find.text('5'), findsOneWidget);
+  });
+
+  testWidgets('navigate manually to previous exercise',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(testWidget);
+    await tester.pump(Duration(seconds: 7)); //progress to next exercise
+
+    await tester.tap(find.byIcon(Icons.skip_previous));
+    await tester.pump();
+    expect(find.text('6'), findsOneWidget);
+  });
+
+  testWidgets('restart exercise', (WidgetTester tester) async {
+    await tester.pumpWidget(testWidget);
+    await tester.pump(Duration(seconds: 3)); //progress to next exercise
+
+    await tester.tap(find.byIcon(Icons.skip_previous));
+    await tester.pump();
+    expect(find.text('6'), findsOneWidget);
   });
 
   testWidgets('complete workout and show completion screen',
