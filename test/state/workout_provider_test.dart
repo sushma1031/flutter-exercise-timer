@@ -63,4 +63,16 @@ void main() {
     await tester.pump(); // Rebuild widget
     expect(find.byType(WorkoutComplete), findsOneWidget);
   });
+
+  testWidgets('disable next button for last exercise',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(testWidget);
+    final nextIconBtn = find.widgetWithIcon(IconButton, Icons.skip_next);
+    expect(tester.widget<IconButton>(nextIconBtn).onPressed == null, false);
+
+    await tester.tap(find.byIcon(Icons.skip_next));
+    await tester.pump();
+
+    expect(tester.widget<IconButton>(nextIconBtn).onPressed, null);
+  });
 }

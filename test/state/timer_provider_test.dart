@@ -36,6 +36,7 @@ void main() {
         key: key,
         duration: duration,
         currentIndex: 0,
+        noOfExercises: 1,
         nextExercise: (_) {},
         previousExercise: (_) {},
         player: fakeAudioCache,
@@ -85,5 +86,4 @@ void main() {
     await tester.pump(Duration(seconds: 1));
     expect(ac.soundPlayed, true); // Ensure sound played
   });
-
 }
