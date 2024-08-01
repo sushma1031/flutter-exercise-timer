@@ -26,7 +26,7 @@ class TimerProvider extends StatefulWidget {
 class _TimerProviderState extends State<TimerProvider> {
   late Timer _timer;
   late Duration _timeLeft;
-  late AudioPlayer _playerInstance;
+  AudioPlayer? _playerInstance;
   bool _isPaused = false;
   bool _isAudioPlaying = false;
   @override
@@ -81,27 +81,27 @@ class _TimerProviderState extends State<TimerProvider> {
 
   void pauseSoundIfPlaying() async {
     if (_isAudioPlaying) {
-      await _playerInstance.pause();
+      await _playerInstance?.pause();
       _isAudioPlaying = false;
     }
   }
 
   void resumeSoundIfPaused() async {
-    if (_timeLeft.inSeconds <= 3 && !_isAudioPlaying) {
-      await _playerInstance.resume();
+    if (!_isAudioPlaying) {
+      await _playerInstance?.resume();
       _isAudioPlaying = true;
     }
   }
 
   void stopSoundIfPlaying() async {
-    if (_isAudioPlaying) {
-      await _playerInstance.stop();
-      _isAudioPlaying = false;
-    }
+    await _playerInstance?.stop();
+    _playerInstance = null;
+    _isAudioPlaying = false;
   }
 
   void goPrevious() async {
     stopSoundIfPlaying();
+
     if (widget.duration.inSeconds - _timeLeft.inSeconds > 2) {
       restartTimer();
     } else {
