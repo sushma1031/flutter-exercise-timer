@@ -61,6 +61,7 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
                 currentIndex: _currentIndex,
                 nextExercise: nextExercise,
                 previousExercise: previousExercise,
+                noOfExercises: _exercises.length - 1,
                 player: AudioCache(),
               ));
   }

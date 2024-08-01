@@ -6,6 +6,7 @@ import '../utils/duration_format.dart';
 class TimerProvider extends StatefulWidget {
   final Duration duration;
   final int currentIndex;
+  final int noOfExercises;
   final ValueChanged<void> nextExercise;
   final ValueChanged<void> previousExercise;
   final AudioCache player;
@@ -13,6 +14,7 @@ class TimerProvider extends StatefulWidget {
       {Key? key,
       required this.duration,
       required this.currentIndex,
+      required this.noOfExercises,
       required this.nextExercise,
       required this.previousExercise,
       required this.player})
@@ -146,10 +148,9 @@ class _TimerProviderState extends State<TimerProvider> {
                 children: [
                   IconButton(
                       tooltip: 'Previous',
-                      onPressed: () {
-                        goPrevious();
-                      },
-                      icon: Icon(Icons.skip_previous, color: Colors.blueGrey)),
+                      onPressed: goPrevious,
+                      icon: Icon(Icons.skip_previous, color: Colors.blueGrey),
+                      disabledColor: Colors.grey),
                   IconButton(
                       tooltip: 'Pause/Resume',
                       onPressed: () {
@@ -166,10 +167,11 @@ class _TimerProviderState extends State<TimerProvider> {
                           color: Colors.blueGrey)),
                   IconButton(
                       tooltip: 'Next',
-                      onPressed: () {
-                        goNext();
-                      },
-                      icon: Icon(Icons.skip_next, color: Colors.blueGrey))
+                      onPressed: widget.currentIndex == widget.noOfExercises
+                          ? null
+                          : goNext,
+                      icon: Icon(Icons.skip_next, color: Colors.blueGrey),
+                      disabledColor: Colors.grey)
                 ],
               )
             ]));
