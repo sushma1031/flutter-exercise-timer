@@ -107,6 +107,11 @@ class _TimerProviderState extends State<TimerProvider> {
     } else {
       _timer.cancel();
       widget.previousExercise(null);
+      if (_isPaused) {
+        setState(() {
+          _isPaused = false;
+        });
+      }
     }
   }
 
@@ -116,7 +121,7 @@ class _TimerProviderState extends State<TimerProvider> {
     widget.nextExercise(null);
     if (_isPaused) {
       setState(() {
-        _isPaused = !_isPaused;
+        _isPaused = false;
       });
     }
   }
