@@ -52,19 +52,19 @@ class _TimerProviderState extends State<TimerProvider> {
     });
   }
 
-  void pauseTimer() {
+  Future<void> pauseTimer() async {
     _timer.cancel();
-    pauseSoundIfPlaying();
+    await pauseSoundIfPlaying();
     print("Paused.");
   }
 
-  void resumeTimer() {
+  Future<void> resumeTimer() async {
     print("Resumed.");
     startTimer();
-    resumeSoundIfPaused();
+    await resumeSoundIfPaused();
   }
 
-  void restartTimer() async {
+  Future<void> restartTimer() async {
     if (!_isPaused) _timer.cancel();
     print("Restarting...");
     setState(() {
@@ -73,34 +73,34 @@ class _TimerProviderState extends State<TimerProvider> {
     if (!_isPaused) startTimer();
   }
 
-  void playSound() async {
+  Future<void> playSound() async {
     print("Playing audio...");
     _playerInstance = await widget.player.play('audio/exercise_change.mp3');
     _isAudioPlaying = true;
   }
 
-  void pauseSoundIfPlaying() async {
+  Future<void> pauseSoundIfPlaying() async {
     if (_isAudioPlaying) {
       await _playerInstance?.pause();
       _isAudioPlaying = false;
     }
   }
 
-  void resumeSoundIfPaused() async {
+  Future<void> resumeSoundIfPaused() async {
     if (!_isAudioPlaying) {
       await _playerInstance?.resume();
       _isAudioPlaying = true;
     }
   }
 
-  void stopSoundIfPlaying() async {
+  Future<void> stopSoundIfPlaying() async {
     await _playerInstance?.stop();
     _playerInstance = null;
     _isAudioPlaying = false;
   }
 
-  void goPrevious() async {
-    stopSoundIfPlaying();
+  Future<void> goPrevious() async {
+    await stopSoundIfPlaying();
 
     if (widget.duration.inSeconds - _timeLeft.inSeconds > 2) {
       restartTimer();
@@ -115,8 +115,8 @@ class _TimerProviderState extends State<TimerProvider> {
     }
   }
 
-  void goNext() async {
-    stopSoundIfPlaying();
+  Future<void> goNext() async {
+    await stopSoundIfPlaying();
     _timer.cancel();
     widget.nextExercise(null);
     if (_isPaused) {
