@@ -14,7 +14,7 @@ void main() async {
   await Hive.initFlutter(appDocumentsDir.path);
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(WorkoutAdapter());
-  runApp(MyApp(db: StorageService()));
+  runApp(MyApp(db: StorageService('workoutBox')));
 }
 
 class MyApp extends StatelessWidget {
@@ -33,27 +33,25 @@ class MyApp extends StatelessWidget {
             textTheme: Theme.of(context)
                 .textTheme
                 .apply(bodyColor: Colors.white, displayColor: Colors.white)),
-        home: FutureBuilder<List<Workout>>(
-          future: db.getAllWorkouts(),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Workout>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+        home: FutureBuilder<void>(
+          future: db.loadData(),
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return Scaffold(
+                  body: Center(child: Text('Error: ${snapshot.error}')),
+                );
+              } else {
+                return HomePage(db: db);
+              }
+            } else {
+              // waiting
               return Scaffold(
                 body: Center(
                     child: Text(
                   'Loading...',
                   style: TextStyle(fontSize: 20),
                 )),
-              );
-            } else if (snapshot.hasError) {
-              return Scaffold(
-                body: Center(child: Text('Error: ${snapshot.error}')),
-              );
-            } else if (snapshot.hasData) {
-              return HomePage(workouts: snapshot.data!, db: db);
-            } else {
-              return Scaffold(
-                body: Center(child: Text('No Workouts Found.')),
               );
             }
           },
@@ -62,13 +60,11 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-  final List<Workout> workouts;
   final StorageService db;
-  const HomePage({Key? key, required this.workouts, required this.db})
-      : super(key: key);
+  const HomePage({Key? key, required this.db}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return WorkoutsScreen(workouts: workouts, db: db);
+    return WorkoutsScreen(workouts: db.getAllWorkoutsForDisplay(), db: db);
   }
 }
