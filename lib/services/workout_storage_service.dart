@@ -1,12 +1,16 @@
+import './storage_service_interface.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
 import '../models/workout_display.dart';
-import 'package:hive/hive.dart';
 
-class StorageService {
+import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+class WorkoutStorageService implements StorageService<Box<Workout>> {
   final String boxName;
-  var workouts;
-  StorageService(this.boxName);
+  late Box<Workout> workouts;
+  WorkoutStorageService(this.boxName);
 
   Future<void> loadData() async {
     try {
@@ -16,18 +20,25 @@ class StorageService {
     }
   }
 
+  ValueListenable<Box<Workout>> getListenable() {
+    return workouts.listenable();
+  }
+
   List<Workout> getAllWorkouts() {
     return workouts.values.toList();
   }
 
   List<WorkoutDisplay> getAllWorkoutsForDisplay() {
-    List<Workout> w = workouts.values.toList() as List<Workout>;
-    var wd = w.map((w) => WorkoutDisplay(w.name, w.exercises.length));
-    return wd.toList();
+    List<WorkoutDisplay> wd = [];
+    for (int i = 0; i < workouts.length; i++) {
+      var w = workouts.getAt(i);
+      wd.add(WorkoutDisplay(w!.name, w.exercises.length));
+    }
+    return wd;
   }
 
   List<Exercise> getWorkoutExercises(int index) {
-    return workouts.getAt(index).exercises;
+    return workouts.getAt(index)!.exercises;
   }
 
   Future<void> addOneWorkout(String name) async {
@@ -47,25 +58,25 @@ class StorageService {
   }
 
   Future<void> updateWorkoutName(int index, String name) async {
-    Workout prev = workouts.getAt(index);
+    Workout prev = workouts.getAt(index)!;
     await workouts.putAt(index, Workout(name, prev.exercises));
   }
 
   Future<void> addWorkoutExercises(int index, List<Exercise> toAdd) async {
-    Workout w = workouts.getAt(index);
+    Workout w = workouts.getAt(index)!;
     w.exercises.addAll(toAdd);
     await w.save();
   }
 
   Future<void> updateWorkoutExercises(
       int index, List<Exercise> newExercises) async {
-    String name = workouts.getAt(index).name;
+    String name = workouts.getAt(index)!.name;
     await workouts.putAt(index, Workout(name, newExercises));
   }
 
   Future<void> modifyWorkoutExercise(
       int wIndex, int eIndex, String name, int duration) async {
-    Workout w = workouts.getAt(wIndex);
+    Workout w = workouts.getAt(wIndex)!;
     w.exercises[eIndex] = Exercise(name, duration);
     await workouts.putAt(wIndex, Workout.fromWorkout(w));
   }
