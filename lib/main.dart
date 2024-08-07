@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'models/workout.dart';
 import 'models/exercise.dart';
 import 'screens/workouts_screen.dart';
-import 'services/storage_service.dart';
+import 'services/storage_service_interface.dart';
+import 'services/workout_storage_service.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -14,7 +15,7 @@ void main() async {
   await Hive.initFlutter(appDocumentsDir.path);
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(WorkoutAdapter());
-  runApp(MyApp(db: StorageService('workoutBox')));
+  runApp(MyApp(db: WorkoutStorageService('workoutsBox')));
 }
 
 class MyApp extends StatelessWidget {
@@ -65,6 +66,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WorkoutsScreen(workouts: db.getAllWorkoutsForDisplay(), db: db);
+    return WorkoutsScreen(db: db);
   }
 }

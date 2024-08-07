@@ -1,15 +1,12 @@
 import 'package:exercise_timer/screens/exercises_screen.dart';
 import 'package:flutter/material.dart';
-import '../models/workout_display.dart';
-import '../models/exercise.dart';
-import '../services/storage_service.dart';
+import '../widgets/workout_form.dart';
+import '../services/storage_service_interface.dart';
 
 class WorkoutsScreen extends StatelessWidget {
-  final List<WorkoutDisplay> workouts;
   final StorageService db;
 
-  WorkoutsScreen({Key? key, required this.workouts, required this.db})
-      : super(key: key);
+  WorkoutsScreen({Key? key, required this.db}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,32 +17,38 @@ class WorkoutsScreen extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.delete, color: Colors.black),
               onPressed: () {
-                db.delete();
+                db.clear();
               },
             ),
           ],
         ),
-        body: Column(children: [
-          ElevatedButton(onPressed: () {}, child: Text('Add')),
-          Expanded(
-            child: ListView.builder(
-              itemCount: workouts.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(workouts[index].name),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ExercisesScreen(
-                            exercises: db.getWorkoutExercises(index)),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          )
-        ]));
+        body: ValueListenableBuilder(
+            valueListenable: db.getListenable(),
+            child: WorkoutForm(addWorkout: db.addOneWorkout),
+            builder: (context, _, form) {
+              var workouts = db.getAllWorkoutsForDisplay();
+              return Column(children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: workouts.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(workouts[index].name),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ExercisesScreen(
+                                  exercises: db.getWorkoutExercises(index)),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+                form!
+              ]);
+            }));
   }
 }
