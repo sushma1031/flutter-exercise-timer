@@ -3,7 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
-import 'package:exercise_timer/services/storage_service.dart';
+import 'package:exercise_timer/services/workout_storage_service.dart';
 import 'package:exercise_timer/models/exercise.dart';
 import 'package:exercise_timer/models/workout.dart';
 
@@ -15,9 +15,8 @@ Future<void> main() async {
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(WorkoutAdapter());
   String box = 'testBox';
-//   runApp(MyApp(db: StorageService(box)));
 
-  StorageService db = StorageService(box);
+  WorkoutStorageService db = WorkoutStorageService(box);
   await db.loadData();
   test('clears box successfully', () async {
     await db.clear();
