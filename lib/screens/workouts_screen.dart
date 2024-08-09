@@ -24,7 +24,10 @@ class WorkoutsScreen extends StatelessWidget {
         ),
         body: ValueListenableBuilder(
             valueListenable: db.getListenable(),
-            child: WorkoutForm(addWorkout: db.addOneWorkout),
+            child: WorkoutForm(
+              addWorkout: db.addOneWorkout,
+              workoutNames: db.getAllWorkouts().map((e) => e.name).toList(),
+            ),
             builder: (context, _, form) {
               var workouts = db.getAllWorkoutsForDisplay();
               return Column(children: [
