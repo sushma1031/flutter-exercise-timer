@@ -29,13 +29,17 @@ void main() {
     await tester.enterText(find.byType(TextFormField), 'Biceps');
     await tester.tap(find.byType(ElevatedButton));
     await tester.pump();
-
     expect(find.text('Biceps'), findsOneWidget);
 
     await tester.enterText(find.byType(TextFormField), '');
     await tester.tap(find.byType(ElevatedButton));
     await tester.pump();
     expect(find.text('Please enter a workout name'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextFormField), 'Abs');
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
+    expect(find.text('Name already in use'), findsOneWidget);
   });
 
   testWidgets('clears workouts correctly', (tester) async {
