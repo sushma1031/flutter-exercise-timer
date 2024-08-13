@@ -95,7 +95,7 @@ Future<void> main() async {
       Exercise('Crunches', 40),
       Exercise('Russian Twist', 40)
     ]);
-    await db.modifyWorkoutExercise(0, 0, 'Push-up', 30);
+    await db.modifyExercise(0, 0, 'Push-up', 30);
     var ex = db.getWorkoutExercises(0);
     expect(ex[0].name, 'Push-up');
     expect(ex[0].duration, 30);

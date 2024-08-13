@@ -74,7 +74,7 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     await workouts.putAt(index, Workout(name, newExercises));
   }
 
-  Future<void> modifyWorkoutExercise(
+  Future<void> modifyExercise(
       int wIndex, int eIndex, String name, int duration) async {
     Workout w = workouts.getAt(wIndex)!;
     w.exercises[eIndex] = Exercise(name, duration);
