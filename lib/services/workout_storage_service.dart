@@ -42,30 +42,41 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   }
 
   Future<void> addOneWorkout(String name) async {
-    try {
-      await workouts.add(Workout(name, []));
-    } on Exception catch (ex) {
-      print('Error: Could not add workout.\n{$ex}');
+    if (name.isNotEmpty &&
+        getAllWorkouts().where((e) => e.name == name).isEmpty) {
+      try {
+        await workouts.add(Workout(name, []));
+      } on Exception catch (ex) {
+        print('Error: Could not add workout.\n{$ex}');
+      }
     }
   }
 
   Future<void> addManyWorkouts(List<String> names) async {
-    try {
-      for (String name in names) await addOneWorkout(name);
-    } on Exception catch (ex) {
-      print('Error: Could not add workout.\n{$ex}');
-    }
+    for (String name in names) await addOneWorkout(name);
   }
 
   Future<void> updateWorkoutName(int index, String name) async {
     Workout prev = workouts.getAt(index)!;
-    await workouts.putAt(index, Workout(name, prev.exercises));
+    if (name.isNotEmpty &&
+        name != prev.name &&
+        getAllWorkouts().where((e) => e.name == name).isEmpty) {
+      await workouts.putAt(index, Workout(name, prev.exercises));
+    }
   }
 
   Future<void> addWorkoutExercises(int index, List<Exercise> toAdd) async {
+    if (index < 0 || index > workouts.length) {
+      print('Error: Workout index out of range.\n');
+      return;
+    }
     Workout w = workouts.getAt(index)!;
-    w.exercises.addAll(toAdd);
-    await w.save();
+    if (toAdd.where((e) => e.duration <= 0 || e.duration > 99).isEmpty) {
+      w.exercises.addAll(toAdd);
+      await w.save();
+    } else {
+      print('Error: Some exercises have duration <= 0s or > 99s.\n');
+    }
   }
 
   Future<void> updateWorkoutExercises(
@@ -76,13 +87,29 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
 
   Future<void> modifyExercise(
       int wIndex, int eIndex, String name, int duration) async {
+    if (duration <= 0 || duration > 99) {
+      print('Error: Duration must be in [1, 100)s.\n');
+      return;
+    }
+    if (wIndex < 0 || wIndex > workouts.length) {
+      print('Error: Workout index out of range.\n');
+      return;
+    }
     Workout w = workouts.getAt(wIndex)!;
+    if (eIndex < 0 || eIndex > w.exercises.length) {
+      print('Error: Exercise index out of range.\n');
+      return;
+    }
     w.exercises[eIndex] = Exercise(name, duration);
     await workouts.putAt(wIndex, Workout.fromWorkout(w));
   }
 
   Future<void> deleteWorkout(int index) async {
     await workouts.deleteAt(index);
+  }
+
+  Future<void> save() async {
+    // await workouts.save();
   }
 
   Future<void> close() async {
