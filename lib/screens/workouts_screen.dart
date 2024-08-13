@@ -46,7 +46,9 @@ class WorkoutsScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ExercisesScreen(
-                                  exercises: db.getWorkoutExercises(index)),
+                                index: index,
+                                db: db,
+                              ),
                             ),
                           );
                         },

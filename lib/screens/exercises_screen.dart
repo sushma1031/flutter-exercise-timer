@@ -1,42 +1,52 @@
+import 'package:exercise_timer/services/storage_service_interface.dart';
 import 'package:flutter/material.dart';
 import '../models/exercise.dart';
-import './timer_screen.dart';
+import '../widgets/exercises_form.dart';
+import '../widgets/static_exercises_list.dart';
 
-class ExercisesScreen extends StatelessWidget {
-  final List<Exercise> exercises;
+class ExercisesScreen extends StatefulWidget {
+  final int index;
+  final StorageService db;
+  const ExercisesScreen({Key? key, required this.db, required this.index})
+      : super(key: key);
 
-  ExercisesScreen({Key? key, required this.exercises}) : super(key: key);
+  @override
+  State<ExercisesScreen> createState() => _ExercisesScreenState();
+}
+
+class _ExercisesScreenState extends State<ExercisesScreen> {
+  List<Exercise> _exercises = [];
+  late Widget _child;
+  void initState() {
+    super.initState();
+    _exercises = widget.db.getWorkoutExercises(widget.index);
+    _child = StaticExerciseList(exercises: _exercises);
+  }
+
+  void returnToStaticList() {
+    setState(() {
+      _child = StaticExerciseList(
+          exercises: widget.db.getWorkoutExercises(widget.index));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Exercises'),
-      ),
-      body: Column(children: [
-        Padding(
-            padding: EdgeInsets.only(top: 16),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TimerScreen(e: exercises)));
-              },
-              child: const Text('Start Workout'),
-            )),
-        Expanded(
-            child: ListView.builder(
-          itemCount: exercises.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(
-                '${exercises[index].name} : ${exercises[index].duration}s',
-              ),
-            );
-          },
-        )),
-      ]),
-    );
+        appBar: AppBar(title: const Text('Exercises'), actions: [
+          IconButton(
+            icon: Icon(Icons.add, color: Colors.black),
+            onPressed: () {
+              setState(() {
+                _child = ExercisesForm(
+                  workoutIndex: widget.index,
+                  addWorkoutExercises: widget.db.addWorkoutExercises,
+                  returnToStaticList: returnToStaticList,
+                );
+              });
+            },
+          ),
+        ]),
+        body: _child);
   }
 }
