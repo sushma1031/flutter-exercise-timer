@@ -4,6 +4,7 @@ import 'models/exercise.dart';
 import 'screens/workouts_screen.dart';
 import 'services/storage_service_interface.dart';
 import 'services/workout_storage_service.dart';
+import 'widgets/life_cycle_watcher.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -34,28 +35,8 @@ class MyApp extends StatelessWidget {
             textTheme: Theme.of(context)
                 .textTheme
                 .apply(bodyColor: Colors.white, displayColor: Colors.white)),
-        home: FutureBuilder<void>(
-          future: db.loadData(),
-          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return Scaffold(
-                  body: Center(child: Text('Error: ${snapshot.error}')),
-                );
-              } else {
-                return HomePage(db: db);
-              }
-            } else {
-              // waiting
-              return Scaffold(
-                body: Center(
-                    child: Text(
-                  'Loading...',
-                  style: TextStyle(fontSize: 20),
-                )),
-              );
-            }
-          },
+        home: LifecycleWatcher(
+          child: HomePage(db: db),
         ));
   }
 }
@@ -66,6 +47,28 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WorkoutsScreen(db: db);
+    return FutureBuilder<void>(
+      future: db.loadData(),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(child: Text('Error: ${snapshot.error}')),
+            );
+          } else {
+            return WorkoutsScreen(db: db);
+          }
+        } else {
+          // waiting
+          return Scaffold(
+            body: Center(
+                child: Text(
+              'Loading...',
+              style: TextStyle(fontSize: 20),
+            )),
+          );
+        }
+      },
+    );
   }
 }
