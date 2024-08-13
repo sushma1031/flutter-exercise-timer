@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class WorkoutForm extends StatefulWidget {
   final Future<void> Function(String) addWorkout;
-  final List<String> workoutNames;
+  final bool Function(String) isUnique;
   const WorkoutForm(
-      {Key? key, required this.addWorkout, required this.workoutNames})
+      {Key? key, required this.addWorkout, required this.isUnique})
       : super(key: key);
   @override
   State<WorkoutForm> createState() => _WorkoutFormState();
@@ -27,10 +27,9 @@ class _WorkoutFormState extends State<WorkoutForm> {
                       child: TextFormField(
                     validator: (String? value) {
                       if (value == null || value.isEmpty) {
-                        // also check if it's unique
                         return 'Please enter a workout name';
                       }
-                      if (widget.workoutNames.contains(value)) {
+                      if (!widget.isUnique(value)) {
                         return 'Name already in use';
                       }
                       return null;
