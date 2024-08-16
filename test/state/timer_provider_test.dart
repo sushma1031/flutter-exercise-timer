@@ -34,6 +34,7 @@ void main() {
         home: Scaffold(
       body: TimerProvider(
         key: key,
+        name: 'Plank',
         duration: duration,
         currentIndex: 0,
         noOfExercises: 1,

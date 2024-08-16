@@ -13,6 +13,7 @@ void main() {
     await tester.pumpWidget(testWidget);
 
     expect(find.text('6'), findsOneWidget);
+    expect(find.text('Plank'), findsOneWidget);
   });
 
   testWidgets('progress to next exercise', (WidgetTester tester) async {
@@ -21,6 +22,7 @@ void main() {
     // advance by duration of first exercise
     await tester.pump(Duration(seconds: 7));
     expect(find.text('5'), findsOneWidget);
+    expect(find.text('Crunches'), findsOneWidget);
   });
 
   testWidgets('navigate to next exercise', (WidgetTester tester) async {
@@ -29,6 +31,7 @@ void main() {
     await tester.tap(find.byIcon(Icons.skip_next));
     await tester.pump();
     expect(find.text('5'), findsOneWidget);
+    expect(find.text('Crunches'), findsOneWidget);
   });
 
   testWidgets('navigate manually to previous exercise',
@@ -39,15 +42,17 @@ void main() {
     await tester.tap(find.byIcon(Icons.skip_previous));
     await tester.pump();
     expect(find.text('6'), findsOneWidget);
+    expect(find.text('Plank'), findsOneWidget);
   });
 
   testWidgets('restart exercise', (WidgetTester tester) async {
     await tester.pumpWidget(testWidget);
-    await tester.pump(Duration(seconds: 3)); //progress to next exercise
+    await tester.pump(Duration(seconds: 3));
 
     await tester.tap(find.byIcon(Icons.skip_previous));
     await tester.pump();
     expect(find.text('6'), findsOneWidget);
+    expect(find.text('Plank'), findsOneWidget);
   });
 
   testWidgets('complete workout and show completion screen',
@@ -58,9 +63,8 @@ void main() {
     // Short duration for quick test
     await tester.pumpWidget(testWidget);
 
-    // Simulate timer completion
     await tester.pump(Duration(seconds: 3));
-    await tester.pump(); // Rebuild widget
+    await tester.pump();
     expect(find.byType(WorkoutComplete), findsOneWidget);
   });
 
