@@ -25,6 +25,7 @@ class _WorkoutFormState extends State<WorkoutForm> {
                 children: <Widget>[
                   Expanded(
                       child: TextFormField(
+                    enableSuggestions: true,
                     validator: (String? value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a workout name';

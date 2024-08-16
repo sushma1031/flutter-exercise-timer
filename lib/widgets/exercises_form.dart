@@ -52,6 +52,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                 width: 200,
                                 // name
                                 child: TextFormField(
+                                  enableSuggestions: true,
                                   validator: (String? value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter a name';
