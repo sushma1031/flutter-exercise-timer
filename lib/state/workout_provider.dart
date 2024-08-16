@@ -57,6 +57,7 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
         child: _isWorkoutComplete
             ? WorkoutComplete()
             : TimerProvider(
+                name:  _exercises[_currentIndex].name,
                 duration: Duration(seconds: _exercises[_currentIndex].duration),
                 currentIndex: _currentIndex,
                 nextExercise: nextExercise,

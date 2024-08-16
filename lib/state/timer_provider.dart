@@ -5,6 +5,7 @@ import '../utils/duration_format.dart';
 
 class TimerProvider extends StatefulWidget {
   final Duration duration;
+  final String name;
   final int currentIndex;
   final int noOfExercises;
   final ValueChanged<void> nextExercise;
@@ -12,6 +13,7 @@ class TimerProvider extends StatefulWidget {
   final AudioCache player;
   const TimerProvider(
       {Key? key,
+      required this.name,
       required this.duration,
       required this.currentIndex,
       required this.noOfExercises,
@@ -157,11 +159,20 @@ class _TimerProviderState extends State<TimerProvider> {
                       alignment: AlignmentDirectional.center,
                       children: <Widget>[
                     Center(
-                      child: Text('${formatDuration(_timeLeft)}',
-                          style: TextStyle(
-                            fontSize: 55,
-                            fontWeight: FontWeight.w300,
-                          )),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('${widget.name}',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )),
+                            Text('${formatDuration(_timeLeft)}',
+                                style: TextStyle(
+                                  fontSize: 55,
+                                  fontWeight: FontWeight.w300,
+                                ))
+                          ]),
                     )
                   ])),
               Row(
