@@ -1,3 +1,4 @@
+import 'package:exercise_timer/widgets/exercise_input_field.dart';
 import 'package:flutter/material.dart';
 import '../models/exercise.dart';
 
@@ -17,14 +18,11 @@ class ExercisesForm extends StatefulWidget {
 
 class _ExercisesFormState extends State<ExercisesForm> {
   final _formKey = GlobalKey<FormState>();
-  String _name = '';
-  int _duration = 0;
+  int _fields = 1;
+  List<List<String>> _allData = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(
-        //   title: const Text('Add Exercises'),
-        // ),
         body: Form(
             key: _formKey,
             child: Padding(
@@ -44,58 +42,46 @@ class _ExercisesFormState extends State<ExercisesForm> {
                               ))
                         ],
                       ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(
-                                width: 200,
-                                // name
-                                child: TextFormField(
-                                  enableSuggestions: true,
-                                  validator: (String? value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter a name';
-                                    }
-                                    return null;
-                                  },
-                                  decoration: const InputDecoration(
-                                    filled: false,
-                                    labelText: 'Name',
-                                    labelStyle:
-                                        TextStyle(color: Colors.white38),
-                                  ),
-                                  onSaved: (value) {
-                                    _name = value!;
-                                  },
-                                )),
-                            SizedBox(
-                                width: 75,
-                                // duration
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  validator: (String? value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter duration';
-                                    }
-                                    var num = int.tryParse(value);
-                                    if (num == null || num == 0) {
-                                      return 'Please enter a numeric value greater than 0';
-                                    }
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: _fields,
+                            itemBuilder: (context, index) {
+                              return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text('$index.'),
+                                    ExerciseFormField(
+                                      onSaved: (newValue) {
+                                        _allData.add(newValue!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null ||
+                                            value[0].isEmpty ||
+                                            value[1].isEmpty)
+                                          return 'Fields cannot be empty';
+                                        var num = int.tryParse(value[1]);
+                                        if (num == null || num > 99 || num <= 0)
+                                          return 'Duration must be in range (0, 100)';
 
-                                    return null;
-                                  },
-                                  decoration: const InputDecoration(
-                                    filled: false,
-                                    labelText: 'Duration',
-                                    labelStyle:
-                                        TextStyle(color: Colors.white38),
-                                  ),
-                                  onSaved: (value) {
-                                    _duration = int.parse(value!);
-                                  },
-                                )),
-                          ]),
+                                        return null;
+                                      },
+                                    )
+                                  ]);
+                            }),
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            var valid = _formKey.currentState!.validate();
+                            if (!valid) {
+                              return;
+                            }
+                            setState(() {
+                              _fields++;
+                            });
+                          },
+                          child: const Text('Add More')),
                       SizedBox(
                           width: 75,
                           child: ElevatedButton(
@@ -105,12 +91,15 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                 return;
                               }
                               _formKey.currentState!.save();
-                              Exercise ex = Exercise(_name, _duration);
+                              List<Exercise> ex = _allData
+                                  .map((e) => Exercise(e[0], int.parse(e[1])))
+                                  .toList();
+
                               await widget.addWorkoutExercises(
-                                  widget.workoutIndex, [ex]);
+                                  widget.workoutIndex, ex);
                               widget.returnToStaticList();
                             },
-                            child: const Text('Add'),
+                            child: const Text('Save'),
                           ))
                     ]))));
   }
