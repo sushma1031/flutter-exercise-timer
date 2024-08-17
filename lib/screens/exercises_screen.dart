@@ -16,6 +16,7 @@ class ExercisesScreen extends StatefulWidget {
 
 class _ExercisesScreenState extends State<ExercisesScreen> {
   List<Exercise> _exercises = [];
+  bool _isStaticList = true;
   late Widget _child;
   void initState() {
     super.initState();
@@ -25,6 +26,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
   void returnToStaticList() {
     setState(() {
+      _isStaticList = true;
       _child = StaticExerciseList(
           exercises: widget.db.getWorkoutExercises(widget.index));
     });
@@ -33,20 +35,25 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Exercises'), actions: [
-          IconButton(
-            icon: Icon(Icons.add, color: Colors.black),
-            onPressed: () {
-              setState(() {
-                _child = ExercisesForm(
-                  workoutIndex: widget.index,
-                  addWorkoutExercises: widget.db.addWorkoutExercises,
-                  returnToStaticList: returnToStaticList,
-                );
-              });
-            },
-          ),
-        ]),
+        appBar: AppBar(
+            title: const Text('Exercises'),
+            actions: _isStaticList
+                ? [
+                    IconButton(
+                        icon: Icon(Icons.add, color: Colors.black),
+                        onPressed: () {
+                          setState(() {
+                            _isStaticList = false;
+                            _child = ExercisesForm(
+                              workoutIndex: widget.index,
+                              addWorkoutExercises:
+                                  widget.db.addWorkoutExercises,
+                              returnToStaticList: returnToStaticList,
+                            );
+                          });
+                        }),
+                  ]
+                : []),
         body: _child);
   }
 }
