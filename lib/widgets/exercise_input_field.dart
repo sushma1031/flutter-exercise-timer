@@ -24,8 +24,8 @@ class _ExerciseInputState extends State<ExerciseInput> {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          SizedBox(
-              width: 200,
+          Expanded(
+              flex: 2,
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Name',
@@ -38,20 +38,19 @@ class _ExerciseInputState extends State<ExerciseInput> {
                 textAlign: TextAlign.left,
                 onChanged: widget.onChanged,
               )),
-          SizedBox(
-              width: 100,
+          Expanded(
               child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Duration',
-                ),
-                controller: widget.durationController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d{1,2}$'))
-                ],
-                textAlign: TextAlign.left,
-                onChanged: widget.onChanged,
-              ))
+            decoration: InputDecoration(
+              hintText: 'Duration',
+            ),
+            controller: widget.durationController,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^\d{1,2}$'))
+            ],
+            textAlign: TextAlign.left,
+            onChanged: widget.onChanged,
+          ))
         ],
       ),
       if (widget.state.hasError) ...[
@@ -70,10 +69,12 @@ class _ExerciseInputState extends State<ExerciseInput> {
 class ExerciseFormField extends FormField<List<String>> {
   ExerciseFormField({
     Key? key,
+    required List<String> initialValue,
     required FormFieldSetter<List<String>> onSaved,
     required FormFieldValidator<List<String>> validator,
   }) : super(
           key: key,
+          initialValue: initialValue,
           validator: validator,
           onSaved: onSaved,
           builder: (FormFieldState<List<String>> field) {
@@ -91,13 +92,14 @@ class ExerciseFormField extends FormField<List<String>> {
 }
 
 class _ExerciseFormFieldState extends FormFieldState<List<String>> {
-  final TextEditingController _nameController = TextEditingController(),
-      _durationController = TextEditingController();
-  List<String> _ex = ["", ""];
+  late final TextEditingController _nameController, _durationController;
+  late List<String> _ex;
   @override
   void initState() {
     super.initState();
-
+    _ex = widget.initialValue!;
+    _nameController = TextEditingController(text: _ex[0]);
+    _durationController = TextEditingController(text: _ex[1]);
     _nameController.addListener(_nameControllerChanged);
     _durationController.addListener(_durationControllerChanged);
   }

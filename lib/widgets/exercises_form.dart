@@ -18,8 +18,17 @@ class ExercisesForm extends StatefulWidget {
 
 class _ExercisesFormState extends State<ExercisesForm> {
   final _formKey = GlobalKey<FormState>();
-  int _fields = 1;
+  int _rows = 1;
   List<List<String>> _allData = [];
+
+  void updateAllData(List<String> data, int index) {
+    if (index < _allData.length) {
+      _allData[index] = data;
+    } else {
+      _allData.add(data);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +40,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
+                        key: UniqueKey(),
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Add Exercises'),
@@ -44,17 +54,35 @@ class _ExercisesFormState extends State<ExercisesForm> {
                       ),
                       Expanded(
                         child: ListView.builder(
-                            itemCount: _fields,
+                            itemCount: _rows,
                             itemBuilder: (context, index) {
                               return Row(
+                                  key: UniqueKey(),
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text('$index.'),
-                                    ExerciseFormField(
+                                    IconButton(
+                                        onPressed: (_rows == 1)
+                                            ? null
+                                            : () {
+                                                setState(() {
+                                                  if (index < _allData.length)
+                                                    _allData.removeAt(index);
+                                                  _rows--;
+                                                });
+                                              },
+                                        icon: Icon(
+                                          Icons.remove_circle,
+                                          color: Colors.red,
+                                        )),
+                                    Expanded(
+                                        child: ExerciseFormField(
+                                      initialValue: (index < _allData.length)
+                                          ? _allData[index]
+                                          : ["", ""],
                                       onSaved: (newValue) {
-                                        _allData.add(newValue!);
+                                        updateAllData(newValue!, index);
                                       },
                                       validator: (value) {
                                         if (value == null ||
@@ -67,21 +95,31 @@ class _ExercisesFormState extends State<ExercisesForm> {
 
                                         return null;
                                       },
-                                    )
+                                    )),
+                                    Container(
+                                        child: (index < _rows - 1)
+                                            ? null
+                                            : IconButton(
+                                                onPressed: () {
+                                                  var valid = _formKey
+                                                      .currentState!
+                                                      .validate();
+                                                  if (!valid) {
+                                                    return;
+                                                  }
+                                                  _formKey.currentState!.save();
+
+                                                  setState(() {
+                                                    _rows++;
+                                                  });
+                                                },
+                                                icon: Icon(Icons.add_box,
+                                                    color: Colors.white),
+                                                tooltip: 'Add another exercise',
+                                              ))
                                   ]);
                             }),
                       ),
-                      ElevatedButton(
-                          onPressed: () {
-                            var valid = _formKey.currentState!.validate();
-                            if (!valid) {
-                              return;
-                            }
-                            setState(() {
-                              _fields++;
-                            });
-                          },
-                          child: const Text('Add More')),
                       SizedBox(
                           width: 75,
                           child: ElevatedButton(
