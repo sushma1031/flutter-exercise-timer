@@ -4,7 +4,7 @@ import 'models/exercise.dart';
 import 'screens/workouts_screen.dart';
 import 'services/storage_service_interface.dart';
 import 'services/workout_storage_service.dart';
-import 'widgets/life_cycle_watcher.dart';
+import 'state/life_cycle_watcher.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
