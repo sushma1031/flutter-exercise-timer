@@ -27,12 +27,12 @@ Future<void> main() async {
     await db.addOneWorkout('Abs');
     var workouts = db.getAllWorkouts();
     expect(workouts.length, 1);
+    expect(db.getWorkoutByIndex(0)!.name, 'Abs');
 
     await db.addManyWorkouts(['Thighs', 'Biceps']);
-    workouts = db.getAllWorkouts();
-    expect(workouts.length, 3);
-
-    expect(workouts.map((e) => e.name), ['Abs', 'Thighs', 'Biceps']);
+    var workoutNames = db.getAllWorkoutNames();
+    expect(workoutNames.length, 3);
+    expect(workoutNames, ['Abs', 'Thighs', 'Biceps']);
   });
 
   test('fetches workouts for display correctly', () async {
