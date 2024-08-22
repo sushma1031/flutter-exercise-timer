@@ -42,8 +42,11 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
     });
   }
 
-  void printIndex() {
-    print("Current: $_currentIndex");
+  void restartWorkout() {
+    setState(() {
+      _currentIndex = 0;
+      _isWorkoutComplete = false;
+    });
   }
 
   @override
@@ -55,9 +58,11 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
   Widget build(BuildContext context) {
     return Center(
         child: _isWorkoutComplete
-            ? WorkoutComplete()
+            ? WorkoutComplete(
+                restartWorkout: restartWorkout,
+              )
             : TimerProvider(
-                name:  _exercises[_currentIndex].name,
+                name: _exercises[_currentIndex].name,
                 duration: Duration(seconds: _exercises[_currentIndex].duration),
                 currentIndex: _currentIndex,
                 nextExercise: nextExercise,

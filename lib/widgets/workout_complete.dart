@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class WorkoutComplete extends StatelessWidget {
+  final void Function() restartWorkout;
+
+  WorkoutComplete({Key? key, required this.restartWorkout});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -21,7 +24,7 @@ class WorkoutComplete extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: restartWorkout,
                     child: const Text('Repeat'),
                   ),
                   ElevatedButton(
