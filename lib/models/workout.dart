@@ -6,14 +6,20 @@ part 'workout.g.dart';
 @HiveType(typeId: 2)
 class Workout extends HiveObject {
   @HiveField(0)
-  final String name;
+  String _name;
 
   @HiveField(1)
-  final List<Exercise> exercises;
+  List<Exercise> _exercises;
 
-  Workout(this.name, this.exercises);
+  String get name => _name;
+  set name(value) => _name = name;
+
+  List<Exercise> get exercises => _exercises;
+  set exercises(value) => _exercises = value;
+
+  Workout(this._name, this._exercises);
 
   Workout.fromWorkout(Workout other)
-      : this.name = other.name,
-        this.exercises = other.exercises;
+      : this._name = other.name,
+        this._exercises = other.exercises;
 }

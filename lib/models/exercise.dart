@@ -5,10 +5,16 @@ part 'exercise.g.dart';
 @HiveType(typeId: 1)
 class Exercise extends HiveObject {
   @HiveField(0)
-  final String name;
+  String _name;
 
   @HiveField(1)
-  final int duration;
+  int _duration;
 
-  Exercise(this.name, this.duration);
+  String get name => _name;
+  set name(value) => _name = value;
+
+  int get duration => _duration;
+  set duration(value) => _duration = value;
+
+  Exercise(this._name, this._duration);
 }

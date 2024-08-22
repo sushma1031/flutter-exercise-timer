@@ -27,9 +27,9 @@ class ExerciseAdapter extends TypeAdapter<Exercise> {
     writer
       ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj._name)
       ..writeByte(1)
-      ..write(obj.duration);
+      ..write(obj._duration);
   }
 
   @override
