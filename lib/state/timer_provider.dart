@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../utils/duration_format.dart';
 
+enum AudioStatus { playing, paused, stopped }
+
 class TimerProvider extends StatefulWidget {
   final Duration duration;
   final String name;
@@ -30,7 +32,7 @@ class _TimerProviderState extends State<TimerProvider> {
   late Duration _timeLeft;
   AudioPlayer? _playerInstance;
   bool _isPaused = false;
-  bool _isAudioPlaying = false;
+  AudioStatus _audioStatus = AudioStatus.stopped;
   @override
   void initState() {
     super.initState();
@@ -48,6 +50,7 @@ class _TimerProviderState extends State<TimerProvider> {
         if (_timeLeft.inSeconds <= -1) {
           timer.cancel();
           print("Finished");
+          _audioStatus = AudioStatus.stopped;
           widget.nextExercise(null);
         }
       });
@@ -78,27 +81,27 @@ class _TimerProviderState extends State<TimerProvider> {
   Future<void> playSound() async {
     print("Playing audio...");
     _playerInstance = await widget.player.play('audio/exercise_change.mp3');
-    _isAudioPlaying = true;
+    _audioStatus = AudioStatus.playing;
   }
 
   Future<void> pauseSoundIfPlaying() async {
-    if (_isAudioPlaying) {
+    if (_audioStatus == AudioStatus.playing) {
+      _audioStatus = AudioStatus.paused;
       await _playerInstance?.pause();
-      _isAudioPlaying = false;
     }
   }
 
   Future<void> resumeSoundIfPaused() async {
-    if (!_isAudioPlaying) {
+    if (_audioStatus == AudioStatus.paused) {
+      _audioStatus = AudioStatus.playing;
       await _playerInstance?.resume();
-      _isAudioPlaying = true;
     }
   }
 
   Future<void> stopSoundIfPlaying() async {
+    _audioStatus = AudioStatus.stopped;
     await _playerInstance?.stop();
     _playerInstance = null;
-    _isAudioPlaying = false;
   }
 
   Future<void> goPrevious() async {
