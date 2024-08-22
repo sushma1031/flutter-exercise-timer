@@ -15,6 +15,8 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   Future<void> loadData() async {
     try {
       workouts = await Hive.openBox<Workout>(boxName);
+    } on HiveError catch (e) {
+      print("Error: Could not load data from Hive.\n$e");
     } on Exception catch (e) {
       print("Error: Could not load data from Hive.\n$e");
     }
@@ -81,8 +83,9 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
 
   Future<void> updateWorkoutExercises(
       int index, List<Exercise> newExercises) async {
-    String name = workouts.getAt(index)!.name;
-    await workouts.putAt(index, Workout(name, newExercises));
+    Workout w = getWorkoutByIndex(index)!;
+    w.exercises = newExercises;
+    await w.save();
   }
 
   Future<void> modifyExercise(
@@ -100,16 +103,14 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
       print('Error: Exercise index out of range.\n');
       return;
     }
-    w.exercises[eIndex] = Exercise(name, duration);
-    await workouts.putAt(wIndex, Workout.fromWorkout(w));
+
+    w.exercises[eIndex].name = name;
+    w.exercises[eIndex].duration = duration;
+    await w.save();
   }
 
   Future<void> deleteWorkout(int index) async {
     await workouts.deleteAt(index);
-  }
-
-  Future<void> save() async {
-    // await workouts.save();
   }
 
   Future<void> close() async {
