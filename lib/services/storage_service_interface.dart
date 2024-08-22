@@ -10,6 +10,8 @@ abstract class StorageService<T> {
   ValueListenable<T> getListenable();
   List<Workout> getAllWorkouts();
   List<WorkoutDisplay> getAllWorkoutsForDisplay();
+  List<String> getAllWorkoutNames();
+  Workout? getWorkoutByIndex(int index);
   List<Exercise> getWorkoutExercises(int index);
   Future<void> addOneWorkout(String name);
   Future<void> addManyWorkouts(List<String> names);
