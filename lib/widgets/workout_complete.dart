@@ -28,7 +28,10 @@ class WorkoutComplete extends StatelessWidget {
                     child: const Text('Repeat'),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.popUntil(
+                          context, (Route<dynamic> route) => route.isFirst);
+                    },
                     child: const Text('Home'),
                   ),
                 ])),
