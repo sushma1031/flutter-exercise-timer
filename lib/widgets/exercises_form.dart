@@ -1,3 +1,4 @@
+import 'package:exercise_timer/utils/validate_exercise.dart';
 import 'package:exercise_timer/widgets/exercise_input_field.dart';
 import 'package:flutter/material.dart';
 import '../models/exercise.dart';
@@ -84,17 +85,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                       onSaved: (newValue) {
                                         updateAllData(newValue!, index);
                                       },
-                                      validator: (value) {
-                                        if (value == null ||
-                                            value[0].isEmpty ||
-                                            value[1].isEmpty)
-                                          return 'Fields cannot be empty';
-                                        var num = int.tryParse(value[1]);
-                                        if (num == null || num > 99 || num <= 0)
-                                          return 'Duration must be in range [1, 99]';
-
-                                        return null;
-                                      },
+                                      validator: validateExercise,
                                     )),
                                     Container(
                                         child: (index < _rows - 1)
