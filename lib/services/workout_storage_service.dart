@@ -68,9 +68,13 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return -1;
   }
 
-  Future<void> addManyWorkouts(List<String> names) async {
-    //TODO: return no. of workouts successfully added
-    for (String name in names) await addOneWorkout(name);
+  Future<int> addManyWorkouts(List<String> names) async {
+    int added = 0;
+    for (String name in names) {
+      int result = await addOneWorkout(name);
+      if (result != -1) added++;
+    }
+    return added;
   }
 
   Future<Workout?> updateWorkoutName(int index, String name) async {
