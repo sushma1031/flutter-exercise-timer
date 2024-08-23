@@ -91,7 +91,7 @@ void main() {
     await tester.enterText(d, '0');
     await tester.tap(find.byType(ElevatedButton).first);
     await tester.pump();
-    expect(find.text('Duration must be in range (0, 100)'), findsOneWidget);
+    expect(find.text('Duration must be in range [1, 99]'), findsOneWidget);
   });
 
   //TODO: add tests for editing workout

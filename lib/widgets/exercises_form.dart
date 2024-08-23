@@ -91,7 +91,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                           return 'Fields cannot be empty';
                                         var num = int.tryParse(value[1]);
                                         if (num == null || num > 99 || num <= 0)
-                                          return 'Duration must be in range (0, 100)';
+                                          return 'Duration must be in range [1, 99]';
 
                                         return null;
                                       },
