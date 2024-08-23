@@ -56,8 +56,7 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   }
 
   Future<int> addOneWorkout(String name) async {
-    if (name.isNotEmpty &&
-        getAllWorkouts().where((e) => e.name == name).isEmpty) {
+    if (name.isNotEmpty && !getAllWorkoutNames().contains(name)) {
       try {
         var w = Workout(name, []);
         await workouts.add(w);
@@ -75,7 +74,7 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   }
 
   Future<Workout?> updateWorkoutName(int index, String name) async {
-    if (index < 0 || index > workouts.length) {
+    if (index < 0 || index > workouts.length - 1) {
       print('Error: Workout index out of range.\n');
       return null;
     }
@@ -90,7 +89,7 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   }
 
   Future<Workout?> addWorkoutExercises(int index, List<Exercise> toAdd) async {
-    if (index < 0 || index > workouts.length) {
+    if (index < 0 || index > workouts.length - 1) {
       print('Error: Workout index out of range.\n');
       return null;
     }
@@ -106,7 +105,7 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
 
   Future<Workout?> updateWorkoutExercises(
       int index, List<Exercise> newExercises) async {
-    if (index < 0 || index > workouts.length) {
+    if (index < 0 || index > workouts.length - 1) {
       print('Error: Workout index out of range.\n');
       return null;
     }
@@ -119,15 +118,15 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   Future<void> modifyExercise(
       int wIndex, int eIndex, String name, int duration) async {
     if (duration <= 0 || duration > 99) {
-      print('Error: Duration must be in [1, 100)s.\n');
+      print('Error: Duration must be in [1, 99]s.\n');
       return;
     }
-    if (wIndex < 0 || wIndex > workouts.length) {
+    if (wIndex < 0 || wIndex > workouts.length - 1) {
       print('Error: Workout index out of range.\n');
       return;
     }
     Workout w = workouts.getAt(wIndex)!;
-    if (eIndex < 0 || eIndex > w.exercises.length) {
+    if (eIndex < 0 || eIndex > w.exercises.length - 1) {
       print('Error: Exercise index out of range.\n');
       return;
     }
