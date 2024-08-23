@@ -10,6 +10,18 @@ class WorkoutsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void goToWorkout(int index) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ExercisesScreen(
+            index: index,
+            db: db,
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Workouts'),
@@ -27,10 +39,10 @@ class WorkoutsScreen extends StatelessWidget {
             child: WorkoutForm(
               addWorkout: db.addOneWorkout,
               isUnique: (name) {
-                if (db.getAllWorkouts().where((e) => e.name == name).isEmpty)
-                  return true;
+                if (!db.getAllWorkoutNames().contains(name)) return true;
                 return false;
               },
+              goToWorkout: goToWorkout,
             ),
             builder: (context, _, form) {
               var workouts = db.getAllWorkoutsForDisplay();
@@ -52,6 +64,15 @@ class WorkoutsScreen extends StatelessWidget {
                             ),
                           );
                         },
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.red.shade900,
+                          ),
+                          onPressed: () {
+                            db.deleteWorkout(index);
+                          },
+                        ),
                       );
                     },
                   ),

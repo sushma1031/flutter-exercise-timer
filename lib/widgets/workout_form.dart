@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
 class WorkoutForm extends StatefulWidget {
-  final Future<void> Function(String) addWorkout;
+  final Future<int> Function(String) addWorkout;
   final bool Function(String) isUnique;
+  final void Function(int) goToWorkout;
   const WorkoutForm(
-      {Key? key, required this.addWorkout, required this.isUnique})
+      {Key? key,
+      required this.addWorkout,
+      required this.isUnique,
+      required this.goToWorkout})
       : super(key: key);
   @override
   State<WorkoutForm> createState() => _WorkoutFormState();
@@ -50,8 +54,9 @@ class _WorkoutFormState extends State<WorkoutForm> {
                         return;
                       }
                       _formKey.currentState!.save();
-                      await widget.addWorkout(_name);
+                      int wIdx = await widget.addWorkout(_name);
                       _formKey.currentState?.reset();
+                      if (wIdx != -1) widget.goToWorkout(wIdx);
                     },
                     child: const Text('Add'),
                   )
