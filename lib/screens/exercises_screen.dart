@@ -1,8 +1,9 @@
 import 'package:exercise_timer/services/storage_service_interface.dart';
 import 'package:flutter/material.dart';
-import '../models/exercise.dart';
 import '../widgets/exercises_form.dart';
 import '../widgets/static_exercises_list.dart';
+
+enum View { staticList, add, edit }
 
 class ExercisesScreen extends StatefulWidget {
   final int index;
@@ -15,20 +16,19 @@ class ExercisesScreen extends StatefulWidget {
 }
 
 class _ExercisesScreenState extends State<ExercisesScreen> {
-  List<Exercise> _exercises = [];
-  bool _isStaticList = true;
+  late Workout _w;
+  var _currentView = View.staticList;
   late Widget _child;
   void initState() {
     super.initState();
-    _exercises = widget.db.getWorkoutExercises(widget.index);
-    _child = StaticExerciseList(exercises: _exercises);
+    _w = widget.db.getWorkoutByIndex(widget.index)!;
+    _child = StaticExerciseList(exercises: _w.exercises);
   }
 
   void returnToStaticList() {
     setState(() {
-      _isStaticList = true;
-      _child = StaticExerciseList(
-          exercises: widget.db.getWorkoutExercises(widget.index));
+      _currentView = View.staticList;
+      _child = StaticExerciseList(exercises: _w.exercises);
     });
   }
 
@@ -36,14 +36,16 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text('Exercises'),
-            actions: _isStaticList
+            title: _currentView == View.edit
+                ? const Text('Edit')
+                : Text('${_w.name}'),
+            actions: _currentView == View.staticList
                 ? [
                     IconButton(
                         icon: Icon(Icons.add, color: Colors.black),
                         onPressed: () {
                           setState(() {
-                            _isStaticList = false;
+                            _currentView = View.add;
                             _child = ExercisesForm(
                               workoutIndex: widget.index,
                               addWorkoutExercises:
