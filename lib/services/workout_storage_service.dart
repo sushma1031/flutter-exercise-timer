@@ -55,34 +55,44 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return workouts.getAt(index)!.exercises;
   }
 
-  Future<void> addOneWorkout(String name) async {
+  Future<int> addOneWorkout(String name) async {
     if (name.isNotEmpty &&
         getAllWorkouts().where((e) => e.name == name).isEmpty) {
       try {
-        await workouts.add(Workout(name, []));
+        var w = Workout(name, []);
+        await workouts.add(w);
+        return workouts.length - 1;
       } on Exception catch (ex) {
         print('Error: Could not add workout.\n{$ex}');
       }
     }
+    return -1;
   }
 
   Future<void> addManyWorkouts(List<String> names) async {
+    //TODO: return no. of workouts successfully added
     for (String name in names) await addOneWorkout(name);
   }
 
-  Future<void> updateWorkoutName(int index, String name) async {
+  Future<Workout?> updateWorkoutName(int index, String name) async {
+    if (index < 0 || index > workouts.length) {
+      print('Error: Workout index out of range.\n');
+      return null;
+    }
     Workout prev = workouts.getAt(index)!;
     if (name.isNotEmpty &&
         name != prev.name &&
-        getAllWorkouts().where((e) => e.name == name).isEmpty) {
-      await workouts.putAt(index, Workout(name, prev.exercises));
+        !getAllWorkoutNames().contains(name)) {
+      prev.name = name;
+      await prev.save();
     }
+    return prev;
   }
 
-  Future<void> addWorkoutExercises(int index, List<Exercise> toAdd) async {
+  Future<Workout?> addWorkoutExercises(int index, List<Exercise> toAdd) async {
     if (index < 0 || index > workouts.length) {
       print('Error: Workout index out of range.\n');
-      return;
+      return null;
     }
     Workout w = workouts.getAt(index)!;
     if (toAdd.where((e) => e.duration <= 0 || e.duration > 99).isEmpty) {
@@ -91,13 +101,19 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     } else {
       print('Error: Some exercises have duration <= 0s or > 99s.\n');
     }
+    return w;
   }
 
-  Future<void> updateWorkoutExercises(
+  Future<Workout?> updateWorkoutExercises(
       int index, List<Exercise> newExercises) async {
+    if (index < 0 || index > workouts.length) {
+      print('Error: Workout index out of range.\n');
+      return null;
+    }
     Workout w = getWorkoutByIndex(index)!;
     w.exercises = newExercises;
     await w.save();
+    return w;
   }
 
   Future<void> modifyExercise(

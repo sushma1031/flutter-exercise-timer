@@ -55,10 +55,11 @@ class MockStorageService implements StorageService<List<Workout>> {
     return workouts[index].exercises;
   }
 
-  Future<void> addOneWorkout(String name) async {
-    workouts.add(Workout(name, []));
+  Future<int> addOneWorkout(String name) async {
+    var w = Workout(name, []);
+    workouts.add(w);
     notifier.update(workouts);
-    return Future.value();
+    return Future.value(workouts.length - 1);
   }
 
   Future<void> addManyWorkouts(List<String> names) async {
@@ -67,26 +68,24 @@ class MockStorageService implements StorageService<List<Workout>> {
     return Future.value();
   }
 
-  Future<void> updateWorkoutName(int index, String name) async {
-    Workout prev = workouts[index];
-    workouts[index] = Workout(name, prev.exercises);
+  Future<Workout?> updateWorkoutName(int index, String name) async {
+    workouts[index].name = name;
     notifier.update(workouts);
-    return Future.value();
+    return Future.value(workouts[index]);
   }
 
-  Future<void> addWorkoutExercises(int index, List<Exercise> toAdd) async {
+  Future<Workout?> addWorkoutExercises(int index, List<Exercise> toAdd) async {
     Workout w = workouts[index];
     w.exercises.addAll(toAdd);
     notifier.update(workouts);
-    return Future.value();
+    return Future.value(w);
   }
 
-  Future<void> updateWorkoutExercises(
+  Future<Workout?> updateWorkoutExercises(
       int index, List<Exercise> newExercises) async {
-    String name = workouts[index].name;
-    workouts[index] = Workout(name, newExercises);
+    workouts[index].exercises = newExercises;
     notifier.update(workouts);
-    return Future.value();
+    return Future.value(workouts[index]);
   }
 
   Future<void> modifyExercise(
