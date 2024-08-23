@@ -119,25 +119,29 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return w;
   }
 
-  Future<void> modifyExercise(
-      int wIndex, int eIndex, String name, int duration) async {
-    if (duration <= 0 || duration > 99) {
-      print('Error: Duration must be in [1, 99]s.\n');
-      return;
-    }
-    if (wIndex < 0 || wIndex > workouts.length - 1) {
+  Future<int> modifyExercises(int wIdx, List<Map> data) async {
+    if (wIdx < 0 || wIdx > workouts.length - 1) {
       print('Error: Workout index out of range.\n');
-      return;
+      return 0;
     }
-    Workout w = workouts.getAt(wIndex)!;
-    if (eIndex < 0 || eIndex > w.exercises.length - 1) {
-      print('Error: Exercise index out of range.\n');
-      return;
+    int modified = 0;
+    Workout w = workouts.getAt(wIdx)!;
+    for (int i = 0; i < data.length; i++) {
+      var x = data[i];
+      if (x['index'] < 0 || x['index'] > w.exercises.length - 1) {
+        print('Error: Exercise index out of range.\n');
+        continue;
+      }
+      if (x['duration'] <= 0 || x['duration'] > 99) {
+        print('Error: Duration must be within range [1, 99]');
+        continue;
+      }
+      w.exercises[x['index']].name = x['name'];
+      w.exercises[x['index']].duration = x['duration'];
+      modified++;
     }
-
-    w.exercises[eIndex].name = name;
-    w.exercises[eIndex].duration = duration;
     await w.save();
+    return modified;
   }
 
   Future<void> deleteWorkout(int index) async {
