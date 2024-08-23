@@ -28,8 +28,11 @@ void main() {
 
     await tester.enterText(find.byType(TextFormField), 'Biceps');
     await tester.tap(find.byType(ElevatedButton));
-    await tester.pump();
-    expect(find.text('Biceps'), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text('Biceps: Exercises'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.arrow_back));
+    await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextFormField), '');
     await tester.tap(find.byType(ElevatedButton));
