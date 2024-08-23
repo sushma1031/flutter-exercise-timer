@@ -17,4 +17,7 @@ class Exercise extends HiveObject {
   set duration(value) => _duration = value;
 
   Exercise(this._name, this._duration);
+
+  @override
+  String toString() => "${this.name}, ${this.duration}s";
 }
