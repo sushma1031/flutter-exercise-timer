@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:exercise_timer/widgets/reverse_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../utils/duration_format.dart';
@@ -27,9 +28,11 @@ class TimerProvider extends StatefulWidget {
   State<TimerProvider> createState() => _TimerProviderState();
 }
 
-class _TimerProviderState extends State<TimerProvider> {
+class _TimerProviderState extends State<TimerProvider>
+    with SingleTickerProviderStateMixin {
   late Timer _timer;
   late Duration _timeLeft;
+  late AnimationController _controller;
   AudioPlayer? _playerInstance;
   bool _isPaused = false;
   AudioStatus _audioStatus = AudioStatus.stopped;
@@ -37,10 +40,17 @@ class _TimerProviderState extends State<TimerProvider> {
   void initState() {
     super.initState();
     _timeLeft = widget.duration;
+    _controller = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+    )..addListener(() {
+        setState(() {});
+      });
     startTimer();
   }
 
   void startTimer() {
+    _controller.forward();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _timeLeft -= Duration(seconds: 1);
@@ -59,6 +69,7 @@ class _TimerProviderState extends State<TimerProvider> {
 
   Future<void> pauseTimer() async {
     _timer.cancel();
+    _controller.stop();
     await pauseSoundIfPlaying();
     print("Paused.");
   }
@@ -66,16 +77,25 @@ class _TimerProviderState extends State<TimerProvider> {
   Future<void> resumeTimer() async {
     print("Resumed.");
     startTimer();
+    _controller.forward(from: _controller.value);
     await resumeSoundIfPaused();
   }
 
   Future<void> restartTimer() async {
-    if (!_isPaused) _timer.cancel();
+    if (!_isPaused) {
+      _timer.cancel();
+      _controller.stop();
+    }
     print("Restarting...");
     setState(() {
       _timeLeft = widget.duration;
+      _controller.duration = widget.duration;
+      _controller.reset();
     });
-    if (!_isPaused) startTimer();
+    if (!_isPaused) {
+      startTimer();
+      _controller.forward();
+    }
   }
 
   Future<void> playSound() async {
@@ -111,6 +131,7 @@ class _TimerProviderState extends State<TimerProvider> {
       restartTimer();
     } else {
       _timer.cancel();
+      _controller.stop();
       widget.previousExercise(null);
       if (_isPaused) {
         setState(() {
@@ -123,6 +144,7 @@ class _TimerProviderState extends State<TimerProvider> {
   Future<void> goNext() async {
     await stopSoundIfPlaying();
     _timer.cancel();
+    _controller.stop();
     widget.nextExercise(null);
     if (_isPaused) {
       setState(() {
@@ -135,6 +157,8 @@ class _TimerProviderState extends State<TimerProvider> {
   void didUpdateWidget(old) {
     super.didUpdateWidget(old);
     _timeLeft = widget.duration;
+    _controller.duration = widget.duration;
+    _controller.reset();
 
     // perform any other operations here, like setting a short break, etc.
 
@@ -161,6 +185,9 @@ class _TimerProviderState extends State<TimerProvider> {
                   child: Stack(
                       alignment: AlignmentDirectional.center,
                       children: <Widget>[
+                    ReverseCircularProgressIndicator(
+                      controller: _controller,
+                    ),
                     Center(
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
