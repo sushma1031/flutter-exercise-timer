@@ -32,9 +32,6 @@ class _ExerciseInputState extends State<ExerciseInput> {
                 ),
                 enableSuggestions: true,
                 controller: widget.nameController,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^[\w\s\.\/-]+$'))
-                ],
                 textAlign: TextAlign.left,
                 onChanged: widget.onChanged,
               )),
