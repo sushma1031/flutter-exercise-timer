@@ -1,11 +1,12 @@
 import 'package:exercise_timer/models/workout.dart';
 import 'package:exercise_timer/screens/edit_workout_screen.dart';
+import 'package:exercise_timer/screens/edit_exercises_screen.dart';
 import 'package:exercise_timer/services/storage_service_interface.dart';
 import 'package:flutter/material.dart';
 import '../widgets/exercises_form.dart';
 import '../widgets/static_exercises_list.dart';
 
-enum View { staticList, add, editWorkout }
+enum View { staticList, add, editWorkout, editExercise }
 
 class ExercisesScreen extends StatefulWidget {
   final int index;
@@ -40,7 +41,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         appBar: AppBar(
             title: _currentView == View.editWorkout
                 ? const Text('Edit')
-                : Text('${_w.name}'),
+                : _currentView == View.editExercise
+                    ? const Text('Edit Exercises')
+                    : Text('${_w.name}'),
             actions: _currentView == View.staticList
                 ? [
                     IconButton(
@@ -77,6 +80,21 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                         });
                       },
                     ),
+                    IconButton(
+                      icon: Icon(Icons.edit_attributes),
+                      tooltip: 'Edit exercises',
+                      onPressed: () {
+                        setState(() {
+                          _currentView = View.editExercise;
+                          _child = EditExercisesScreen(
+                            exercises: _w.exercises,
+                            modifyExercise: widget.db.modifyExercises,
+                            workoutIndex: widget.index,
+                            returnToStaticList: returnToStaticList,
+                          );
+                        });
+                      },
+                    )
                   ]
                 : []),
         body: _child);
