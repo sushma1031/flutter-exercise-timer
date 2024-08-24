@@ -168,6 +168,7 @@ class _TimerProviderState extends State<TimerProvider>
   @override
   void dispose() {
     _timer.cancel();
+    _controller.dispose();
     stopSoundIfPlaying();
     super.dispose();
   }
