@@ -64,6 +64,8 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
       } on Exception catch (ex) {
         print('Error: Could not add workout.\n{$ex}');
       }
+    } else {
+      print('Error: Name must be unique and non-empty');
     }
     return -1;
   }
@@ -88,6 +90,8 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
         !getAllWorkoutNames().contains(name)) {
       prev.name = name;
       await prev.save();
+    } else {
+      print('Error: Name must be unique and non-empty');
     }
     return prev;
   }
@@ -134,6 +138,10 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
       }
       if (x['duration'] <= 0 || x['duration'] > 99) {
         print('Error: Duration must be within range [1, 99]');
+        continue;
+      }
+      if (x['name'].isEmpty) {
+        print('Error: Name must not be empty');
         continue;
       }
       w.exercises[x['index']].name = x['name'];
