@@ -66,11 +66,41 @@ class WorkoutsScreen extends StatelessWidget {
                         },
                         trailing: IconButton(
                           icon: Icon(
-                            Icons.delete,
+                            Icons.delete_outline,
                             color: Colors.red.shade900,
                           ),
                           onPressed: () {
-                            db.deleteWorkout(index);
+                            if (workouts[index].noOfExercises == 0)
+                              db.deleteWorkout(index);
+                            else
+                              showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      'Danger Zone!',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    content: Text(
+                                      'Are you sure you want to delete this workout with ${workouts[index].noOfExercises} exercises?',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                          child: Text('Yes'),
+                                          onPressed: () async {
+                                            await db.deleteWorkout(index);
+                                            Navigator.pop(context);
+                                          }),
+                                      TextButton(
+                                          child: Text('No'),
+                                          onPressed: () =>
+                                              Navigator.pop(context)),
+                                    ],
+                                    elevation: 24,
+                                  );
+                                },
+                              );
                           },
                         ),
                       );
