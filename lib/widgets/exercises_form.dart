@@ -7,10 +7,12 @@ class ExercisesForm extends StatefulWidget {
   final Future<void> Function(int, List<Exercise>) addWorkoutExercises;
   final void Function() returnToStaticList;
   final int workoutIndex;
+  final Future<bool> Function() onWillPop;
   const ExercisesForm(
       {Key? key,
       required this.addWorkoutExercises,
       required this.returnToStaticList,
+      required this.onWillPop,
       required this.workoutIndex})
       : super(key: key);
   @override
@@ -32,104 +34,118 @@ class _ExercisesFormState extends State<ExercisesForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Form(
-            key: _formKey,
-            child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        key: UniqueKey(),
+    return WillPopScope(
+        onWillPop: () {
+          if (_rows >= 1)
+            return widget.onWillPop();
+          else
+            return Future.value(true);
+        },
+        child: Scaffold(
+            body: Form(
+                key: _formKey,
+                child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Add Exercises'),
-                          IconButton(
-                              onPressed: widget.returnToStaticList,
-                              icon: Icon(
-                                Icons.cancel,
-                                color: Colors.white,
-                              ))
-                        ],
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: _rows,
-                            itemBuilder: (context, index) {
-                              return Row(
-                                  key: UniqueKey(),
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    IconButton(
-                                        onPressed: (_rows == 1)
-                                            ? null
-                                            : () {
-                                                setState(() {
-                                                  if (index < _allData.length)
-                                                    _allData.removeAt(index);
-                                                  _rows--;
-                                                });
-                                              },
-                                        icon: Icon(
-                                          Icons.remove_circle,
-                                          color: Colors.red,
+                          Row(
+                            key: UniqueKey(),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Add Exercises'),
+                              IconButton(
+                                  onPressed: widget.returnToStaticList,
+                                  icon: Icon(
+                                    Icons.cancel,
+                                    color: Colors.white,
+                                  ))
+                            ],
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                                itemCount: _rows,
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                      key: UniqueKey(),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        IconButton(
+                                            onPressed: (_rows == 1)
+                                                ? null
+                                                : () {
+                                                    setState(() {
+                                                      if (index <
+                                                          _allData.length)
+                                                        _allData
+                                                            .removeAt(index);
+                                                      _rows--;
+                                                    });
+                                                  },
+                                            icon: Icon(
+                                              Icons.remove_circle,
+                                              color: Colors.red,
+                                            )),
+                                        Expanded(
+                                            child: ExerciseFormField(
+                                          initialValue:
+                                              (index < _allData.length)
+                                                  ? _allData[index]
+                                                  : ["", ""],
+                                          onSaved: (newValue) {
+                                            updateAllData(newValue!, index);
+                                          },
+                                          validator: validateExercise,
                                         )),
-                                    Expanded(
-                                        child: ExerciseFormField(
-                                      initialValue: (index < _allData.length)
-                                          ? _allData[index]
-                                          : ["", ""],
-                                      onSaved: (newValue) {
-                                        updateAllData(newValue!, index);
-                                      },
-                                      validator: validateExercise,
-                                    )),
-                                    Container(
-                                        child: (index < _rows - 1)
-                                            ? null
-                                            : IconButton(
-                                                onPressed: () {
-                                                  var valid = _formKey
-                                                      .currentState!
-                                                      .validate();
-                                                  if (!valid) {
-                                                    return;
-                                                  }
-                                                  _formKey.currentState!.save();
+                                        Container(
+                                            child: (index < _rows - 1)
+                                                ? null
+                                                : IconButton(
+                                                    onPressed: () {
+                                                      var valid = _formKey
+                                                          .currentState!
+                                                          .validate();
+                                                      if (!valid) {
+                                                        return;
+                                                      }
+                                                      _formKey.currentState!
+                                                          .save();
 
-                                                  setState(() {
-                                                    _rows++;
-                                                  });
-                                                },
-                                                icon: Icon(Icons.add_box,
-                                                    color: Colors.white),
-                                                tooltip: 'Add another exercise',
-                                              ))
-                                  ]);
-                            }),
-                      ),
-                      SizedBox(
-                          width: 75,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              var valid = _formKey.currentState!.validate();
-                              if (!valid) {
-                                return;
-                              }
-                              _formKey.currentState!.save();
-                              List<Exercise> ex = _allData
-                                  .map((e) => Exercise(e[0], int.parse(e[1])))
-                                  .toList();
+                                                      setState(() {
+                                                        _rows++;
+                                                      });
+                                                    },
+                                                    icon: Icon(Icons.add_box,
+                                                        color: Colors.white),
+                                                    tooltip:
+                                                        'Add another exercise',
+                                                  ))
+                                      ]);
+                                }),
+                          ),
+                          SizedBox(
+                              width: 75,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  var valid = _formKey.currentState!.validate();
+                                  if (!valid) {
+                                    return;
+                                  }
+                                  _formKey.currentState!.save();
+                                  List<Exercise> ex = _allData
+                                      .map((e) =>
+                                          Exercise(e[0], int.parse(e[1])))
+                                      .toList();
 
-                              await widget.addWorkoutExercises(
-                                  widget.workoutIndex, ex);
-                              widget.returnToStaticList();
-                            },
-                            child: const Text('Save'),
-                          ))
-                    ]))));
+                                  await widget.addWorkoutExercises(
+                                      widget.workoutIndex, ex);
+                                  widget.returnToStaticList();
+                                },
+                                child: const Text('Save'),
+                              ))
+                        ])))));
   }
 }

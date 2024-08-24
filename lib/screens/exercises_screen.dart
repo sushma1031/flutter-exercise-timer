@@ -22,6 +22,34 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   late Workout _w;
   var _currentView = View.staticList;
   late Widget _child;
+
+  Future<bool> _onWillPop() async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Unsaved Changes!',
+                style: TextStyle(color: Colors.black),
+              ),
+              content: Text(
+                'Are you sure you want to discard all changes?',
+                style: TextStyle(color: Colors.black),
+              ),
+              actions: <Widget>[
+                TextButton(
+                    child: Text('Yes'),
+                    onPressed: () => Navigator.of(context).pop(true)),
+                TextButton(
+                    child: Text('No'),
+                    onPressed: () => Navigator.of(context).pop(false)),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
   void initState() {
     super.initState();
     _w = widget.db.getWorkoutByIndex(widget.index)!;
@@ -57,6 +85,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                               addWorkoutExercises:
                                   widget.db.addWorkoutExercises,
                               returnToStaticList: returnToStaticList,
+                              onWillPop: _onWillPop,
                             );
                           });
                         }),
@@ -76,7 +105,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                               updateWorkoutName: widget.db.updateWorkoutName,
                               updateWorkoutExercises:
                                   widget.db.updateWorkoutExercises,
-                              returnToStaticList: returnToStaticList);
+                              returnToStaticList: returnToStaticList,
+                              onWillPop: _onWillPop);
                         });
                       },
                     ),
@@ -87,11 +117,11 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                         setState(() {
                           _currentView = View.editExercise;
                           _child = EditExercisesScreen(
-                            exercises: _w.exercises,
-                            modifyExercise: widget.db.modifyExercises,
-                            workoutIndex: widget.index,
-                            returnToStaticList: returnToStaticList,
-                          );
+                              exercises: _w.exercises,
+                              modifyExercise: widget.db.modifyExercises,
+                              workoutIndex: widget.index,
+                              returnToStaticList: returnToStaticList,
+                              onWillPop: _onWillPop);
                         });
                       },
                     )
