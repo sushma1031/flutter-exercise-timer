@@ -45,9 +45,6 @@ class _ExerciseInputState extends State<ExerciseInput> {
             ),
             controller: widget.durationController,
             keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^\d{1,2}$'))
-            ],
             textAlign: TextAlign.left,
             onChanged: widget.onChanged,
           ))
