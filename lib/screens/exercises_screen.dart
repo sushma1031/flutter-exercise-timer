@@ -1,9 +1,11 @@
+import 'package:exercise_timer/models/workout.dart';
+import 'package:exercise_timer/screens/edit_workout_screen.dart';
 import 'package:exercise_timer/services/storage_service_interface.dart';
 import 'package:flutter/material.dart';
 import '../widgets/exercises_form.dart';
 import '../widgets/static_exercises_list.dart';
 
-enum View { staticList, add, edit }
+enum View { staticList, add, editWorkout }
 
 class ExercisesScreen extends StatefulWidget {
   final int index;
@@ -36,13 +38,14 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: _currentView == View.edit
+            title: _currentView == View.editWorkout
                 ? const Text('Edit')
                 : Text('${_w.name}'),
             actions: _currentView == View.staticList
                 ? [
                     IconButton(
                         icon: Icon(Icons.add, color: Colors.black),
+                        tooltip: 'Add exercises',
                         onPressed: () {
                           setState(() {
                             _currentView = View.add;
@@ -54,6 +57,26 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                             );
                           });
                         }),
+                    IconButton(
+                      icon: Icon(
+                        Icons.edit,
+                        color: Colors.black,
+                      ),
+                      tooltip: 'Edit workout',
+                      onPressed: () {
+                        setState(() {
+                          _currentView = View.editWorkout;
+                          _child = EditWorkoutScreen(
+                              workout: _w,
+                              workoutNames: widget.db.getAllWorkoutNames(),
+                              index: widget.index,
+                              updateWorkoutName: widget.db.updateWorkoutName,
+                              updateWorkoutExercises:
+                                  widget.db.updateWorkoutExercises,
+                              returnToStaticList: returnToStaticList);
+                        });
+                      },
+                    ),
                   ]
                 : []),
         body: _child);
