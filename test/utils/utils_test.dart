@@ -20,6 +20,10 @@ void main() {
     expect(validateExercise(l), null);
     l = ["", "10"];
     expect(validateExercise(l), "Fields cannot be empty");
+    l = ["  ", "10"];
+    expect(validateExercise(l), "Fields cannot be empty");
+    l = ["*,%\$#@'", "10"];
+    expect(validateExercise(l), "Use only alphanumeric, spaces, ./-");
     l = ["Crunches", ""];
     expect(validateExercise(l), "Fields cannot be empty");
     l = ["", ""];
