@@ -1,4 +1,4 @@
-import 'package:exercise_timer/widgets/exercise_input_field.dart';
+import 'package:exercise_timer/widgets/exercise_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../services/mock_storage_service.dart';

@@ -1,5 +1,5 @@
 import 'package:exercise_timer/utils/validate_exercise.dart';
-import 'package:exercise_timer/widgets/exercise_input_field.dart';
+import 'package:exercise_timer/widgets/exercise_form_field.dart';
 import 'package:flutter/material.dart';
 import '../models/exercise.dart';
 
