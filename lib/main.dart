@@ -26,15 +26,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    ColorScheme _colorScheme = ColorScheme.dark().copyWith(
+        primary: Colors.indigo.shade200,
+        primaryVariant: Colors.indigo.shade700,
+        secondary: Colors.deepPurple.shade200,
+        secondaryVariant: Colors.deepPurple.shade200,
+        error: Color(0xFFF85149));
     return MaterialApp(
         title: 'Exercise Timer',
         theme: ThemeData(
-            primarySwatch: Colors.blue,
-            accentColor: Colors.teal,
-            scaffoldBackgroundColor: const Color(0x0A0A0AFF),
-            textTheme: Theme.of(context)
-                .textTheme
-                .apply(bodyColor: Colors.white, displayColor: Colors.white)),
+          brightness: Brightness.dark,
+          primarySwatch: Colors.indigo,
+          colorScheme: _colorScheme,
+          errorColor: _colorScheme.error,
+          accentColor: _colorScheme.secondaryVariant,
+          applyElevationOverlayColor: true,
         home: LifecycleWatcher(
           child: HomePage(db: db),
         ));
@@ -53,7 +59,12 @@ class HomePage extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
             return Scaffold(
-              body: Center(child: Text('Error: ${snapshot.error}')),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              body: Center(
+                  child: Text(
+                'Error: ${snapshot.error}',
+                style: TextStyle(color: Theme.of(context).colorScheme.onError),
+              )),
             );
           } else {
             return WorkoutsScreen(db: db);
@@ -61,6 +72,7 @@ class HomePage extends StatelessWidget {
         } else {
           // waiting
           return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.background,
             body: Center(
                 child: Text(
               'Loading...',
