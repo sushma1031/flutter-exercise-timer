@@ -12,6 +12,8 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   late Box<Workout> workouts;
   WorkoutStorageService(this.boxName);
 
+  int get size => workouts.length;
+
   Future<void> loadData() async {
     try {
       workouts = await Hive.openBox<Workout>(boxName);
@@ -33,8 +35,11 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   List<WorkoutDisplay> getAllWorkoutsForDisplay() {
     List<WorkoutDisplay> wd = [];
     for (int i = 0; i < workouts.length; i++) {
-      var w = workouts.getAt(i);
-      wd.add(WorkoutDisplay(w!.name, w.exercises.length));
+      var w = workouts.getAt(i)!;
+      int totalDuration = 0;
+      for (var ex in w.exercises) totalDuration += ex.duration;
+      totalDuration ~/= 60;
+      wd.add(WorkoutDisplay(w.name, w.exercises.length, totalDuration));
     }
     return wd;
   }
