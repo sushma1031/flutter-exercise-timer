@@ -24,16 +24,25 @@ class StaticExerciseList extends StatelessWidget {
             child: const Text('Start Workout'),
           )),
       Expanded(
-          child: ListView.builder(
-        itemCount: exercises.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              '${exercises[index].name} : ${exercises[index].duration}s',
-            ),
-          );
-        },
-      )),
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(32, 0, 32, 24),
+              child: ListView.builder(
+                itemCount: exercises.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                      padding: EdgeInsets.only(top: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(exercises[index].name),
+                          Text(
+                            '${exercises[index].duration}s',
+                          )
+                        ],
+                      ));
+                },
+              ))),
     ]);
   }
 }
