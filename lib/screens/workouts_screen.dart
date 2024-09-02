@@ -95,7 +95,7 @@ class WorkoutsScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () async {
-            int wIdx = await showDialog(
+            var wIdx = await showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
@@ -110,7 +110,7 @@ class WorkoutsScreen extends StatelessWidget {
                 );
               },
             );
-            if (wIdx != -1) goToWorkout(wIdx);
+            if (wIdx != null && wIdx != -1) goToWorkout(wIdx);
           },
         ),
         body: ValueListenableBuilder(
