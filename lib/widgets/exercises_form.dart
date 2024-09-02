@@ -42,26 +42,14 @@ class _ExercisesFormState extends State<ExercisesForm> {
             return Future.value(true);
         },
         child: Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.background,
             body: Form(
                 key: _formKey,
                 child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(10),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            key: UniqueKey(),
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Add Exercises'),
-                              IconButton(
-                                  onPressed: widget.returnToStaticList,
-                                  icon: Icon(
-                                    Icons.cancel,
-                                    color: Colors.white,
-                                  ))
-                            ],
-                          ),
                           Expanded(
                             child: ListView.builder(
                                 itemCount: _rows,
@@ -87,7 +75,11 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                                   },
                                             icon: Icon(
                                               Icons.remove_circle,
-                                              color: Colors.red,
+                                              size: 16,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground
+                                                  .withOpacity(0.8),
                                             )),
                                         Expanded(
                                             child: ExerciseFormField(
@@ -100,7 +92,8 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                           },
                                           validator: validateExercise,
                                         )),
-                                        Container(
+                                        SizedBox(
+                                            width: 45,
                                             child: (index < _rows - 1)
                                                 ? null
                                                 : IconButton(
@@ -118,8 +111,13 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                                         _rows++;
                                                       });
                                                     },
-                                                    icon: Icon(Icons.add_box,
-                                                        color: Colors.white),
+                                                    icon: Icon(
+                                                      Icons.add_box,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary,
+                                                      size: 20,
+                                                    ),
                                                     tooltip:
                                                         'Add another exercise',
                                                   ))

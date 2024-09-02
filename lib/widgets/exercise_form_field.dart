@@ -22,7 +22,7 @@ class _ExerciseInputState extends State<ExerciseInput> {
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Expanded(
               flex: 2,
@@ -35,14 +35,17 @@ class _ExerciseInputState extends State<ExerciseInput> {
                 textAlign: TextAlign.left,
                 onChanged: widget.onChanged,
               )),
+          SizedBox(
+            width: 25,
+          ),
           Expanded(
               child: TextField(
             decoration: InputDecoration(
-              hintText: 'Duration',
+              hintText: 'Secs',
             ),
             controller: widget.durationController,
             keyboardType: TextInputType.number,
-            textAlign: TextAlign.left,
+            textAlign: TextAlign.center,
             onChanged: widget.onChanged,
           ))
         ],
@@ -53,7 +56,8 @@ class _ExerciseInputState extends State<ExerciseInput> {
             child: Text(
               widget.state.errorText,
               textAlign: TextAlign.left,
-              style: TextStyle(color: Colors.red, fontSize: 12),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.error, fontSize: 12),
             ))
       ]
     ]);
