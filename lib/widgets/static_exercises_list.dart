@@ -1,6 +1,7 @@
 import '../models/exercise.dart';
 import 'package:flutter/material.dart';
 import '../screens/timer_screen.dart';
+import 'package:exercise_timer/widgets/exercise_item.dart';
 
 class StaticExerciseList extends StatelessWidget {
   final List<Exercise> exercises;
@@ -31,16 +32,9 @@ class StaticExerciseList extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Padding(
                       padding: EdgeInsets.only(top: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(exercises[index].name),
-                          Text(
-                            '${exercises[index].duration}s',
-                          )
-                        ],
-                      ));
+                      child: ExerciseItem(
+                          name: exercises[index].name,
+                          duration: '${exercises[index].duration}'));
                 },
               ))),
     ]);
