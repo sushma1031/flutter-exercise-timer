@@ -63,11 +63,15 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
               )
             : TimerProvider(
                 name: _exercises[_currentIndex].name,
+                nextName: _currentIndex < _exercises.length - 1
+                    ? _exercises[_currentIndex + 1].name
+                    : null,
                 duration: Duration(seconds: _exercises[_currentIndex].duration),
                 currentIndex: _currentIndex,
                 nextExercise: nextExercise,
                 previousExercise: previousExercise,
                 noOfExercises: _exercises.length - 1,
+                workoutProgress: "${_currentIndex + 1}/${_exercises.length}",
                 player: AudioCache(),
               ));
   }
