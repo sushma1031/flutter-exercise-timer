@@ -34,14 +34,14 @@ flutter:
     - assets/audio/
     - assets/images/
   fonts:
-    - family: Mulish
+    - family: EthosNova
       fonts:
-        - asset: assets/fonts/Mulish-Regular.ttf
-        - asset: assets/fonts/Mulish-Italic.ttf
+        - asset: assets/fonts/EthosNova-Regular.ttf
+        - asset: assets/fonts/EthosNova-Italic.ttf
           style: italic
-        - asset: assets/fonts/Mulish-Light.ttf
+        - asset: assets/fonts/EthosNova-Light.ttf
           weight: 300
-        - asset: assets/fonts/Mulish-Bold.ttf
+        - asset: assets/fonts/EthosNova-Bold.ttf
           weight: 700
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
