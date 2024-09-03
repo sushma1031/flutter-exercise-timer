@@ -12,8 +12,9 @@ class TimerScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title:
-            const Text('Timer', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Timer',
+            style: TextStyle(
+                fontFamily: "EthosNova", fontWeight: FontWeight.bold)),
       ),
       body: Center(child: WorkoutProvider(exercises: e)),
     );

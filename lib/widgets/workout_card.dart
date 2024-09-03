@@ -46,9 +46,7 @@ class WorkoutCard extends StatelessWidget {
                   children: [
                     Text(
                       workout.name,
-                      style: TextStyle(
-                        fontSize: 25,
-                      ),
+                      style: TextStyle(fontSize: 25, fontFamily: "EthosNova"),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,

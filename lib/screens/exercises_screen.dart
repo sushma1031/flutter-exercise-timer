@@ -123,7 +123,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                     onPressed: _returnToStaticList, icon: Icon(Icons.close)),
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: Text(_getAppBarTitle(_currentView)),
+            title: Text(_getAppBarTitle(_currentView),
+                style: TextStyle(
+                    fontFamily: "EthosNova", fontWeight: FontWeight.bold)),
             actions: _currentView == View.staticList
                 ? [
                     PopupMenuButton<WorkoutActions>(

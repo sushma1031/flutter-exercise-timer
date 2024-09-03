@@ -72,7 +72,8 @@ class WorkoutsScreen extends StatelessWidget {
           elevation: 0,
           title: const Text(
             'Workouts',
-            style: TextStyle(fontFamily: "Mulish", fontWeight: FontWeight.bold),
+            style:
+                TextStyle(fontFamily: "EthosNova", fontWeight: FontWeight.bold),
           ),
           actions: [
             PopupMenuButton<Actions>(
