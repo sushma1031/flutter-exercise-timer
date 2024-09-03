@@ -51,40 +51,34 @@ class TimerWidget extends StatelessWidget {
                         controller: controller,
                       ),
                       Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Padding(
-                                padding: EdgeInsets.only(bottom: 8),
-                                child: Text(name,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                    ))),
-                            Text('${formatDuration(timeLeft)}',
-                                style: TextStyle(
-                                  fontSize: 55,
-                                  fontWeight: FontWeight.w300,
-                                )),
-                            Padding(
-                                padding: EdgeInsets.only(top: 16),
-                                child: Chip(
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.background,
-                                  label: Text(
-                                    workoutProgress,
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary),
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary),
-                                      borderRadius: BorderRadius.circular(5)),
-                                ))
+                            Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                      padding: EdgeInsets.only(bottom: 8),
+                                      child: Text(name,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                          ))),
+                                  Text('${formatDuration(timeLeft)}',
+                                      style: TextStyle(
+                                        fontSize: 55,
+                                        fontWeight: FontWeight.w300,
+                                      ))
+                                ]),
                           ]),
+                      Align(
+                          heightFactor: 10,
+                          alignment: Alignment.bottomCenter,
+                          child: Text(
+                            workoutProgress,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).colorScheme.secondary),
+                          ))
                     ])),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
