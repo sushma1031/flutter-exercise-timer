@@ -1,4 +1,5 @@
 import 'package:exercise_timer/utils/duration_format.dart';
+import 'package:exercise_timer/widgets/offset_animated_text.dart';
 import 'package:exercise_timer/widgets/reverse_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -29,14 +30,12 @@ class TimerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Text(
-        (timeLeft.inSeconds > 5
-            ? ''
-            : nextName != null
-                ? 'Next Up: $nextName'
-                : 'Last one!'),
-        style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20),
-      ),
+      Container(
+          height: 50,
+          child: timeLeft.inSeconds > 5
+              ? Container()
+              : OffsetAnimatedText(
+                  text: nextName != null ? 'Next Up: $nextName' : 'Last one!')),
       SizedBox(
           height: 500,
           child: Column(
