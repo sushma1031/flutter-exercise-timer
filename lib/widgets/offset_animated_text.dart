@@ -5,10 +5,10 @@ class OffsetAnimatedText extends StatefulWidget {
   const OffsetAnimatedText({Key? key, required this.text}) : super(key: key);
 
   @override
-  State<OffsetAnimatedText> createState() => _AnimateOffsetOpacityTextState();
+  State<OffsetAnimatedText> createState() => _OffsetAnimatedTextState();
 }
 
-class _AnimateOffsetOpacityTextState extends State<OffsetAnimatedText>
+class _OffsetAnimatedTextState extends State<OffsetAnimatedText>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late Animation<Offset> _offsetAnm;
