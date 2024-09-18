@@ -20,7 +20,7 @@ class _AnimateOffsetOpacityTextState extends State<OffsetAnimatedText>
     _controller = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this)
       ..forward();
-    _offsetAnm = Tween<Offset>(begin: Offset(0.0, 0.75), end: Offset.zero)
+    _offsetAnm = Tween<Offset>(begin: Offset(0.0, 1.2), end: Offset(0.0, 0.5))
         .animate(CurvedAnimation(parent: _controller, curve: Curves.ease));
     _opacityAnm = Tween<double>(begin: 0, end: 1)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.ease));
