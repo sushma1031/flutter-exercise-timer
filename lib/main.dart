@@ -71,14 +71,26 @@ class HomePage extends StatelessWidget {
             return WorkoutsScreen(db: db);
           }
         } else {
-          // waiting
+          // loading
+          final gradient =
+              LinearGradient(colors: [Colors.indigo.shade200, Colors.indigo]);
           return Scaffold(
             backgroundColor: Theme.of(context).colorScheme.background,
             body: Center(
+              child: ShaderMask(
+                blendMode: BlendMode.srcIn,
+                shaderCallback: (bounds) => gradient.createShader(
+                  Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                ),
                 child: Text(
-              'Loading...',
-              style: TextStyle(fontSize: 20),
-            )),
+                  'COUNT UP',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontFamily: "EthosNova",
+                  ),
+                ),
+              ),
+            ),
           );
         }
       },
