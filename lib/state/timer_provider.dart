@@ -51,12 +51,12 @@ class _TimerProviderState extends State<TimerProvider>
     )..addListener(() {
         setState(() {});
       });
+    widget.player.load(audioPath);
     startTimer();
   }
 
-  Future<void> startTimer() async {
+  void startTimer() {
     _controller.forward();
-    await widget.player.load(audioPath);
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _timeLeft -= Duration(seconds: 1);
