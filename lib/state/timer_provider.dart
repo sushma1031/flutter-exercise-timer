@@ -39,21 +39,23 @@ class _TimerProviderState extends State<TimerProvider>
   AudioPlayer? _playerInstance;
   bool _isPaused = false;
   AudioStatus _audioStatus = AudioStatus.stopped;
+  var oneSec = Duration(seconds: 1);
   @override
   void initState() {
     super.initState();
     _timeLeft = widget.duration;
     _controller = AnimationController(
       vsync: this,
-      duration: widget.duration,
+      duration: widget.duration + oneSec,
     )..addListener(() {
         setState(() {});
       });
     startTimer();
   }
 
-  void startTimer() {
+  Future<void> startTimer() async {
     _controller.forward();
+    await widget.player.load('audio/exercise_change.mp3');
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _timeLeft -= Duration(seconds: 1);
