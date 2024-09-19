@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         primaryVariant: Colors.indigo.shade700,
         secondary: Colors.deepPurple.shade200,
         secondaryVariant: Colors.deepPurple.shade200,
-        error: Color(0xFFCF6965));
+        error: Color(0xFFCF6765));
     return MaterialApp(
         title: 'Exercise Timer',
         theme: ThemeData(
@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
           errorColor: _colorScheme.error,
           accentColor: _colorScheme.secondaryVariant,
           applyElevationOverlayColor: true,
+        ),
         home: LifecycleWatcher(
           child: HomePage(db: db),
         ));
