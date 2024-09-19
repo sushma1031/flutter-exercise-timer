@@ -37,9 +37,7 @@ class TimerWidget extends StatelessWidget {
               child: timeLeft.inSeconds > 5
                   ? Container()
                   : OffsetAnimatedText(
-                      text: nextName != null
-                          ? 'Next Up: $nextName'
-                          : 'Last one!')),
+                      nextName != null ? 'Next Up: $nextName' : 'Last one!')),
           SizedBox(
               height: 500,
               child: Column(

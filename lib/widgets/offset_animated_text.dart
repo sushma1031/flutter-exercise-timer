@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class OffsetAnimatedText extends StatefulWidget {
   final String text;
-  const OffsetAnimatedText({Key? key, required this.text}) : super(key: key);
+  const OffsetAnimatedText(this.text, {Key? key}) : super(key: key);
 
   @override
   State<OffsetAnimatedText> createState() => _OffsetAnimatedTextState();
