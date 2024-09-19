@@ -15,31 +15,23 @@ class WorkoutCard extends StatelessWidget {
       elevation: 24,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          //   image: DecorationImage(
-          //       fit: BoxFit.fill,
-          //       image: AssetImage("assets/images/background_design_1.png")),
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: <Color>[
+              Color.alphaBlend(primary, darkSurface),
+              Theme.of(context).colorScheme.primaryVariant.withOpacity(0.25)
+            ],
+            tileMode: TileMode.mirror,
+          ),
         ),
-        constraints: BoxConstraints(minHeight: 150),
+        constraints: BoxConstraints(minHeight: 140),
         child: InkWell(
+            borderRadius: BorderRadius.circular(5),
             onTap: onTap,
             child: Container(
                 padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(2),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: <Color>[
-                      Color.alphaBlend(primary, darkSurface),
-                      Theme.of(context)
-                          .colorScheme
-                          .primaryVariant
-                          .withOpacity(0.25)
-                    ],
-                    tileMode: TileMode.mirror,
-                  ),
-                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
