@@ -7,15 +7,11 @@ class ExerciseItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var style = TextStyle(fontSize: 16);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(name),
-        Text(
-          '${duration}s',
-        )
-      ],
+      children: [Text(name, style: style), Text('${duration}s', style: style)],
     );
   }
 }

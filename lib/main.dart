@@ -52,10 +52,15 @@ class HomePage extends StatelessWidget {
   final StorageService db;
   const HomePage({Key? key, required this.db}) : super(key: key);
 
+  Future<void> loadDataWithDelay() async {
+    await db.loadData();
+    await Future.delayed(Duration(seconds: 2));
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(
-      future: db.loadData(),
+      future: loadDataWithDelay(),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
