@@ -1,4 +1,4 @@
-import 'package:exercise_timer/widgets/scale_animated_text.dart';
+import 'package:count_up/widgets/scale_animated_text.dart';
 import 'package:flutter/material.dart';
 
 class ScaleTextSequence extends StatefulWidget {

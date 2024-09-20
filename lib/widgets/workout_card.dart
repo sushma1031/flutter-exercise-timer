@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:exercise_timer/models/workout_display.dart';
+import 'package:count_up/models/workout_display.dart';
 
 class WorkoutCard extends StatelessWidget {
   final WorkoutDisplay workout;

@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
-import 'package:exercise_timer/utils/duration_format.dart';
-import 'package:exercise_timer/utils/validate_exercise.dart';
+import 'package:count_up/utils/duration_format.dart';
+import 'package:count_up/utils/validate_exercise.dart';
 
 void main() {
   group('Utility functions work correctly', () {

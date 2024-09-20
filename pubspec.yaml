@@ -1,5 +1,5 @@
-name: exercise_timer
-description: A new Flutter project.
+name: count_up
+description: An exercise timer built using Flutter.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.

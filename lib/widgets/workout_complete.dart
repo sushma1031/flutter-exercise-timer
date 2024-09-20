@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:exercise_timer/screens/countdown_screen.dart';
+import 'package:count_up/screens/countdown_screen.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutComplete extends StatelessWidget {

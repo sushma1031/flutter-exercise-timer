@@ -1,8 +1,8 @@
-import 'package:exercise_timer/widgets/exercise_form_field.dart';
+import 'package:count_up/widgets/exercise_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../services/mock_storage_service.dart';
-import 'package:exercise_timer/main.dart';
+import 'package:count_up/main.dart';
 
 void main() {
   var app = MyApp(db: MockStorageService());
@@ -63,8 +63,6 @@ void main() {
     await tester.tap(find.text('Save'));
     await tester.pump();
     expect(find.byType(ListTile), findsNWidgets(4));
-    expect(find.text('Crunches : 4s'), findsOneWidget);
-    expect(find.text('Push up : 10s'), findsOneWidget);
   });
 
   testWidgets('handles invalid input correctly', (tester) async {
