@@ -88,6 +88,4 @@ void main() {
     await tester.pump(Duration(seconds: 1));
     expect(ac.soundPlayed, true); // Ensure sound played
   });
-
-  //TODO: Add tests for animation controller (or should it be a seperate widget test?)
 }
