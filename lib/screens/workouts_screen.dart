@@ -1,5 +1,5 @@
-import 'package:exercise_timer/screens/exercises_screen.dart';
-import 'package:exercise_timer/widgets/workout_card.dart';
+import 'package:count_up/screens/exercises_screen.dart';
+import 'package:count_up/widgets/workout_card.dart';
 import 'package:flutter/material.dart';
 import '../widgets/workout_form.dart';
 import '../services/storage_service_interface.dart';

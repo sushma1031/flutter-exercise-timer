@@ -1,4 +1,4 @@
-import 'package:exercise_timer/models/exercise.dart';
+import 'package:count_up/models/exercise.dart';
 import 'package:flutter/material.dart';
 import '../state/workout_provider.dart';
 

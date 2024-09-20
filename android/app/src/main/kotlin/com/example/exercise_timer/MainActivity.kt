@@ -1,4 +1,4 @@
-package com.example.exercise_timer
+package com.example.count_up
 
 import io.flutter.embedding.android.FlutterActivity
 

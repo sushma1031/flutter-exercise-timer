@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:exercise_timer/widgets/timer_widget.dart';
+import 'package:count_up/widgets/timer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 

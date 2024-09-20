@@ -1,7 +1,7 @@
 import '../models/exercise.dart';
 import 'package:flutter/material.dart';
 import '../screens/timer_screen.dart';
-import 'package:exercise_timer/widgets/exercise_item.dart';
+import 'package:count_up/widgets/exercise_item.dart';
 
 class StaticExerciseList extends StatelessWidget {
   final List<Exercise> exercises;

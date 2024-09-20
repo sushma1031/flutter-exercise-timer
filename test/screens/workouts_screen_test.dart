@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../services/mock_storage_service.dart';
-import 'package:exercise_timer/main.dart';
+import 'package:count_up/main.dart';
 
 void main() {
   var app = MyApp(db: MockStorageService());
@@ -29,7 +29,7 @@ void main() {
     await tester.enterText(find.byType(TextFormField), 'Biceps');
     await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
-    expect(find.text('Biceps: Exercises'), findsOneWidget);
+    expect(find.text('Biceps'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.arrow_back));
     await tester.pumpAndSettle();

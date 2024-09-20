@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:exercise_timer/state/timer_provider.dart';
+import 'package:count_up/state/timer_provider.dart';
 
 class FakeAudioCache extends AudioCache {
   bool soundPlayed = false;
@@ -41,6 +41,7 @@ void main() {
         nextExercise: (_) {},
         previousExercise: (_) {},
         player: fakeAudioCache,
+        workoutProgress: '1/1',
       ),
     ));
   }
@@ -87,4 +88,6 @@ void main() {
     await tester.pump(Duration(seconds: 1));
     expect(ac.soundPlayed, true); // Ensure sound played
   });
+
+  //TODO: Add tests for animation controller (or should it be a seperate widget test?)
 }

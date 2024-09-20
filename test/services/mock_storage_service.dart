@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:exercise_timer/services/storage_service_interface.dart';
-import 'package:exercise_timer/models/exercise.dart';
-import 'package:exercise_timer/models/workout.dart';
-import 'package:exercise_timer/models/workout_display.dart';
+import 'package:count_up/services/storage_service_interface.dart';
+import 'package:count_up/models/exercise.dart';
+import 'package:count_up/models/workout.dart';
+import 'package:count_up/models/workout_display.dart';
 
 class WorkoutListValueNotifier extends ValueNotifier<List<Workout>> {
   WorkoutListValueNotifier(List<Workout> value) : super(value);

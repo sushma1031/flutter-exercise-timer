@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:exercise_timer/widgets/scale_text_sequence.dart';
+import 'package:count_up/widgets/scale_text_sequence.dart';
 
 class CountdownScreen extends StatelessWidget {
   CountdownScreen({Key? key}) : super(key: key);

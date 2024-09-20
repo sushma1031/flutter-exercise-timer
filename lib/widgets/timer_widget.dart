@@ -1,6 +1,6 @@
-import 'package:exercise_timer/utils/duration_format.dart';
-import 'package:exercise_timer/widgets/offset_animated_text.dart';
-import 'package:exercise_timer/widgets/reverse_circular_progress_indicator.dart';
+import 'package:count_up/utils/duration_format.dart';
+import 'package:count_up/widgets/offset_animated_text.dart';
+import 'package:count_up/widgets/reverse_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
 class TimerWidget extends StatelessWidget {

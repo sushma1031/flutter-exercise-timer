@@ -1,8 +1,8 @@
-import 'package:exercise_timer/models/workout.dart';
-import 'package:exercise_timer/screens/edit_workout_screen.dart';
-import 'package:exercise_timer/screens/edit_exercises_screen.dart';
-import 'package:exercise_timer/services/storage_service_interface.dart';
-import 'package:exercise_timer/widgets/icon_text_item.dart';
+import 'package:count_up/models/workout.dart';
+import 'package:count_up/screens/edit_workout_screen.dart';
+import 'package:count_up/screens/edit_exercises_screen.dart';
+import 'package:count_up/services/storage_service_interface.dart';
+import 'package:count_up/widgets/icon_text_item.dart';
 import 'package:flutter/material.dart';
 import '../widgets/exercises_form.dart';
 import '../widgets/static_exercises_list.dart';

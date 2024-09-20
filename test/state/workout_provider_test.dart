@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:exercise_timer/models/exercise.dart';
-import 'package:exercise_timer/state/workout_provider.dart';
-import 'package:exercise_timer/widgets/workout_complete.dart';
+import 'package:count_up/models/exercise.dart';
+import 'package:count_up/state/workout_provider.dart';
+import 'package:count_up/widgets/workout_complete.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
