@@ -33,6 +33,7 @@ class TimerProvider extends StatefulWidget {
 
 class _TimerProviderState extends State<TimerProvider>
     with SingleTickerProviderStateMixin {
+  final String audioPath = "audio/exercise_change.mp3";
   late Timer _timer;
   late Duration _timeLeft;
   late AnimationController _controller;
@@ -50,12 +51,12 @@ class _TimerProviderState extends State<TimerProvider>
     )..addListener(() {
         setState(() {});
       });
+    widget.player.load(audioPath);
     startTimer();
   }
 
-  Future<void> startTimer() async {
+  void startTimer() {
     _controller.forward();
-    await widget.player.load('audio/exercise_change.mp3');
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _timeLeft -= Duration(seconds: 1);
@@ -100,7 +101,7 @@ class _TimerProviderState extends State<TimerProvider>
   }
 
   Future<void> playSound() async {
-    _playerInstance = await widget.player.play('audio/exercise_change.mp3');
+    _playerInstance = await widget.player.play(audioPath);
     _audioStatus = AudioStatus.playing;
   }
 
