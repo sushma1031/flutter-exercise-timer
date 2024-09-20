@@ -8,8 +8,14 @@ class TimerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Timer'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text('Timer',
+            style: TextStyle(
+                fontFamily: "EthosNova", fontWeight: FontWeight.bold)),
       ),
       body: Center(child: WorkoutProvider(exercises: e)),
     );

@@ -45,6 +45,7 @@ class _EditExercisesScreenState extends State<EditExercisesScreen> {
     return WillPopScope(
         onWillPop: widget.onWillPop,
         child: Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.background,
           body: Form(
               key: _formKey,
               child: Padding(

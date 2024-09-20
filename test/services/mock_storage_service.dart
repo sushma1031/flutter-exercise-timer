@@ -17,6 +17,8 @@ class MockStorageService implements StorageService<List<Workout>> {
   final WorkoutListValueNotifier notifier = WorkoutListValueNotifier([]);
   List<Workout> workouts = [];
 
+  int get size => workouts.length;
+
   Future<void> loadData() async {
     var e = [Exercise('Plank', 10), Exercise('Crunches', 5)];
     workouts = [Workout('Abs', e), Workout('Thighs', e)];
@@ -34,8 +36,13 @@ class MockStorageService implements StorageService<List<Workout>> {
 
   List<WorkoutDisplay> getAllWorkoutsForDisplay() {
     List<WorkoutDisplay> wd = [];
-    for (Workout w in workouts)
-      wd.add(WorkoutDisplay(w.name, w.exercises.length));
+    int totalDuration;
+    for (Workout w in workouts) {
+      totalDuration = 0;
+      for (var ex in w.exercises) totalDuration += ex.duration;
+      totalDuration ~/= 60;
+      wd.add(WorkoutDisplay(w.name, w.exercises.length, totalDuration));
+    }
     return wd;
   }
 

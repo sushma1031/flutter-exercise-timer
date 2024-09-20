@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 class WorkoutForm extends StatefulWidget {
   final Future<int> Function(String) addWorkout;
   final bool Function(String) isUnique;
-  final void Function(int) goToWorkout;
-  const WorkoutForm(
-      {Key? key,
-      required this.addWorkout,
-      required this.isUnique,
-      required this.goToWorkout})
-      : super(key: key);
+  const WorkoutForm({
+    Key? key,
+    required this.addWorkout,
+    required this.isUnique,
+  }) : super(key: key);
   @override
   State<WorkoutForm> createState() => _WorkoutFormState();
 }
@@ -21,9 +19,10 @@ class _WorkoutFormState extends State<WorkoutForm> {
   Widget build(BuildContext context) {
     return Form(
         key: _formKey,
-        child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Row(
+        child: Container(
+            // padding: EdgeInsets.all(15),
+            height: 150,
+            child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
@@ -32,7 +31,7 @@ class _WorkoutFormState extends State<WorkoutForm> {
                     enableSuggestions: true,
                     validator: (String? value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a workout name';
+                        return 'Please enter a name';
                       }
                       if (!widget.isUnique(value)) {
                         return 'Name already in use';
@@ -40,9 +39,8 @@ class _WorkoutFormState extends State<WorkoutForm> {
                       return null;
                     },
                     decoration: const InputDecoration(
-                        filled: false,
-                        labelText: 'Workout Name',
-                        fillColor: Colors.white70),
+                      labelText: 'New Workout',
+                    ),
                     onSaved: (value) {
                       _name = value!;
                     },
@@ -56,7 +54,7 @@ class _WorkoutFormState extends State<WorkoutForm> {
                       _formKey.currentState!.save();
                       int wIdx = await widget.addWorkout(_name);
                       _formKey.currentState?.reset();
-                      if (wIdx != -1) widget.goToWorkout(wIdx);
+                      Navigator.pop(context, wIdx);
                     },
                     child: const Text('Add'),
                   )

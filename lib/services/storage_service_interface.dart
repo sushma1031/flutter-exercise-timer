@@ -5,6 +5,7 @@ import '../models/workout_display.dart';
 
 abstract class StorageService<T> {
   late T workouts;
+  int get size;
 
   Future<void> loadData();
   ValueListenable<T> getListenable();

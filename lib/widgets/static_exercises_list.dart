@@ -1,6 +1,7 @@
 import '../models/exercise.dart';
 import 'package:flutter/material.dart';
 import '../screens/timer_screen.dart';
+import 'package:exercise_timer/widgets/exercise_item.dart';
 
 class StaticExerciseList extends StatelessWidget {
   final List<Exercise> exercises;
@@ -24,16 +25,18 @@ class StaticExerciseList extends StatelessWidget {
             child: const Text('Start Workout'),
           )),
       Expanded(
-          child: ListView.builder(
-        itemCount: exercises.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              '${exercises[index].name} : ${exercises[index].duration}s',
-            ),
-          );
-        },
-      )),
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(32, 0, 32, 24),
+              child: ListView.builder(
+                itemCount: exercises.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                      padding: EdgeInsets.only(top: 24),
+                      child: ExerciseItem(
+                          name: exercises[index].name,
+                          duration: '${exercises[index].duration}'));
+                },
+              ))),
     ]);
   }
 }

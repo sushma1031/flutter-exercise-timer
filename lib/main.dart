@@ -26,15 +26,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    ColorScheme _colorScheme = ColorScheme.dark().copyWith(
+        primary: Colors.indigo.shade200,
+        primaryVariant: Colors.indigo.shade700,
+        secondary: Colors.deepPurple.shade200,
+        secondaryVariant: Colors.deepPurple.shade200,
+        error: Color(0xFFCF6765));
     return MaterialApp(
         title: 'Exercise Timer',
         theme: ThemeData(
-            primarySwatch: Colors.blue,
-            accentColor: Colors.teal,
-            scaffoldBackgroundColor: const Color(0x0A0A0AFF),
-            textTheme: Theme.of(context)
-                .textTheme
-                .apply(bodyColor: Colors.white, displayColor: Colors.white)),
+          brightness: Brightness.dark,
+          primarySwatch: Colors.indigo,
+          colorScheme: _colorScheme,
+          errorColor: _colorScheme.error,
+          accentColor: _colorScheme.secondaryVariant,
+          applyElevationOverlayColor: true,
+        ),
         home: LifecycleWatcher(
           child: HomePage(db: db),
         ));
@@ -53,19 +60,37 @@ class HomePage extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
             return Scaffold(
-              body: Center(child: Text('Error: ${snapshot.error}')),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              body: Center(
+                  child: Text(
+                'Error: ${snapshot.error}',
+                style: TextStyle(color: Theme.of(context).colorScheme.onError),
+              )),
             );
           } else {
             return WorkoutsScreen(db: db);
           }
         } else {
-          // waiting
+          // loading
+          final gradient =
+              LinearGradient(colors: [Colors.indigo.shade200, Colors.indigo]);
           return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.background,
             body: Center(
+              child: ShaderMask(
+                blendMode: BlendMode.srcIn,
+                shaderCallback: (bounds) => gradient.createShader(
+                  Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                ),
                 child: Text(
-              'Loading...',
-              style: TextStyle(fontSize: 20),
-            )),
+                  'COUNT UP',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontFamily: "EthosNova",
+                  ),
+                ),
+              ),
+            ),
           );
         }
       },

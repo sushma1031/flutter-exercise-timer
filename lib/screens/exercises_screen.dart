@@ -2,11 +2,13 @@ import 'package:exercise_timer/models/workout.dart';
 import 'package:exercise_timer/screens/edit_workout_screen.dart';
 import 'package:exercise_timer/screens/edit_exercises_screen.dart';
 import 'package:exercise_timer/services/storage_service_interface.dart';
+import 'package:exercise_timer/widgets/icon_text_item.dart';
 import 'package:flutter/material.dart';
 import '../widgets/exercises_form.dart';
 import '../widgets/static_exercises_list.dart';
 
 enum View { staticList, add, editWorkout, editExercise }
+enum WorkoutActions { addEx, editWkt, editEx, delWkt }
 
 class ExercisesScreen extends StatefulWidget {
   final int index;
@@ -30,11 +32,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
             return AlertDialog(
               title: Text(
                 'Unsaved Changes!',
-                style: TextStyle(color: Colors.black),
               ),
               content: Text(
                 'Are you sure you want to discard all changes?',
-                style: TextStyle(color: Colors.black),
               ),
               actions: <Widget>[
                 TextButton(
@@ -50,81 +50,167 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         false;
   }
 
+  Future<bool> _confirmAndDeleteWorkouts(int index) async {
+    var w = widget.db.getWorkoutByIndex(index)!;
+    if (w.exercises.length == 0) {
+      return await widget.db.deleteWorkout(index).then((value) => true);
+    }
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Wrap(spacing: 20, children: [
+            Icon(Icons.warning, color: Theme.of(context).errorColor),
+            Text(
+              'Danger Zone!',
+            )
+          ]),
+          content: Text(
+            'Are you sure you want to delete this workout with ${w.exercises.length} exercises?',
+          ),
+          actions: <Widget>[
+            TextButton(
+                child: Text('Yes'),
+                onPressed: () async {
+                  await widget.db
+                      .deleteWorkout(index)
+                      .then((value) => Navigator.pop(context, true));
+                }),
+            TextButton(
+                child: Text('No'),
+                onPressed: () => Navigator.pop(context, false)),
+          ],
+          elevation: 24,
+        );
+      },
+    );
+  }
+
   void initState() {
     super.initState();
     _w = widget.db.getWorkoutByIndex(widget.index)!;
     _child = StaticExerciseList(exercises: _w.exercises);
   }
 
-  void returnToStaticList() {
+  void _returnToStaticList() {
     setState(() {
       _currentView = View.staticList;
       _child = StaticExerciseList(exercises: _w.exercises);
     });
   }
 
+  String _getAppBarTitle(View view) {
+    switch (view) {
+      case View.staticList:
+        return _w.name;
+      case View.add:
+        return 'Add Exercises';
+      case View.editWorkout:
+        return 'Edit Workout';
+      case View.editExercise:
+        return 'Edit Exercises';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-            title: _currentView == View.editWorkout
-                ? const Text('Edit')
-                : _currentView == View.editExercise
-                    ? const Text('Edit Exercises')
-                    : Text('${_w.name}'),
+            leading: _currentView == View.staticList
+                ? BackButton()
+                : IconButton(
+                    onPressed: _returnToStaticList, icon: Icon(Icons.close)),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: Text(_getAppBarTitle(_currentView),
+                style: TextStyle(
+                    fontFamily: "EthosNova", fontWeight: FontWeight.bold)),
             actions: _currentView == View.staticList
                 ? [
-                    IconButton(
-                        icon: Icon(Icons.add, color: Colors.black),
-                        tooltip: 'Add exercises',
-                        onPressed: () {
-                          setState(() {
-                            _currentView = View.add;
-                            _child = ExercisesForm(
-                              workoutIndex: widget.index,
-                              addWorkoutExercises:
-                                  widget.db.addWorkoutExercises,
-                              returnToStaticList: returnToStaticList,
-                              onWillPop: _onWillPop,
-                            );
-                          });
-                        }),
-                    IconButton(
-                      icon: Icon(
-                        Icons.edit,
-                        color: Colors.black,
-                      ),
-                      tooltip: 'Edit workout',
-                      onPressed: () {
-                        setState(() {
-                          _currentView = View.editWorkout;
-                          _child = EditWorkoutScreen(
-                              workout: _w,
-                              workoutNames: widget.db.getAllWorkoutNames(),
-                              index: widget.index,
-                              updateWorkoutName: widget.db.updateWorkoutName,
-                              updateWorkoutExercises:
-                                  widget.db.updateWorkoutExercises,
-                              returnToStaticList: returnToStaticList,
-                              onWillPop: _onWillPop);
-                        });
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.edit_attributes),
-                      tooltip: 'Edit exercises',
-                      onPressed: () {
-                        setState(() {
-                          _currentView = View.editExercise;
-                          _child = EditExercisesScreen(
-                              exercises: _w.exercises,
-                              modifyExercise: widget.db.modifyExercises,
-                              workoutIndex: widget.index,
-                              returnToStaticList: returnToStaticList,
-                              onWillPop: _onWillPop);
-                        });
-                      },
-                    )
+                    PopupMenuButton<WorkoutActions>(
+                        offset: Offset.fromDirection(90, 50),
+                        onSelected: (value) async {
+                          switch (value) {
+                            case WorkoutActions.addEx:
+                              setState(() {
+                                _currentView = View.add;
+                                _child = ExercisesForm(
+                                  workoutIndex: widget.index,
+                                  addWorkoutExercises:
+                                      widget.db.addWorkoutExercises,
+                                  returnToStaticList: _returnToStaticList,
+                                  onWillPop: _onWillPop,
+                                );
+                              });
+                              break;
+                            case WorkoutActions.editWkt:
+                              setState(() {
+                                _currentView = View.editWorkout;
+                                _child = EditWorkoutScreen(
+                                    workout: _w,
+                                    workoutNames:
+                                        widget.db.getAllWorkoutNames(),
+                                    index: widget.index,
+                                    updateWorkoutName:
+                                        widget.db.updateWorkoutName,
+                                    updateWorkoutExercises:
+                                        widget.db.updateWorkoutExercises,
+                                    returnToStaticList: _returnToStaticList,
+                                    onWillPop: _onWillPop);
+                              });
+                              break;
+                            case WorkoutActions.editEx:
+                              setState(() {
+                                _currentView = View.editExercise;
+                                _child = EditExercisesScreen(
+                                    exercises: _w.exercises,
+                                    modifyExercise: widget.db.modifyExercises,
+                                    workoutIndex: widget.index,
+                                    returnToStaticList: _returnToStaticList,
+                                    onWillPop: _onWillPop);
+                              });
+                              break;
+                            case WorkoutActions.delWkt:
+                              await _confirmAndDeleteWorkouts(widget.index)
+                                  .then((value) {
+                                if (value) Navigator.pop(context);
+                              });
+
+                              break;
+                          }
+                        },
+                        itemBuilder: (context) =>
+                            <PopupMenuEntry<WorkoutActions>>[
+                              PopupMenuItem<WorkoutActions>(
+                                child: IconTextItem(
+                                  icon: Icons.add,
+                                  text: 'Add Exercises',
+                                ),
+                                value: WorkoutActions.addEx,
+                              ),
+                              PopupMenuItem<WorkoutActions>(
+                                child: IconTextItem(
+                                  icon: Icons.reorder,
+                                  text: 'Edit Workout',
+                                ),
+                                value: WorkoutActions.editWkt,
+                              ),
+                              PopupMenuItem<WorkoutActions>(
+                                child: IconTextItem(
+                                  icon: Icons.edit,
+                                  text: 'Edit Exercises',
+                                ),
+                                value: WorkoutActions.editEx,
+                              ),
+                              PopupMenuItem<WorkoutActions>(
+                                child: IconTextItem(
+                                  icon: Icons.delete,
+                                  text: 'Delete Workout',
+                                ),
+                                value: WorkoutActions.delWkt,
+                              ),
+                            ]),
                   ]
                 : []),
         body: _child);
