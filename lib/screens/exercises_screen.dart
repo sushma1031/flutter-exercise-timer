@@ -60,9 +60,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Wrap(spacing: 20, children: [
-            Icon(Icons.warning, color: Theme.of(context).errorColor),
+            Icon(Icons.error, color: Theme.of(context).errorColor),
             Text(
-              'Danger Zone!',
+              'Danger Zone',
             )
           ]),
           content: Text(
