@@ -14,6 +14,9 @@ class StaticExerciseList extends StatelessWidget {
       Padding(
           padding: EdgeInsets.only(top: 16),
           child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 8)
+            ),
             onPressed: (exercises.length > 0)
                 ? () {
                     Navigator.push(

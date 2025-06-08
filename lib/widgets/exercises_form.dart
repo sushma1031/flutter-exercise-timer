@@ -131,6 +131,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
                           ),
                           SizedBox(
                               width: 75,
+                              height: 35,
                               child: ElevatedButton(
                                 onPressed: () async {
                                   var valid = _formKey.currentState!.validate();

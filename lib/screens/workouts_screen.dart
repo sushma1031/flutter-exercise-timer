@@ -32,8 +32,8 @@ class WorkoutsScreen extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Wrap(spacing: 20, children: [
-                Icon(Icons.error, color: Theme.of(context).errorColor),
+              title: Wrap(spacing: 20, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                Icon(Icons.error, color: Theme.of(context).colorScheme.error),
                 Text(
                   'Danger Zone',
                 )
@@ -72,8 +72,7 @@ class WorkoutsScreen extends StatelessWidget {
           elevation: 0,
           title: const Text(
             'Workouts',
-            style:
-                TextStyle(fontFamily: "EthosNova", fontWeight: FontWeight.bold),
+            style: TextStyle(fontFamily: "EthosNova", fontWeight: FontWeight.bold),
           ),
           actions: [
             PopupMenuButton<Actions>(
@@ -94,6 +93,8 @@ class WorkoutsScreen extends StatelessWidget {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          shape: StadiumBorder(),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
           child: Icon(Icons.add),
           onPressed: () async {
             var wIdx = await showDialog(
