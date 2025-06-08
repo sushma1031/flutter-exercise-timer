@@ -10,8 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final appDocumentsDir =
-      await path_provider.getApplicationDocumentsDirectory();
+  final appDocumentsDir = await path_provider.getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentsDir.path);
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(WorkoutAdapter());

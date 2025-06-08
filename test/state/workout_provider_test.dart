@@ -8,8 +8,7 @@ void main() {
   final exercises = [Exercise('Plank', 6), Exercise('Crunches', 5)];
   final Widget testWidget =
       MaterialApp(home: Scaffold(body: WorkoutProvider(exercises: exercises)));
-  testWidgets('initial exercise and timer duration',
-      (WidgetTester tester) async {
+  testWidgets('initial exercise and timer duration', (WidgetTester tester) async {
     await tester.pumpWidget(testWidget);
 
     expect(find.text('6'), findsOneWidget);

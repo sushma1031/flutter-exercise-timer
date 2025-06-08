@@ -9,8 +9,7 @@ class EditWorkoutScreen extends StatefulWidget {
   final List<String> workoutNames;
   final int index;
   final Future<Workout?> Function(int index, String name) updateWorkoutName;
-  final Future<Workout?> Function(int index, List<Exercise> newExercises)
-      updateWorkoutExercises;
+  final Future<Workout?> Function(int index, List<Exercise> newExercises) updateWorkoutExercises;
   final void Function() returnToStaticList;
   final Future<bool> Function() onWillPop;
 
@@ -71,8 +70,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                       child: Form(
                           key: _formKey,
                           child: Padding(
-                              padding:
-                                  EdgeInsets.only(left: 25, right: 25, top: 10),
+                              padding: EdgeInsets.only(left: 25, right: 25, top: 10),
                               child: TextFormField(
                                 textAlign: TextAlign.center,
                                 initialValue: widget.workout.name,
@@ -81,16 +79,14 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter a workout name';
                                   }
-                                  if (value != widget.workout.name &&
-                                      widget.workoutNames.contains(value)) {
+                                  if (value != widget.workout.name && widget.workoutNames.contains(value)) {
                                     return 'Name already in use';
                                   }
                                   return null;
                                 },
                                 decoration: const InputDecoration(
-                                    filled: false,
-                                    labelText: 'Workout Name',
-                                    fillColor: Colors.white70),
+                                    filled: false, labelText: 'Workout Name', fillColor: Colors.white70
+                                ),
                                 onChanged: (value) {
                                   _name = value;
                                 },
@@ -118,9 +114,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                     });
                                   },
                                 ),
-                                title: ExerciseItem(
-                                    name: _ex[index].name,
-                                    duration: '${_ex[index].duration}'),
+                                title: ExerciseItem(name: _ex[index].name, duration: '${_ex[index].duration}'),
                                 trailing: ReorderableDragStartListener(
                                   index: index,
                                   child: Icon(
@@ -150,8 +144,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                           await widget.updateWorkoutName(widget.index, _name);
                         }
                         if (!listEquals(widget.workout.exercises, _ex))
-                          await widget.updateWorkoutExercises(
-                              widget.index, _ex);
+                          await widget.updateWorkoutExercises(widget.index, _ex);
                         widget.returnToStaticList();
                       },
                       child: Text('Save'))

@@ -69,8 +69,7 @@ Future<void> main() async {
     var ex = db.getWorkoutExercises(0);
     expect(ex.length, 1);
 
-    await db.addWorkoutExercises(
-        0, [Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
+    await db.addWorkoutExercises(0, [Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
     ex = db.getWorkoutExercises(0);
     expect(ex.length, 3);
 
@@ -80,19 +79,13 @@ Future<void> main() async {
   test('updates workout exercises correctly', () async {
     await db.clear();
     await db.addOneWorkout('Abs');
-    await db.addWorkoutExercises(0, [
-      Exercise('Plank', 60),
-      Exercise('Crunches', 40),
-      Exercise('Russian Twist', 40)
-    ]);
+    await db.addWorkoutExercises(0, [Exercise('Plank', 60), Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
 
-    await db.updateWorkoutExercises(
-        0, [Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
+    await db.updateWorkoutExercises(0, [Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
     var ex = db.getWorkoutExercises(0);
     expect(ex.length, 2);
 
-    await db.updateWorkoutExercises(
-        0, [Exercise('Russian Twist', 40), Exercise('Crunches', 40)]);
+    await db.updateWorkoutExercises(0, [Exercise('Russian Twist', 40), Exercise('Crunches', 40)]);
     ex = db.getWorkoutExercises(0);
     expect(ex.map((e) => e.name), ['Russian Twist', 'Crunches']);
   });
@@ -100,11 +93,7 @@ Future<void> main() async {
   test('modifies a workout exercise correctly', () async {
     await db.clear();
     await db.addOneWorkout('Abs');
-    await db.addWorkoutExercises(0, [
-      Exercise('Plank', 60),
-      Exercise('Crunches', 40),
-      Exercise('Russian Twist', 40)
-    ]);
+    await db.addWorkoutExercises(0, [Exercise('Plank', 60), Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
     await db.modifyExercises(0, [
       {'index': 0, 'name': 'Push-up', 'duration': 30}
     ]);

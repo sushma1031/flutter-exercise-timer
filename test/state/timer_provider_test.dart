@@ -103,10 +103,8 @@ void main() {
   });
 
   testWidgets('play sound at 3 seconds remaining', (WidgetTester tester) async {
-    final GlobalKey<State<TimerProvider>> timerProviderKey =
-        GlobalKey(); // create unique key to identify widget
-    Widget testWidget =
-        createWidgetUnderTest(Duration(seconds: 5), key: timerProviderKey);
+    final GlobalKey<State<TimerProvider>> timerProviderKey = GlobalKey(); // create unique key to identify widget
+    Widget testWidget = createWidgetUnderTest(Duration(seconds: 5), key: timerProviderKey);
     await tester.pumpWidget(testWidget);
     await tester.pump(Duration(seconds: 1));
     final FakeAudioPlayer ac = timerProviderKey.currentState!.widget.player as FakeAudioPlayer;
