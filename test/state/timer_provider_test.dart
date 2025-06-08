@@ -1,32 +1,59 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:count_up/state/timer_provider.dart';
 
-class FakeAudioCache extends AudioCache {
+class FakeAudioPlayer extends AudioPlayer {
   bool soundPlayed = false;
 
   @override
-  Future<AudioPlayer> play(String fileName,
-      {double volume = 1.0,
-      bool? isNotification,
-      PlayerMode mode = PlayerMode.MEDIA_PLAYER,
-      bool stayAwake = false,
-      bool recordingActive = false,
-      bool? duckAudio}) {
+  Future<void> play(
+    Source source, {
+    double? volume,
+    double? balance,
+    AudioContext? ctx,
+    Duration? position,
+    PlayerMode? mode,
+  }) async {
     soundPlayed = true;
-    return Future.value(FakeAudioPlayer());
+    return Future.value();
   }
 }
 
-class FakeAudioPlayer extends AudioPlayer {}
-
 void main() {
-  late FakeAudioCache fakeAudioCache;
+  late FakeAudioPlayer fakeAudioPlayer;
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  const MethodChannel audioplayersGlobal = MethodChannel('xyz.luan/audioplayers.global');
+  const MethodChannel audioPlayers = MethodChannel('xyz.luan/audioplayers');
 
   setUp(() {
-    fakeAudioCache = FakeAudioCache();
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(audioplayersGlobal,
+        (MethodCall methodCall) async {
+      switch (methodCall.method) {
+        case 'init':
+        default:
+          return null;
+      }
+    });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(audioPlayers,
+        (MethodCall methodCall) async {
+      switch (methodCall.method) {
+        case 'create':
+        default:
+          return null;
+      }
+    });
+
+    fakeAudioPlayer = FakeAudioPlayer();
+  });
+
+  tearDown(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(audioplayersGlobal, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(audioPlayers, null);
   });
 
   Widget createWidgetUnderTest(Duration duration, {Key? key}) {
@@ -40,7 +67,7 @@ void main() {
         noOfExercises: 1,
         nextExercise: (_) {},
         previousExercise: (_) {},
-        player: fakeAudioCache,
+        player: fakeAudioPlayer,
         workoutProgress: '1/1',
       ),
     ));
@@ -76,14 +103,11 @@ void main() {
   });
 
   testWidgets('play sound at 3 seconds remaining', (WidgetTester tester) async {
-    final GlobalKey<State<TimerProvider>> timerProviderKey =
-        GlobalKey(); // create unique key to identify widget
-    Widget testWidget =
-        createWidgetUnderTest(Duration(seconds: 5), key: timerProviderKey);
+    final GlobalKey<State<TimerProvider>> timerProviderKey = GlobalKey(); // create unique key to identify widget
+    Widget testWidget = createWidgetUnderTest(Duration(seconds: 5), key: timerProviderKey);
     await tester.pumpWidget(testWidget);
     await tester.pump(Duration(seconds: 1));
-    final FakeAudioCache ac =
-        timerProviderKey.currentState!.widget.player as FakeAudioCache;
+    final FakeAudioPlayer ac = timerProviderKey.currentState!.widget.player as FakeAudioPlayer;
     expect(ac.soundPlayed, false); // Ensure no sound played yet
     await tester.pump(Duration(seconds: 1));
     expect(ac.soundPlayed, true); // Ensure sound played

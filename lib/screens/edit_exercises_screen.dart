@@ -40,12 +40,24 @@ class _EditExercisesScreenState extends State<EditExercisesScreen> {
     _hasChanged = List<bool>.filled(_data.length, false);
   }
 
+  void _onPopInvoked(bool didPop, Object? result) async {
+    if (didPop) {
+      return;
+    }
+    final bool shouldPop = await widget.onWillPop();
+    if (shouldPop && context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: widget.onWillPop,
+
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: _onPopInvoked,
         child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           body: Form(
               key: _formKey,
               child: Padding(

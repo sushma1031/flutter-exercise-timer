@@ -9,8 +9,7 @@ class EditWorkoutScreen extends StatefulWidget {
   final List<String> workoutNames;
   final int index;
   final Future<Workout?> Function(int index, String name) updateWorkoutName;
-  final Future<Workout?> Function(int index, List<Exercise> newExercises)
-      updateWorkoutExercises;
+  final Future<Workout?> Function(int index, List<Exercise> newExercises) updateWorkoutExercises;
   final void Function() returnToStaticList;
   final Future<bool> Function() onWillPop;
 
@@ -42,29 +41,36 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     _ex = <Exercise>[...widget.workout.exercises];
   }
 
+  void _onPopInvoked(bool didPop, Object? result) async {
+    if (didPop) {
+      return;
+    }
+   final shouldPop = (widget.workout.name != _name || !listEquals(widget.workout.exercises, _ex)) 
+        ? await widget.onWillPop() 
+        : true;
+
+    if (shouldPop && context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () {
-          if (widget.workout.name != _name ||
-              !listEquals(widget.workout.exercises, _ex))
-            return widget.onWillPop();
-          else
-            return Future.value(true);
-        },
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: _onPopInvoked,
         child: Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.background,
-            body: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            body: Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                   SizedBox(
                       height: 100,
                       //seperate this as a component that can be reused
                       child: Form(
                           key: _formKey,
                           child: Padding(
-                              padding:
-                                  EdgeInsets.only(left: 25, right: 25, top: 10),
+                              padding: EdgeInsets.only(left: 25, right: 25, top: 10),
                               child: TextFormField(
                                 textAlign: TextAlign.center,
                                 initialValue: widget.workout.name,
@@ -73,16 +79,14 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter a workout name';
                                   }
-                                  if (value != widget.workout.name &&
-                                      widget.workoutNames.contains(value)) {
+                                  if (value != widget.workout.name && widget.workoutNames.contains(value)) {
                                     return 'Name already in use';
                                   }
                                   return null;
                                 },
                                 decoration: const InputDecoration(
-                                    filled: false,
-                                    labelText: 'Workout Name',
-                                    fillColor: Colors.white70),
+                                    filled: false, labelText: 'Workout Name', fillColor: Colors.white70
+                                ),
                                 onChanged: (value) {
                                   _name = value;
                                 },
@@ -102,7 +106,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                   icon: Icon(
                                     Icons.remove_circle_outline,
                                     size: 20,
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                   ),
                                   onPressed: () {
                                     setState(() {
@@ -110,14 +114,12 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                     });
                                   },
                                 ),
-                                title: ExerciseItem(
-                                    name: _ex[index].name,
-                                    duration: '${_ex[index].duration}'),
+                                title: ExerciseItem(name: _ex[index].name, duration: '${_ex[index].duration}'),
                                 trailing: ReorderableDragStartListener(
                                   index: index,
                                   child: Icon(
                                     Icons.drag_handle,
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                   ),
                                 ),
                               )
@@ -142,11 +144,10 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                           await widget.updateWorkoutName(widget.index, _name);
                         }
                         if (!listEquals(widget.workout.exercises, _ex))
-                          await widget.updateWorkoutExercises(
-                              widget.index, _ex);
+                          await widget.updateWorkoutExercises(widget.index, _ex);
                         widget.returnToStaticList();
                       },
                       child: Text('Save'))
-                ])));
+                ]))));
   }
 }

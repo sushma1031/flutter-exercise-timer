@@ -6,13 +6,11 @@ import 'services/storage_service_interface.dart';
 import 'services/workout_storage_service.dart';
 import 'state/life_cycle_watcher.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final appDocumentsDir =
-      await path_provider.getApplicationDocumentsDirectory();
+  final appDocumentsDir = await path_provider.getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentsDir.path);
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(WorkoutAdapter());
@@ -28,20 +26,30 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     ColorScheme _colorScheme = ColorScheme.dark().copyWith(
         primary: Colors.indigo.shade200,
-        primaryVariant: Colors.indigo.shade700,
+        primaryContainer: Colors.indigo.shade700,
         secondary: Colors.deepPurple.shade200,
-        secondaryVariant: Colors.deepPurple.shade200,
+        secondaryContainer: Colors.deepPurple.shade200,
         error: Color(0xFFCF6765));
+    final dialogGray = Color.alphaBlend(Colors.white10, _colorScheme.surface);
     return MaterialApp(
         title: 'Exercise Timer',
         theme: ThemeData(
-          brightness: Brightness.dark,
-          primarySwatch: Colors.indigo,
-          colorScheme: _colorScheme,
-          errorColor: _colorScheme.error,
-          accentColor: _colorScheme.secondaryVariant,
-          applyElevationOverlayColor: true,
-        ),
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            primarySwatch: Colors.indigo,
+            colorScheme: _colorScheme,
+            applyElevationOverlayColor: true,
+            dialogTheme: DialogThemeData(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              backgroundColor: dialogGray,
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: _colorScheme.primary,
+                    foregroundColor: _colorScheme.onPrimary,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2))),
+            popupMenuTheme: PopupMenuThemeData(color: dialogGray)),
         home: LifecycleWatcher(
           child: HomePage(db: db),
         ));
@@ -77,10 +85,9 @@ class HomePage extends StatelessWidget {
           }
         } else {
           // loading
-          final gradient =
-              LinearGradient(colors: [Colors.indigo.shade200, Colors.indigo]);
+          final gradient = LinearGradient(colors: [Colors.indigo.shade200, Colors.indigo]);
           return Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             body: Center(
               child: ShaderMask(
                 blendMode: BlendMode.srcIn,

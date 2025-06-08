@@ -32,17 +32,22 @@ class _ExercisesFormState extends State<ExercisesForm> {
     }
   }
 
+  void _onPopInvoked(bool didPop, Object? result) async {
+    if (didPop) return;
+    final shouldPop = await widget.onWillPop();
+
+    if (shouldPop && context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () {
-          if (_rows >= 1)
-            return widget.onWillPop();
-          else
-            return Future.value(true);
-        },
+    return PopScope(
+        canPop: _rows == 0,
+        onPopInvokedWithResult: _onPopInvoked,
         child: Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             body: Form(
                 key: _formKey,
                 child: Padding(
@@ -78,8 +83,8 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                               size: 16,
                                               color: Theme.of(context)
                                                   .colorScheme
-                                                  .onBackground
-                                                  .withOpacity(0.8),
+                                                  .onSurface
+                                                  .withValues(alpha: 0.8),
                                             )),
                                         Expanded(
                                             child: ExerciseFormField(
@@ -126,6 +131,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
                           ),
                           SizedBox(
                               width: 75,
+                              height: 35,
                               child: ElevatedButton(
                                 onPressed: () async {
                                   var valid = _formKey.currentState!.validate();

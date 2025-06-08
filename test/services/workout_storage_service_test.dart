@@ -1,20 +1,23 @@
+import 'dart:io';
 import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 
 import 'package:count_up/services/workout_storage_service.dart';
 import 'package:count_up/models/exercise.dart';
 import 'package:count_up/models/workout.dart';
 
 Future<void> main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-  final appDocumentsDir =
-      await path_provider.getApplicationDocumentsDirectory();
-  await Hive.initFlutter(appDocumentsDir.path);
+  TestWidgetsFlutterBinding.ensureInitialized();
+  Hive.init(Directory.systemTemp.path);
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(WorkoutAdapter());
+
+  TestWidgetsFlutterBinding.ensureInitialized();
   String box = 'testBox';
+
+  tearDownAll(() async {
+    await Hive.close();
+  });
 
   WorkoutStorageService db = WorkoutStorageService(box);
   await db.loadData();
@@ -22,6 +25,7 @@ Future<void> main() async {
     await db.clear();
     expect(db.getAllWorkouts().length, 0);
   });
+
   test('adds workouts correctly', () async {
     await db.clear();
     await db.addOneWorkout('Abs');
@@ -29,10 +33,16 @@ Future<void> main() async {
     expect(workouts.length, 1);
     expect(db.getWorkoutByIndex(0)!.name, 'Abs');
 
+    await db.addOneWorkout('Abs2', exercises: [Exercise('Plank', 10)]);
+    workouts = db.getAllWorkouts();
+    expect(workouts.length, 2);
+    expect(db.getWorkoutByIndex(1)!.name, 'Abs2');
+    expect(db.getWorkoutByIndex(1)!.exercises.length, 1);
+
     await db.addManyWorkouts(['Thighs', 'Biceps']);
     var workoutNames = db.getAllWorkoutNames();
-    expect(workoutNames.length, 3);
-    expect(workoutNames, ['Abs', 'Thighs', 'Biceps']);
+    expect(workoutNames.length, 4);
+    expect(workoutNames, ['Abs', 'Abs2', 'Thighs', 'Biceps']);
   });
 
   test('fetches workouts for display correctly', () async {
@@ -59,8 +69,7 @@ Future<void> main() async {
     var ex = db.getWorkoutExercises(0);
     expect(ex.length, 1);
 
-    await db.addWorkoutExercises(
-        0, [Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
+    await db.addWorkoutExercises(0, [Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
     ex = db.getWorkoutExercises(0);
     expect(ex.length, 3);
 
@@ -70,19 +79,13 @@ Future<void> main() async {
   test('updates workout exercises correctly', () async {
     await db.clear();
     await db.addOneWorkout('Abs');
-    await db.addWorkoutExercises(0, [
-      Exercise('Plank', 60),
-      Exercise('Crunches', 40),
-      Exercise('Russian Twist', 40)
-    ]);
+    await db.addWorkoutExercises(0, [Exercise('Plank', 60), Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
 
-    await db.updateWorkoutExercises(
-        0, [Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
+    await db.updateWorkoutExercises(0, [Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
     var ex = db.getWorkoutExercises(0);
     expect(ex.length, 2);
 
-    await db.updateWorkoutExercises(
-        0, [Exercise('Russian Twist', 40), Exercise('Crunches', 40)]);
+    await db.updateWorkoutExercises(0, [Exercise('Russian Twist', 40), Exercise('Crunches', 40)]);
     ex = db.getWorkoutExercises(0);
     expect(ex.map((e) => e.name), ['Russian Twist', 'Crunches']);
   });
@@ -90,11 +93,7 @@ Future<void> main() async {
   test('modifies a workout exercise correctly', () async {
     await db.clear();
     await db.addOneWorkout('Abs');
-    await db.addWorkoutExercises(0, [
-      Exercise('Plank', 60),
-      Exercise('Crunches', 40),
-      Exercise('Russian Twist', 40)
-    ]);
+    await db.addWorkoutExercises(0, [Exercise('Plank', 60), Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
     await db.modifyExercises(0, [
       {'index': 0, 'name': 'Push-up', 'duration': 30}
     ]);
@@ -113,13 +112,13 @@ Future<void> main() async {
     expect(workouts.length, 1);
     expect(workouts.where((e) => e.name == "Biceps").length, 0);
   });
-  test('closes box successfully', () async {
-    await db.close();
-    expect(() => db.getAllWorkouts(), throwsA(TypeMatcher<HiveError>()));
-  });
   test('deletes box successfully', () async {
     await db.loadData();
     await db.delete();
+    expect(() => db.getAllWorkouts(), throwsA(TypeMatcher<HiveError>()));
+  });
+  test('closes box successfully', () async {
+    await db.close();
     expect(() => db.getAllWorkouts(), throwsA(TypeMatcher<HiveError>()));
   });
 }

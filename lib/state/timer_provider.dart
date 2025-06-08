@@ -14,7 +14,7 @@ class TimerProvider extends StatefulWidget {
   final int noOfExercises;
   final ValueChanged<void> nextExercise;
   final ValueChanged<void> previousExercise;
-  final AudioCache player;
+  final AudioPlayer player;
   const TimerProvider(
       {Key? key,
       required this.name,
@@ -31,13 +31,12 @@ class TimerProvider extends StatefulWidget {
   State<TimerProvider> createState() => _TimerProviderState();
 }
 
-class _TimerProviderState extends State<TimerProvider>
-    with SingleTickerProviderStateMixin {
+class _TimerProviderState extends State<TimerProvider> with SingleTickerProviderStateMixin {
   final String audioPath = "audio/exercise_change.mp3";
+  final AssetSource audioAsset = AssetSource("audio/exercise_change.mp3");
   late Timer _timer;
   late Duration _timeLeft;
   late AnimationController _controller;
-  AudioPlayer? _playerInstance;
   bool _isPaused = false;
   AudioStatus _audioStatus = AudioStatus.stopped;
   var oneSec = Duration(seconds: 1);
@@ -51,7 +50,6 @@ class _TimerProviderState extends State<TimerProvider>
     )..addListener(() {
         setState(() {});
       });
-    widget.player.load(audioPath);
     startTimer();
   }
 
@@ -101,28 +99,27 @@ class _TimerProviderState extends State<TimerProvider>
   }
 
   Future<void> playSound() async {
-    _playerInstance = await widget.player.play(audioPath);
+    await widget.player.play(audioAsset);
     _audioStatus = AudioStatus.playing;
   }
 
   Future<void> pauseSoundIfPlaying() async {
     if (_audioStatus == AudioStatus.playing) {
       _audioStatus = AudioStatus.paused;
-      await _playerInstance?.pause();
+      await widget.player.pause();
     }
   }
 
   Future<void> resumeSoundIfPaused() async {
     if (_audioStatus == AudioStatus.paused) {
       _audioStatus = AudioStatus.playing;
-      await _playerInstance?.resume();
+      await widget.player.resume();
     }
   }
 
   Future<void> stopSoundIfPlaying() async {
     _audioStatus = AudioStatus.stopped;
-    await _playerInstance?.stop();
-    _playerInstance = null;
+    await widget.player.stop();
   }
 
   Future<void> goPrevious() async {
@@ -185,7 +182,7 @@ class _TimerProviderState extends State<TimerProvider>
     super.dispose();
   }
 
-  Future<bool> _onWillPop() async {
+  Future<bool> _showExitDialog() async {
     return await showDialog<bool>(
           context: context,
           barrierDismissible: false,
@@ -198,12 +195,8 @@ class _TimerProviderState extends State<TimerProvider>
                 'Current workout progress will be lost. Are you sure you want to exit?',
               ),
               actions: <Widget>[
-                TextButton(
-                    child: Text('Yes'),
-                    onPressed: () => Navigator.of(context).pop(true)),
-                TextButton(
-                    child: Text('No'),
-                    onPressed: () => Navigator.of(context).pop(false)),
+                TextButton(child: Text('Yes'), onPressed: () => Navigator.of(context).pop(true)),
+                TextButton(child: Text('No'), onPressed: () => Navigator.of(context).pop(false)),
               ],
               elevation: 20,
             );
@@ -212,21 +205,32 @@ class _TimerProviderState extends State<TimerProvider>
         false;
   }
 
+  void _onPopInvoked(bool didPop, Object? result) async {
+    if (didPop) {
+      return;
+    }
+    if (!_isPaused) {
+      setState(() {
+        _isPaused = true;
+      });
+      await pauseTimer();
+    }
+    final bool shouldExit = await _showExitDialog();
+
+    if (shouldExit && context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () {
-          setState(() {
-            _isPaused = true;
-          });
-          pauseTimer();
-          return _onWillPop();
-        },
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: _onPopInvoked,
         child: TimerWidget(
           name: widget.name,
           nextName: widget.nextName,
-          nextBtnFunction:
-              widget.currentIndex == widget.noOfExercises ? null : goNext,
+          nextBtnFunction: widget.currentIndex == widget.noOfExercises ? null : goNext,
           pauseResume: _isPaused ? Icons.play_arrow : Icons.pause,
           togglePauseResume: togglePauseResume,
           timeLeft: _timeLeft,
