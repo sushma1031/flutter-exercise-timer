@@ -4,7 +4,6 @@ import '../models/workout.dart';
 import '../models/workout_display.dart';
 
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class WorkoutStorageService implements StorageService<Box<Workout>> {
@@ -60,11 +59,11 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return workouts.getAt(index)!.exercises;
   }
 
-  Future<int> addOneWorkout(String name) async {
+  Future<int> addOneWorkout(String name, {List<Exercise>? exercises}) async {
     if (name.isNotEmpty && !getAllWorkoutNames().contains(name)) {
       try {
-        var w = Workout(name, []);
-        await workouts.add(w);
+        var workout = Workout(name, exercises ?? <Exercise>[]);
+        await workouts.add(workout);
         return workouts.length - 1;
       } on Exception catch (ex) {
         print('Error: Could not add workout.\n{$ex}');
@@ -76,12 +75,12 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   }
 
   Future<int> addManyWorkouts(List<String> names) async {
-    int added = 0;
+    int addedCount = 0;
     for (String name in names) {
       int result = await addOneWorkout(name);
-      if (result != -1) added++;
+      if (result != -1) addedCount++;
     }
-    return added;
+    return addedCount;
   }
 
   Future<Workout?> updateWorkoutName(int index, String name) async {
