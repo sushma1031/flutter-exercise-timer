@@ -6,7 +6,6 @@ import 'services/storage_service_interface.dart';
 import 'services/workout_storage_service.dart';
 import 'state/life_cycle_watcher.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
@@ -28,20 +27,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     ColorScheme _colorScheme = ColorScheme.dark().copyWith(
         primary: Colors.indigo.shade200,
-        primaryVariant: Colors.indigo.shade700,
+        primaryContainer: Colors.indigo.shade700,
         secondary: Colors.deepPurple.shade200,
-        secondaryVariant: Colors.deepPurple.shade200,
+        secondaryContainer: Colors.deepPurple.shade200,
         error: Color(0xFFCF6765));
     return MaterialApp(
         title: 'Exercise Timer',
         theme: ThemeData(
-          brightness: Brightness.dark,
-          primarySwatch: Colors.indigo,
-          colorScheme: _colorScheme,
-          errorColor: _colorScheme.error,
-          accentColor: _colorScheme.secondaryVariant,
-          applyElevationOverlayColor: true,
-        ),
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            primarySwatch: Colors.indigo,
+            colorScheme: _colorScheme,
+            applyElevationOverlayColor: true,
         home: LifecycleWatcher(
           child: HomePage(db: db),
         ));
@@ -77,10 +74,9 @@ class HomePage extends StatelessWidget {
           }
         } else {
           // loading
-          final gradient =
-              LinearGradient(colors: [Colors.indigo.shade200, Colors.indigo]);
+          final gradient = LinearGradient(colors: [Colors.indigo.shade200, Colors.indigo]);
           return Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             body: Center(
               child: ShaderMask(
                 blendMode: BlendMode.srcIn,

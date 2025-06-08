@@ -72,7 +72,7 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
                 previousExercise: previousExercise,
                 noOfExercises: _exercises.length - 1,
                 workoutProgress: "${_currentIndex + 1}/${_exercises.length}",
-                player: AudioCache(),
+                player: AudioPlayer(),
               ));
   }
 }

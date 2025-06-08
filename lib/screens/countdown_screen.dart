@@ -8,7 +8,7 @@ class CountdownScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var duration = Duration(milliseconds: 2000);
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.08),
+      backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
       body: Container(
         alignment: Alignment.center,
         child: Column(

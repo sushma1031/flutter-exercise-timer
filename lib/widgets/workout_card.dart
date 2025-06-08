@@ -9,7 +9,7 @@ class WorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color primary = Theme.of(context).colorScheme.primary.withOpacity(0.08);
+    Color primary = Theme.of(context).colorScheme.primary.withValues(alpha: 0.08);
     Color darkSurface = Theme.of(context).colorScheme.surface;
     return Card(
       elevation: 24,
@@ -21,7 +21,7 @@ class WorkoutCard extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: <Color>[
               Color.alphaBlend(primary, darkSurface),
-              Theme.of(context).colorScheme.primaryVariant.withOpacity(0.25)
+              Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.25)
             ],
             tileMode: TileMode.mirror,
           ),

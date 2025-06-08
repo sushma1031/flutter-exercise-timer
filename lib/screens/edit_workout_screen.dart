@@ -42,21 +42,29 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     _ex = <Exercise>[...widget.workout.exercises];
   }
 
+  void _onPopInvoked(bool didPop, Object? result) async {
+    if (didPop) {
+      return;
+    }
+   final shouldPop = (widget.workout.name != _name || !listEquals(widget.workout.exercises, _ex)) 
+        ? await widget.onWillPop() 
+        : true;
+
+    if (shouldPop && context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () {
-          if (widget.workout.name != _name ||
-              !listEquals(widget.workout.exercises, _ex))
-            return widget.onWillPop();
-          else
-            return Future.value(true);
-        },
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: _onPopInvoked,
         child: Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.background,
-            body: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            body: Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                   SizedBox(
                       height: 100,
                       //seperate this as a component that can be reused
@@ -102,7 +110,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                   icon: Icon(
                                     Icons.remove_circle_outline,
                                     size: 20,
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                   ),
                                   onPressed: () {
                                     setState(() {
@@ -117,7 +125,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                   index: index,
                                   child: Icon(
                                     Icons.drag_handle,
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                   ),
                                 ),
                               )
@@ -147,6 +155,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                         widget.returnToStaticList();
                       },
                       child: Text('Save'))
-                ])));
+                ]))));
   }
 }

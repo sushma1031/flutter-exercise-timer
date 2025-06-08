@@ -7,7 +7,7 @@ class ReverseCircularProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color secondary = Theme.of(context).colorScheme.secondary.withOpacity(0.15);
+    Color secondary = Theme.of(context).colorScheme.secondary.withValues(alpha: 0.15);
     Color darkSurface = Theme.of(context).colorScheme.surface;
     return Container(
         width: 275,
