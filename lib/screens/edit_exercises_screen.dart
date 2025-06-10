@@ -8,12 +8,12 @@ class EditExercisesScreen extends StatefulWidget {
   final List<Exercise> exercises;
   final Future<int> Function(int, List<Map>) modifyExercise;
   final void Function() returnToStaticList;
-  final Future<bool> Function() onWillPop;
+  final Future<bool> Function() onPop;
   const EditExercisesScreen(
       {Key? key,
       required this.modifyExercise,
       required this.returnToStaticList,
-      required this.onWillPop,
+      required this.onPop,
       required this.workoutIndex,
       required this.exercises})
       : super(key: key);
@@ -44,7 +44,7 @@ class _EditExercisesScreenState extends State<EditExercisesScreen> {
     if (didPop) {
       return;
     }
-    final bool shouldPop = await widget.onWillPop();
+    final bool shouldPop = await widget.onPop();
     if (shouldPop && context.mounted) {
       Navigator.of(context).pop();
     }

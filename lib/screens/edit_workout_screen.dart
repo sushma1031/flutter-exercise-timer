@@ -11,7 +11,7 @@ class EditWorkoutScreen extends StatefulWidget {
   final Future<Workout?> Function(int index, String name) updateWorkoutName;
   final Future<Workout?> Function(int index, List<Exercise> newExercises) updateWorkoutExercises;
   final void Function() returnToStaticList;
-  final Future<bool> Function() onWillPop;
+  final Future<bool> Function() onPop;
 
   const EditWorkoutScreen(
       {Key? key,
@@ -21,7 +21,7 @@ class EditWorkoutScreen extends StatefulWidget {
       required this.updateWorkoutName,
       required this.updateWorkoutExercises,
       required this.returnToStaticList,
-      required this.onWillPop})
+      required this.onPop})
       : super(key: key);
 
   @override
@@ -46,7 +46,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
       return;
     }
    final shouldPop = (widget.workout.name != _name || !listEquals(widget.workout.exercises, _ex)) 
-        ? await widget.onWillPop() 
+        ? await widget.onPop() 
         : true;
 
     if (shouldPop && context.mounted) {

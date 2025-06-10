@@ -25,7 +25,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   var _currentView = View.staticList;
   late Widget _child;
 
-  Future<bool> _onWillPop() async {
+  Future<bool> _onPop() async {
     return await showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
@@ -140,7 +140,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                   addWorkoutExercises:
                                       widget.db.addWorkoutExercises,
                                   returnToStaticList: _returnToStaticList,
-                                  onWillPop: _onWillPop,
+                                  onPop: _onPop,
                                 );
                               });
                               break;
@@ -157,7 +157,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                     updateWorkoutExercises:
                                         widget.db.updateWorkoutExercises,
                                     returnToStaticList: _returnToStaticList,
-                                    onWillPop: _onWillPop);
+                                    onPop: _onPop);
                               });
                               break;
                             case WorkoutActions.editEx:
@@ -168,7 +168,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                     modifyExercise: widget.db.modifyExercises,
                                     workoutIndex: widget.index,
                                     returnToStaticList: _returnToStaticList,
-                                    onWillPop: _onWillPop);
+                                    onPop: _onPop);
                               });
                               break;
                             case WorkoutActions.delWkt:

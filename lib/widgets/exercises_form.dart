@@ -7,12 +7,12 @@ class ExercisesForm extends StatefulWidget {
   final Future<void> Function(int, List<Exercise>) addWorkoutExercises;
   final void Function() returnToStaticList;
   final int workoutIndex;
-  final Future<bool> Function() onWillPop;
+  final Future<bool> Function() onPop;
   const ExercisesForm(
       {Key? key,
       required this.addWorkoutExercises,
       required this.returnToStaticList,
-      required this.onWillPop,
+      required this.onPop,
       required this.workoutIndex})
       : super(key: key);
   @override
@@ -34,7 +34,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
 
   void _onPopInvoked(bool didPop, Object? result) async {
     if (didPop) return;
-    final shouldPop = await widget.onWillPop();
+    final shouldPop = await widget.onPop();
 
     if (shouldPop && context.mounted) {
       Navigator.of(context).pop();
