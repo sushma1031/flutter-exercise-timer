@@ -66,7 +66,7 @@ class WorkoutsScreen extends StatelessWidget {
     }
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -94,7 +94,6 @@ class WorkoutsScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           shape: StadiumBorder(),
-          backgroundColor: Theme.of(context).colorScheme.secondary,
           child: Icon(Icons.add),
           onPressed: () async {
             var wIdx = await showDialog(

@@ -30,26 +30,15 @@ class MyApp extends StatelessWidget {
         secondary: Colors.deepPurple.shade200,
         secondaryContainer: Colors.deepPurple.shade200,
         error: Color(0xFFCF6765));
-    final dialogGray = Color.alphaBlend(Colors.white10, _colorScheme.surface);
     return MaterialApp(
         title: 'Exercise Timer',
         theme: ThemeData(
-            useMaterial3: true,
+            useMaterial3: false,
             brightness: Brightness.dark,
             primarySwatch: Colors.indigo,
             colorScheme: _colorScheme,
             applyElevationOverlayColor: true,
-            dialogTheme: DialogThemeData(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-              backgroundColor: dialogGray,
-            ),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: _colorScheme.primary,
-                    foregroundColor: _colorScheme.onPrimary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2))),
-            popupMenuTheme: PopupMenuThemeData(color: dialogGray)),
+        ),
         home: LifecycleWatcher(
           child: HomePage(db: db),
         ));

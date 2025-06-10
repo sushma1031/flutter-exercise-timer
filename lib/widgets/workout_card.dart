@@ -9,7 +9,7 @@ class WorkoutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color primary = Theme.of(context).colorScheme.primary.withValues(alpha: 0.08);
-    Color darkSurface = Theme.of(context).colorScheme.surface;
+    Color darkBase =Theme.of(context).colorScheme.surface;
     return Card(
       elevation: 24,
       child: Container(
@@ -19,7 +19,7 @@ class WorkoutCard extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: <Color>[
-              Color.alphaBlend(primary, darkSurface),
+              Color.alphaBlend(primary, darkBase),
               Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.25)
             ],
             tileMode: TileMode.mirror,
@@ -45,7 +45,7 @@ class WorkoutCard extends StatelessWidget {
                         Padding(
                             padding: EdgeInsets.only(right: 12),
                             child: Chip(
-                              backgroundColor: Color.alphaBlend(primary, darkSurface),
+                              backgroundColor: Color.alphaBlend(primary, darkBase),
                               label: Text(
                                 "${workout.totalDuration} Min",
                                 style: TextStyle(color: Theme.of(context).colorScheme.secondary),
