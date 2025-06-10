@@ -57,7 +57,7 @@ class _EditExercisesScreenState extends State<EditExercisesScreen> {
         canPop: false,
         onPopInvokedWithResult: _onPopInvoked,
         child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.surface,
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
           body: Form(
               key: _formKey,
               child: Padding(

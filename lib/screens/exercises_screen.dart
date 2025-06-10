@@ -115,7 +115,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
         appBar: AppBar(
             leading: _currentView == View.staticList
                 ? BackButton()

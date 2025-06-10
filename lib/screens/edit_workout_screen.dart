@@ -60,7 +60,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         canPop: false,
         onPopInvokedWithResult: _onPopInvoked,
         child: Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.surface,
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
             body: Padding(
                 padding: EdgeInsets.only(bottom: 16),
                 child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [

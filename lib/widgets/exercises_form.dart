@@ -47,7 +47,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
         canPop: _rows == 0,
         onPopInvokedWithResult: _onPopInvoked,
         child: Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.surface,
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
             body: Form(
                 key: _formKey,
                 child: Padding(
@@ -131,7 +131,6 @@ class _ExercisesFormState extends State<ExercisesForm> {
                           ),
                           SizedBox(
                               width: 75,
-                              height: 35,
                               child: ElevatedButton(
                                 onPressed: () async {
                                   var valid = _formKey.currentState!.validate();
