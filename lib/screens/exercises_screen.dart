@@ -1,14 +1,24 @@
+import 'dart:io';
+
+import 'package:count_up/utils/format.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:count_up/models/workout.dart';
 import 'package:count_up/screens/edit_workout_screen.dart';
 import 'package:count_up/screens/edit_exercises_screen.dart';
 import 'package:count_up/services/storage_service_interface.dart';
+import 'package:count_up/utils/serialise_workout.dart';
 import 'package:count_up/widgets/icon_text_item.dart';
 import 'package:flutter/material.dart';
 import '../widgets/exercises_form.dart';
 import '../widgets/static_exercises_list.dart';
 
 enum View { staticList, add, editWorkout, editExercise }
-enum WorkoutActions { addEx, editWkt, editEx, delWkt }
+
+enum WorkoutActions { addEx, editWkt, editEx, delWkt, exportWkt }
+
+enum ExportError { empty, fs, platform, unknown }
 
 class ExercisesScreen extends StatefulWidget {
   final int index;
@@ -85,6 +95,50 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         );
       },
     );
+  }
+
+  void _showExportErrorSnackbar(ExportError error) {
+    String message;
+    switch (error) {
+      case ExportError.empty:
+        message = "Cannot export empty workout.";
+        break;
+      case ExportError.fs:
+        message = "Failed to save the workout file.";
+        break;
+      case ExportError.platform:
+        message = "Could not open share interface.";
+        break;
+      default:
+        message = "Something went wrong while exporting.";
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  Future<ExportError?> _exportWorkout(int index) async {
+    if (_w.exercises.length == 0) return ExportError.empty;
+    try {
+      final workoutJson = exportJson(_w);
+      final backupFileName = generateBackupFilename(_w.name);
+      final tempDir = await getTemporaryDirectory();
+
+      final file = File('${tempDir.path}/$backupFileName');
+      await file.writeAsString(workoutJson);
+
+      await Share.shareXFiles([XFile(file.path)]);
+      return null;
+    } on FileSystemException catch (e) {
+      print('File system error: $e');
+      return ExportError.fs;
+    } on PlatformException catch (e) {
+      print('Platform share error: $e');
+      return ExportError.platform;
+    } on Exception catch (e) {
+      print('Unexpected error: $e');
+      return ExportError.unknown;
+    }
   }
 
   void initState() {
@@ -184,6 +238,12 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                     onPop: _onPop);
                               });
                               break;
+                            case WorkoutActions.exportWkt:
+                              var error = await _exportWorkout(widget.index);
+                              if (error != null) {
+                                _showExportErrorSnackbar(error);
+                              }
+                              break;
                             case WorkoutActions.delWkt:
                               await _confirmAndDeleteWorkouts(widget.index)
                                   .then((value) {
@@ -215,6 +275,13 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                   text: 'Edit Exercises',
                                 ),
                                 value: WorkoutActions.editEx,
+                              ),
+                              PopupMenuItem<WorkoutActions>(
+                                child: IconTextItem(
+                                  icon: Icons.download,
+                                  text: 'Export',
+                                ),
+                                value: WorkoutActions.exportWkt,
                               ),
                               PopupMenuItem<WorkoutActions>(
                                 child: IconTextItem(

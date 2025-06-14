@@ -19,7 +19,9 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   path_provider: ^2.1.5
+  share_plus: ^10.1.2
   file_picker: ^10.1.9
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
