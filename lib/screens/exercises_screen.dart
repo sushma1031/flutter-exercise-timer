@@ -62,10 +62,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   }
 
   Future<bool> _confirmAndDeleteWorkouts(int index) async {
-    var w = widget.db.getWorkoutByIndex(index)!;
-    if (w.exercises.length == 0) {
-      return await widget.db.deleteWorkout(index).then((value) => true);
-    }
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
