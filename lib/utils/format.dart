@@ -16,3 +16,16 @@ String generateBackupFilename(String name) {
   final date = DateFormat('yyyy-MM-dd').format(DateTime.now());
   return '$sanitisedSlug-$date.json';
 }
+
+String getUniqueWorkoutName(List<String> existingNames, String baseName) {
+  if (!existingNames.contains(baseName)) return baseName;
+
+  int suffix = 1;
+  String newName;
+  do {
+    newName = '$baseName ($suffix)';
+    suffix++;
+  } while (existingNames.contains(newName));
+
+  return newName;
+}
