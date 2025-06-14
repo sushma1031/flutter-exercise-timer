@@ -72,6 +72,7 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     }
     return addedCount;
   }
+
   Future<int> addEmptyWorkout(String name) async {
       try {
         var workout = Workout(name, <Exercise>[]);
@@ -118,8 +119,7 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return w;
   }
 
-  Future<Workout?> updateWorkoutExercises(
-      int index, List<Exercise> newExercises) async {
+  Future<Workout?> updateWorkoutExercises(int index, List<Exercise> newExercises) async {
     if (index < 0 || index > workouts.length - 1) {
       print('Error: Workout index out of range.\n');
       return null;
