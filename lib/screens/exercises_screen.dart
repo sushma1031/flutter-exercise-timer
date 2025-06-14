@@ -1,14 +1,24 @@
+import 'dart:io';
+
+import 'package:count_up/utils/format.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:count_up/models/workout.dart';
 import 'package:count_up/screens/edit_workout_screen.dart';
 import 'package:count_up/screens/edit_exercises_screen.dart';
 import 'package:count_up/services/storage_service_interface.dart';
+import 'package:count_up/utils/serialise_workout.dart';
 import 'package:count_up/widgets/icon_text_item.dart';
 import 'package:flutter/material.dart';
 import '../widgets/exercises_form.dart';
 import '../widgets/static_exercises_list.dart';
 
 enum View { staticList, add, editWorkout, editExercise }
-enum WorkoutActions { addEx, editWkt, editEx, delWkt }
+
+enum WorkoutActions { addEx, editWkt, editEx, delWkt, exportWkt }
+
+enum ExportError { empty, fs, platform, unknown }
 
 class ExercisesScreen extends StatefulWidget {
   final int index;
@@ -24,8 +34,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   late Workout _w;
   var _currentView = View.staticList;
   late Widget _child;
+  bool _invalid = false;
 
-  Future<bool> _onWillPop() async {
+  Future<bool> _onPop() async {
     return await showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
@@ -86,9 +97,61 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     );
   }
 
+  void _showExportErrorSnackbar(ExportError error) {
+    String message;
+    switch (error) {
+      case ExportError.empty:
+        message = "Cannot export empty workout.";
+        break;
+      case ExportError.fs:
+        message = "Failed to save the workout file.";
+        break;
+      case ExportError.platform:
+        message = "Could not open share interface.";
+        break;
+      default:
+        message = "Something went wrong while exporting.";
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  Future<ExportError?> _exportWorkout(int index) async {
+    if (_w.exercises.length == 0) return ExportError.empty;
+    try {
+      final workoutJson = exportJson(_w);
+      final backupFileName = generateBackupFilename(_w.name);
+      final tempDir = await getTemporaryDirectory();
+
+      final file = File('${tempDir.path}/$backupFileName');
+      await file.writeAsString(workoutJson);
+
+      await Share.shareXFiles([XFile(file.path)]);
+      return null;
+    } on FileSystemException catch (e) {
+      print('File system error: $e');
+      return ExportError.fs;
+    } on PlatformException catch (e) {
+      print('Platform share error: $e');
+      return ExportError.platform;
+    } on Exception catch (e) {
+      print('Unexpected error: $e');
+      return ExportError.unknown;
+    }
+  }
+
   void initState() {
     super.initState();
-    _w = widget.db.getWorkoutByIndex(widget.index)!;
+    final workout = widget.db.getWorkoutByIndex(widget.index);
+    if (workout == null) {
+      _invalid = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pop<bool>(context, false);
+      });
+      return;
+    }
+    _w = workout;
     _child = StaticExerciseList(exercises: _w.exercises);
   }
 
@@ -114,6 +177,10 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_invalid)
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
         appBar: AppBar(
@@ -140,7 +207,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                   addWorkoutExercises:
                                       widget.db.addWorkoutExercises,
                                   returnToStaticList: _returnToStaticList,
-                                  onWillPop: _onWillPop,
+                                  onPop: _onPop,
                                 );
                               });
                               break;
@@ -157,7 +224,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                     updateWorkoutExercises:
                                         widget.db.updateWorkoutExercises,
                                     returnToStaticList: _returnToStaticList,
-                                    onWillPop: _onWillPop);
+                                    onPop: _onPop);
                               });
                               break;
                             case WorkoutActions.editEx:
@@ -168,8 +235,14 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                     modifyExercise: widget.db.modifyExercises,
                                     workoutIndex: widget.index,
                                     returnToStaticList: _returnToStaticList,
-                                    onWillPop: _onWillPop);
+                                    onPop: _onPop);
                               });
+                              break;
+                            case WorkoutActions.exportWkt:
+                              var error = await _exportWorkout(widget.index);
+                              if (error != null) {
+                                _showExportErrorSnackbar(error);
+                              }
                               break;
                             case WorkoutActions.delWkt:
                               await _confirmAndDeleteWorkouts(widget.index)
@@ -202,6 +275,13 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                   text: 'Edit Exercises',
                                 ),
                                 value: WorkoutActions.editEx,
+                              ),
+                              PopupMenuItem<WorkoutActions>(
+                                child: IconTextItem(
+                                  icon: Icons.download,
+                                  text: 'Export',
+                                ),
+                                value: WorkoutActions.exportWkt,
                               ),
                               PopupMenuItem<WorkoutActions>(
                                 child: IconTextItem(

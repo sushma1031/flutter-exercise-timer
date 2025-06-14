@@ -50,6 +50,11 @@ class MockStorageService implements StorageService<List<Workout>> {
     return workouts.map((w) => w.name).toList();
   }
 
+  bool hasWorkoutAt(int index) {
+    return index >= 0 && index < workouts.length;
+  }
+
+
   Workout? getWorkoutByIndex(int index) {
     if (index < 0 || index > workouts.length) {
       print('Error: Workout index out of range.\n');
@@ -62,17 +67,28 @@ class MockStorageService implements StorageService<List<Workout>> {
     return workouts[index].exercises;
   }
 
-  Future<int> addOneWorkout(String name) async {
+  Future<int> addEmptyWorkout(String name) async {
     var w = Workout(name, []);
     workouts.add(w);
     notifier.update(workouts);
     return Future.value(workouts.length - 1);
   }
 
-  Future<int> addManyWorkouts(List<String> names) async {
-    for (String name in names) addOneWorkout(name);
+  Future<int> addManyEmptyWorkouts(List<String> names) async {
+    for (String name in names) addEmptyWorkout(name);
     notifier.update(workouts);
     return Future.value(names.length);
+  }
+  Future<int> addWorkout(Workout wkt) async {
+    workouts.add(wkt);
+    notifier.update(workouts);
+    return Future.value(workouts.length - 1);
+  }
+
+  Future<int> addManyWorkouts(List<Workout> wkts) async {
+    for (Workout wkt in wkts) addWorkout(wkt);
+    notifier.update(workouts);
+    return Future.value(wkts.length);
   }
 
   Future<Workout?> updateWorkoutName(int index, String name) async {

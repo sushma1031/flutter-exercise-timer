@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:count_up/utils/duration_format.dart';
+import 'package:count_up/utils/format.dart';
 import 'package:count_up/utils/validate_exercise.dart';
 
 void main() {

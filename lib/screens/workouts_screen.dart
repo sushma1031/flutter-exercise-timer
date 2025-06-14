@@ -1,10 +1,17 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:count_up/screens/exercises_screen.dart';
 import 'package:count_up/widgets/workout_card.dart';
 import 'package:flutter/material.dart';
+import 'package:count_up/utils/format.dart';
+import 'package:count_up/utils/serialise_workout.dart';
 import '../widgets/workout_form.dart';
 import '../services/storage_service_interface.dart';
 
-enum Actions { deleteAll }
+enum Actions { deleteAll, importWkt }
+
+enum ImportError { format, type, unknown }
 
 class WorkoutsScreen extends StatelessWidget {
   final StorageService db;
@@ -13,8 +20,15 @@ class WorkoutsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void goToWorkout(int index) {
-      Navigator.push(
+
+    Future<void> goToWorkout(int index) async {
+      if (!db.hasWorkoutAt(index)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Workout not found."), duration: Duration(milliseconds: 2500)),
+        );
+        return;
+      }
+      final result = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ExercisesScreen(
@@ -23,6 +37,56 @@ class WorkoutsScreen extends StatelessWidget {
           ),
         ),
       );
+
+      if (result != null && result == false) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Workout no longer available.'), duration: Duration(milliseconds: 2500)),
+        );
+      }
+    }
+
+    void showImportErrorSnackbar(ImportError error) {
+      String message;
+      switch (error) {
+        case ImportError.format:
+          message = "Invalid file format.";
+          break;
+        case ImportError.type:
+          message = "Workout structure is incompatible or malformed.";
+          break;
+        default:
+          message = "Something went wrong while exporting.";
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+
+    Future<ImportError?> importWorkout() async {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+      );
+      if (result == null) {
+        return null;
+      }
+      File file = File(result.files.single.path!);
+      String workoutJson = await file.readAsString();
+      try {
+        var workout = importFromJson(workoutJson);
+        workout.name = getUniqueWorkoutName(db.getAllWorkoutNames(), workout.name);
+        await db.addWorkout(workout);
+        return null;
+      } on FormatException catch (e) {
+        print('Invalid JSON: $e');
+        return ImportError.format;
+      } on TypeError catch (e) {
+        print('Type error: $e');
+        return ImportError.type;
+      } catch (e) {
+        print('Unexpected error: $e');
+        return ImportError.unknown;
+      }
     }
 
     void confirmAndDeleteAllWorkouts() {
@@ -77,14 +141,24 @@ class WorkoutsScreen extends StatelessWidget {
           actions: [
             PopupMenuButton<Actions>(
                 offset: Offset.fromDirection(90, 50),
-                onSelected: (value) {
+                onSelected: (value) async {
                   switch (value) {
+                    case Actions.importWkt:
+                      var error = await importWorkout();
+                      if (error != null) {
+                        showImportErrorSnackbar(error);
+                      }
+                      break;
                     case Actions.deleteAll:
                       confirmAndDeleteAllWorkouts();
                       break;
                   }
                 },
                 itemBuilder: (context) => <PopupMenuEntry<Actions>>[
+                      const PopupMenuItem<Actions>(
+                        child: Text('Import Workout'),
+                        value: Actions.importWkt,
+                      ),
                       const PopupMenuItem<Actions>(
                         child: Text('Delete All'),
                         value: Actions.deleteAll,
@@ -101,7 +175,7 @@ class WorkoutsScreen extends StatelessWidget {
               builder: (BuildContext context) {
                 return AlertDialog(
                   content: WorkoutForm(
-                    addWorkout: db.addOneWorkout,
+                    addWorkout: db.addEmptyWorkout,
                     isUnique: (name) {
                       if (!db.getAllWorkoutNames().contains(name)) return true;
                       return false;

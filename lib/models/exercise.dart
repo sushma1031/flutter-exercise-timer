@@ -20,4 +20,18 @@ class Exercise extends HiveObject {
 
   @override
   String toString() => "${this.name}, ${this.duration}s";
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': _name,
+      'duration': _duration,
+    };
+  }
+
+  factory Exercise.fromJson(Map<String, dynamic> json) {
+    return Exercise(
+      json['name'] as String,
+      json['duration'] as int,
+    );
+  }
 }

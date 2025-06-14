@@ -5,6 +5,7 @@ import 'screens/workouts_screen.dart';
 import 'services/storage_service_interface.dart';
 import 'services/workout_storage_service.dart';
 import 'state/life_cycle_watcher.dart';
+import 'utils/color.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.indigo,
             colorScheme: _colorScheme,
             applyElevationOverlayColor: true,
+            snackBarTheme: SnackBarThemeData(
+                backgroundColor: darken(_colorScheme.onSurface, 0.2)
+            )
         ),
         home: LifecycleWatcher(
           child: HomePage(db: db),

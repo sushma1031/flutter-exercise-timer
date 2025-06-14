@@ -47,22 +47,52 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return workouts.values.map((w) => w.name).toList();
   }
 
+  bool hasWorkoutAt(int index) {
+    return index >= 0 && index < workouts.length && workouts.getAt(index) != null;
+  }
+
   Workout? getWorkoutByIndex(int index) {
-    if (index < 0 || index > workouts.length) {
+    if (index < 0 || index >= workouts.length) {
       print('Error: Workout index out of range.\n');
       return null;
     }
-    return workouts.getAt(index)!;
+    var w = workouts.getAt(index);
+    if (w == null) {
+      print('Error: Workout at index $index is null.\n');
+    }
+    return w;
   }
 
   List<Exercise> getWorkoutExercises(int index) {
     return workouts.getAt(index)!.exercises;
   }
 
-  Future<int> addOneWorkout(String name, {List<Exercise>? exercises}) async {
+  Future<int> addWorkout(Workout workout) async {
+    if (!getAllWorkoutNames().contains(workout.name)) {
+      try {
+        await workouts.add(workout);
+        return workouts.length - 1;
+      } on Exception catch (ex) {
+        print('Error: Could not add workout.\n{$ex}');
+      }
+    } else {
+      print('Error: Name must be unique');
+    }
+    return -1;
+  }
+
+  Future<int> addManyWorkouts(List<Workout> workouts) async {
+    int addedCount = 0;
+    for (Workout wkt in workouts) {
+      int result = await addWorkout(wkt);
+      if (result != -1) addedCount++;
+    }
+    return addedCount;
+  }
+  Future<int> addEmptyWorkout(String name) async {
     if (name.isNotEmpty && !getAllWorkoutNames().contains(name)) {
       try {
-        var workout = Workout(name, exercises ?? <Exercise>[]);
+        var workout = Workout(name, <Exercise>[]);
         await workouts.add(workout);
         return workouts.length - 1;
       } on Exception catch (ex) {
@@ -74,10 +104,10 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return -1;
   }
 
-  Future<int> addManyWorkouts(List<String> names) async {
+  Future<int> addManyEmptyWorkouts(List<String> names) async {
     int addedCount = 0;
     for (String name in names) {
-      int result = await addOneWorkout(name);
+      int result = await addEmptyWorkout(name);
       if (result != -1) addedCount++;
     }
     return addedCount;

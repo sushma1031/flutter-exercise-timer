@@ -28,18 +28,12 @@ Future<void> main() async {
 
   test('adds workouts correctly', () async {
     await db.clear();
-    await db.addOneWorkout('Abs');
+    await db.addEmptyWorkout('Abs');
     var workouts = db.getAllWorkouts();
     expect(workouts.length, 1);
     expect(db.getWorkoutByIndex(0)!.name, 'Abs');
 
-    await db.addOneWorkout('Abs2', exercises: [Exercise('Plank', 10)]);
-    workouts = db.getAllWorkouts();
-    expect(workouts.length, 2);
-    expect(db.getWorkoutByIndex(1)!.name, 'Abs2');
-    expect(db.getWorkoutByIndex(1)!.exercises.length, 1);
-
-    await db.addManyWorkouts(['Thighs', 'Biceps']);
+    await db.addManyEmptyWorkouts(['Thighs', 'Biceps']);
     var workoutNames = db.getAllWorkoutNames();
     expect(workoutNames.length, 4);
     expect(workoutNames, ['Abs', 'Abs2', 'Thighs', 'Biceps']);
@@ -47,7 +41,7 @@ Future<void> main() async {
 
   test('fetches workouts for display correctly', () async {
     await db.clear();
-    await db.addOneWorkout('Abs');
+    await db.addEmptyWorkout('Abs');
     var workouts = db.getAllWorkoutsForDisplay();
     expect(workouts.length, 1);
     expect(workouts[0].name, 'Abs');
@@ -56,7 +50,7 @@ Future<void> main() async {
 
   test('updates workout name correctly', () async {
     await db.clear();
-    await db.addOneWorkout('Abs');
+    await db.addEmptyWorkout('Abs');
     expect(db.getAllWorkouts()[0].name, 'Abs');
 
     await db.updateWorkoutName(0, 'Thighs');
@@ -64,7 +58,7 @@ Future<void> main() async {
   });
   test('adds workout exercises correctly', () async {
     await db.clear();
-    await db.addOneWorkout('Abs');
+    await db.addEmptyWorkout('Abs');
     await db.addWorkoutExercises(0, [Exercise('Plank', 60)]);
     var ex = db.getWorkoutExercises(0);
     expect(ex.length, 1);
@@ -78,7 +72,7 @@ Future<void> main() async {
 
   test('updates workout exercises correctly', () async {
     await db.clear();
-    await db.addOneWorkout('Abs');
+    await db.addEmptyWorkout('Abs');
     await db.addWorkoutExercises(0, [Exercise('Plank', 60), Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
 
     await db.updateWorkoutExercises(0, [Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
@@ -92,7 +86,7 @@ Future<void> main() async {
 
   test('modifies a workout exercise correctly', () async {
     await db.clear();
-    await db.addOneWorkout('Abs');
+    await db.addEmptyWorkout('Abs');
     await db.addWorkoutExercises(0, [Exercise('Plank', 60), Exercise('Crunches', 40), Exercise('Russian Twist', 40)]);
     await db.modifyExercises(0, [
       {'index': 0, 'name': 'Push-up', 'duration': 30}
@@ -104,7 +98,7 @@ Future<void> main() async {
 
   test('deletes a workout successfully', () async {
     await db.clear();
-    await db.addManyWorkouts(['Thighs', 'Biceps']);
+    await db.addManyEmptyWorkouts(['Thighs', 'Biceps']);
     expect(db.getAllWorkouts().length, 2);
 
     await db.deleteWorkout(1);

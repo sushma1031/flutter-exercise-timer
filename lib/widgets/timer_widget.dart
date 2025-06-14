@@ -1,4 +1,4 @@
-import 'package:count_up/utils/duration_format.dart';
+import 'package:count_up/utils/format.dart';
 import 'package:count_up/widgets/offset_animated_text.dart';
 import 'package:count_up/widgets/reverse_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
