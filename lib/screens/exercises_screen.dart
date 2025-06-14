@@ -73,7 +73,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
             )
           ]),
           content: Text(
-            'Are you sure you want to delete this workout with ${w.exercises.length} exercises?',
+            'Are you sure you want to delete ${_w.name} (${_w.exercises.length} exercises)?',
           ),
           actions: <Widget>[
             TextButton(
