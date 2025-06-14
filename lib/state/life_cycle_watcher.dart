@@ -27,7 +27,7 @@ class _LifecycleWatcherState extends State<LifecycleWatcher>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.detached) {
-      print('Close Hive box');
+      print('Closing Hive box.');
       Hive.close();
     }
   }
