@@ -101,7 +101,7 @@ class WorkoutsScreen extends StatelessWidget {
               builder: (BuildContext context) {
                 return AlertDialog(
                   content: WorkoutForm(
-                    addWorkout: db.addOneWorkout,
+                    addWorkout: db.addEmptyWorkout,
                     isUnique: (name) {
                       if (!db.getAllWorkoutNames().contains(name)) return true;
                       return false;

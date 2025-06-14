@@ -62,15 +62,15 @@ class MockStorageService implements StorageService<List<Workout>> {
     return workouts[index].exercises;
   }
 
-  Future<int> addOneWorkout(String name) async {
+  Future<int> addEmptyWorkout(String name) async {
     var w = Workout(name, []);
     workouts.add(w);
     notifier.update(workouts);
     return Future.value(workouts.length - 1);
   }
 
-  Future<int> addManyWorkouts(List<String> names) async {
-    for (String name in names) addOneWorkout(name);
+  Future<int> addManyEmptyWorkouts(List<String> names) async {
+    for (String name in names) addEmptyWorkout(name);
     notifier.update(workouts);
     return Future.value(names.length);
   }

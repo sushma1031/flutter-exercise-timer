@@ -59,10 +59,10 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return workouts.getAt(index)!.exercises;
   }
 
-  Future<int> addOneWorkout(String name, {List<Exercise>? exercises}) async {
+  Future<int> addEmptyWorkout(String name) async {
     if (name.isNotEmpty && !getAllWorkoutNames().contains(name)) {
       try {
-        var workout = Workout(name, exercises ?? <Exercise>[]);
+        var workout = Workout(name, <Exercise>[]);
         await workouts.add(workout);
         return workouts.length - 1;
       } on Exception catch (ex) {
@@ -74,10 +74,10 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return -1;
   }
 
-  Future<int> addManyWorkouts(List<String> names) async {
+  Future<int> addManyEmptyWorkouts(List<String> names) async {
     int addedCount = 0;
     for (String name in names) {
-      int result = await addOneWorkout(name);
+      int result = await addEmptyWorkout(name);
       if (result != -1) addedCount++;
     }
     return addedCount;
