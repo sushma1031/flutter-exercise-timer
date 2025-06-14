@@ -50,6 +50,11 @@ class MockStorageService implements StorageService<List<Workout>> {
     return workouts.map((w) => w.name).toList();
   }
 
+  bool hasWorkoutAt(int index) {
+    return index >= 0 && index < workouts.length;
+  }
+
+
   Workout? getWorkoutByIndex(int index) {
     if (index < 0 || index > workouts.length) {
       print('Error: Workout index out of range.\n');

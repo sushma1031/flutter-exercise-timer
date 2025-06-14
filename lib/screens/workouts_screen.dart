@@ -13,8 +13,15 @@ class WorkoutsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void goToWorkout(int index) {
-      Navigator.push(
+
+    Future<void> goToWorkout(int index) async {
+      if (!db.hasWorkoutAt(index)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Workout not found."), duration: Duration(milliseconds: 2500)),
+        );
+        return;
+      }
+      final result = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ExercisesScreen(
@@ -23,6 +30,12 @@ class WorkoutsScreen extends StatelessWidget {
           ),
         ),
       );
+
+      if (result != null && result == false) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Workout no longer available.'), duration: Duration(milliseconds: 2500)),
+        );
+      }
     }
 
     void confirmAndDeleteAllWorkouts() {

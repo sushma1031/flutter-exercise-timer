@@ -47,12 +47,20 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return workouts.values.map((w) => w.name).toList();
   }
 
+  bool hasWorkoutAt(int index) {
+    return index >= 0 && index < workouts.length && workouts.getAt(index) != null;
+  }
+
   Workout? getWorkoutByIndex(int index) {
-    if (index < 0 || index > workouts.length) {
+    if (index < 0 || index >= workouts.length) {
       print('Error: Workout index out of range.\n');
       return null;
     }
-    return workouts.getAt(index)!;
+    var w = workouts.getAt(index);
+    if (w == null) {
+      print('Error: Workout at index $index is null.\n');
+    }
+    return w;
   }
 
   List<Exercise> getWorkoutExercises(int index) {

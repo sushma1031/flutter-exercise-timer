@@ -12,6 +12,7 @@ abstract class StorageService<T> {
   List<Workout> getAllWorkouts();
   List<WorkoutDisplay> getAllWorkoutsForDisplay();
   List<String> getAllWorkoutNames();
+  bool hasWorkoutAt(int index);
   Workout? getWorkoutByIndex(int index);
   List<Exercise> getWorkoutExercises(int index);
   Future<int> addEmptyWorkout(String name);

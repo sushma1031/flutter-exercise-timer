@@ -24,6 +24,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   late Workout _w;
   var _currentView = View.staticList;
   late Widget _child;
+  bool _invalid = false;
 
   Future<bool> _onPop() async {
     return await showDialog<bool>(
@@ -88,7 +89,15 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
   void initState() {
     super.initState();
-    _w = widget.db.getWorkoutByIndex(widget.index)!;
+    final workout = widget.db.getWorkoutByIndex(widget.index);
+    if (workout == null) {
+      _invalid = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pop<bool>(context, false);
+      });
+      return;
+    }
+    _w = workout;
     _child = StaticExerciseList(exercises: _w.exercises);
   }
 
@@ -114,6 +123,10 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_invalid)
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
         appBar: AppBar(
