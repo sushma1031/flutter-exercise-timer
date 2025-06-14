@@ -81,7 +81,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
           elevation: 24,
         );
       },
-    );
+    ) ?? 
+    false;
   }
 
   void _showExportErrorSnackbar(ExportError error) {
