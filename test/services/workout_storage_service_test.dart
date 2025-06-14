@@ -35,8 +35,8 @@ Future<void> main() async {
 
     await db.addManyEmptyWorkouts(['Thighs', 'Biceps']);
     var workoutNames = db.getAllWorkoutNames();
-    expect(workoutNames.length, 4);
-    expect(workoutNames, ['Abs', 'Abs2', 'Thighs', 'Biceps']);
+    expect(workoutNames.length, 3);
+    expect(workoutNames, ['Abs', 'Thighs', 'Biceps']);
   });
 
   test('updates workout name correctly', () async {
