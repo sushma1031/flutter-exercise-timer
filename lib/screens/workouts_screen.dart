@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:count_up/screens/exercises_screen.dart';
+import 'package:count_up/models/workout_display.dart';
 import 'package:count_up/widgets/workout_card.dart';
 import 'package:flutter/material.dart';
 import 'package:count_up/utils/format.dart';
@@ -17,6 +18,19 @@ class WorkoutsScreen extends StatelessWidget {
   final StorageService db;
 
   WorkoutsScreen({Key? key, required this.db}) : super(key: key);
+
+  List<WorkoutDisplay> _getAllWorkoutsForDisplay() {
+    List<WorkoutDisplay> wd = [];
+    final workouts = db.getAllWorkouts();
+    for (int i = 0; i < workouts.length; i++) {
+      var w = workouts[i];
+      int totalDuration = 0;
+      for (var ex in w.exercises) totalDuration += ex.duration;
+      totalDuration ~/= 60;
+      wd.add(WorkoutDisplay(w.name, w.exercises.length, totalDuration));
+    }
+    return wd;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +205,7 @@ class WorkoutsScreen extends StatelessWidget {
         body: ValueListenableBuilder(
             valueListenable: db.getListenable(),
             builder: (context, _, __) {
-              var workouts = db.getAllWorkoutsForDisplay();
+              var workouts = _getAllWorkoutsForDisplay();
               return Column(children: [
                 Expanded(
                   child: ListView.builder(

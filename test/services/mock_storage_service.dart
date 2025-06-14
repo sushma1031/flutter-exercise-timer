@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:count_up/services/storage_service_interface.dart';
 import 'package:count_up/models/exercise.dart';
 import 'package:count_up/models/workout.dart';
-import 'package:count_up/models/workout_display.dart';
 
 class WorkoutListValueNotifier extends ValueNotifier<List<Workout>> {
   WorkoutListValueNotifier(List<Workout> value) : super(value);
@@ -32,18 +31,6 @@ class MockStorageService implements StorageService<List<Workout>> {
 
   List<Workout> getAllWorkouts() {
     return workouts;
-  }
-
-  List<WorkoutDisplay> getAllWorkoutsForDisplay() {
-    List<WorkoutDisplay> wd = [];
-    int totalDuration;
-    for (Workout w in workouts) {
-      totalDuration = 0;
-      for (var ex in w.exercises) totalDuration += ex.duration;
-      totalDuration ~/= 60;
-      wd.add(WorkoutDisplay(w.name, w.exercises.length, totalDuration));
-    }
-    return wd;
   }
 
   List<String> getAllWorkoutNames() {

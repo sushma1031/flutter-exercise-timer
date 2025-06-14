@@ -1,7 +1,6 @@
 import './storage_service_interface.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
-import '../models/workout_display.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -29,18 +28,6 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
 
   List<Workout> getAllWorkouts() {
     return workouts.values.toList();
-  }
-
-  List<WorkoutDisplay> getAllWorkoutsForDisplay() {
-    List<WorkoutDisplay> wd = [];
-    for (int i = 0; i < workouts.length; i++) {
-      var w = workouts.getAt(i)!;
-      int totalDuration = 0;
-      for (var ex in w.exercises) totalDuration += ex.duration;
-      totalDuration ~/= 60;
-      wd.add(WorkoutDisplay(w.name, w.exercises.length, totalDuration));
-    }
-    return wd;
   }
 
   List<String> getAllWorkoutNames() {

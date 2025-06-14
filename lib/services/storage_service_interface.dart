@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
-import '../models/workout_display.dart';
 
 abstract class StorageService<T> {
   late T workouts;
@@ -10,7 +9,6 @@ abstract class StorageService<T> {
   Future<void> loadData();
   ValueListenable<T> getListenable();
   List<Workout> getAllWorkouts();
-  List<WorkoutDisplay> getAllWorkoutsForDisplay();
   List<String> getAllWorkoutNames();
   bool hasWorkoutAt(int index);
   Workout? getWorkoutByIndex(int index);
