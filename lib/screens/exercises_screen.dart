@@ -56,7 +56,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         false;
   }
 
-  Future<bool> _confirmAndDeleteWorkouts(int index) async {
+  Future<bool> _confirmAndDeleteWorkout(int index) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -227,7 +227,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                               }
                               break;
                             case WorkoutActions.delWkt:
-                              await _confirmAndDeleteWorkouts(widget.index).then((value) {
+                              await _confirmAndDeleteWorkout(widget.index).then((value) {
                                 if (value) Navigator.pop(context);
                               });
                               break;
