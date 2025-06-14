@@ -1,10 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:count_up/screens/exercises_screen.dart';
 import 'package:count_up/models/workout_display.dart';
 import 'package:count_up/widgets/workout_card.dart';
-import 'package:flutter/material.dart';
 import 'package:count_up/utils/format.dart';
 import 'package:count_up/utils/serialise_workout.dart';
 import '../widgets/workout_form.dart';
