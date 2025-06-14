@@ -23,8 +23,7 @@ enum ExportError { empty, fs, platform, unknown }
 class ExercisesScreen extends StatefulWidget {
   final int index;
   final StorageService db;
-  const ExercisesScreen({Key? key, required this.db, required this.index})
-      : super(key: key);
+  const ExercisesScreen({Key? key, required this.db, required this.index}) : super(key: key);
 
   @override
   State<ExercisesScreen> createState() => _ExercisesScreenState();
@@ -48,12 +47,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                 'Are you sure you want to discard all changes?',
               ),
               actions: <Widget>[
-                TextButton(
-                    child: Text('Yes'),
-                    onPressed: () => Navigator.of(context).pop(true)),
-                TextButton(
-                    child: Text('No'),
-                    onPressed: () => Navigator.of(context).pop(false)),
+                TextButton(child: Text('Yes'), onPressed: () => Navigator.of(context).pop(true)),
+                TextButton(child: Text('No'), onPressed: () => Navigator.of(context).pop(false)),
               ],
             );
           },
@@ -62,10 +57,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   }
 
   Future<bool> _confirmAndDeleteWorkouts(int index) async {
-    var w = widget.db.getWorkoutByIndex(index)!;
-    if (w.exercises.length == 0) {
-      return await widget.db.deleteWorkout(index).then((value) => true);
-    }
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -77,19 +68,15 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
             )
           ]),
           content: Text(
-            'Are you sure you want to delete this workout with ${w.exercises.length} exercises?',
+            'Are you sure you want to delete ${_w.name} (${_w.exercises.length} exercises)?',
           ),
           actions: <Widget>[
             TextButton(
                 child: Text('Yes'),
                 onPressed: () async {
-                  await widget.db
-                      .deleteWorkout(index)
-                      .then((value) => Navigator.pop(context, true));
+                  await widget.db.deleteWorkout(index).then((value) => Navigator.pop(context, true));
                 }),
-            TextButton(
-                child: Text('No'),
-                onPressed: () => Navigator.pop(context, false)),
+            TextButton(child: Text('No'), onPressed: () => Navigator.pop(context, false)),
           ],
           elevation: 24,
         );
@@ -186,13 +173,11 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         appBar: AppBar(
             leading: _currentView == View.staticList
                 ? BackButton()
-                : IconButton(
-                    onPressed: _returnToStaticList, icon: Icon(Icons.close)),
+                : IconButton(onPressed: _returnToStaticList, icon: Icon(Icons.close)),
             backgroundColor: Colors.transparent,
             elevation: 0,
             title: Text(_getAppBarTitle(_currentView),
-                style: TextStyle(
-                    fontFamily: "EthosNova", fontWeight: FontWeight.bold)),
+                style: TextStyle(fontFamily: "EthosNova", fontWeight: FontWeight.bold)),
             actions: _currentView == View.staticList
                 ? [
                     PopupMenuButton<WorkoutActions>(
@@ -204,8 +189,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                 _currentView = View.add;
                                 _child = ExercisesForm(
                                   workoutIndex: widget.index,
-                                  addWorkoutExercises:
-                                      widget.db.addWorkoutExercises,
+                                  addWorkoutExercises: widget.db.addWorkoutExercises,
                                   returnToStaticList: _returnToStaticList,
                                   onPop: _onPop,
                                 );
@@ -216,13 +200,10 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                 _currentView = View.editWorkout;
                                 _child = EditWorkoutScreen(
                                     workout: _w,
-                                    workoutNames:
-                                        widget.db.getAllWorkoutNames(),
+                                    workoutNames: widget.db.getAllWorkoutNames(),
                                     index: widget.index,
-                                    updateWorkoutName:
-                                        widget.db.updateWorkoutName,
-                                    updateWorkoutExercises:
-                                        widget.db.updateWorkoutExercises,
+                                    updateWorkoutName: widget.db.updateWorkoutName,
+                                    updateWorkoutExercises: widget.db.updateWorkoutExercises,
                                     returnToStaticList: _returnToStaticList,
                                     onPop: _onPop);
                               });
@@ -245,16 +226,13 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                               }
                               break;
                             case WorkoutActions.delWkt:
-                              await _confirmAndDeleteWorkouts(widget.index)
-                                  .then((value) {
+                              await _confirmAndDeleteWorkouts(widget.index).then((value) {
                                 if (value) Navigator.pop(context);
                               });
-
                               break;
                           }
                         },
-                        itemBuilder: (context) =>
-                            <PopupMenuEntry<WorkoutActions>>[
+                        itemBuilder: (context) => <PopupMenuEntry<WorkoutActions>>[
                               PopupMenuItem<WorkoutActions>(
                                 child: IconTextItem(
                                   icon: Icons.add,
