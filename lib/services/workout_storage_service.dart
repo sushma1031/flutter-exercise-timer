@@ -68,15 +68,11 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   }
 
   Future<int> addWorkout(Workout workout) async {
-    if (!getAllWorkoutNames().contains(workout.name)) {
-      try {
-        await workouts.add(workout);
-        return workouts.length - 1;
-      } on Exception catch (ex) {
-        print('Error: Could not add workout.\n{$ex}');
-      }
-    } else {
-      print('Error: Name must be unique');
+    try {
+      await workouts.add(workout);
+      return workouts.length - 1;
+    } on Exception catch (ex) {
+      print('Error: Could not add workout.\n{$ex}');
     }
     return -1;
   }
@@ -90,18 +86,14 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return addedCount;
   }
   Future<int> addEmptyWorkout(String name) async {
-    if (name.isNotEmpty && !getAllWorkoutNames().contains(name)) {
       try {
         var workout = Workout(name, <Exercise>[]);
         await workouts.add(workout);
         return workouts.length - 1;
       } on Exception catch (ex) {
         print('Error: Could not add workout.\n{$ex}');
+        return -1;
       }
-    } else {
-      print('Error: Name must be unique and non-empty');
-    }
-    return -1;
   }
 
   Future<int> addManyEmptyWorkouts(List<String> names) async {
@@ -119,14 +111,8 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
       return null;
     }
     Workout prev = workouts.getAt(index)!;
-    if (name.isNotEmpty &&
-        name != prev.name &&
-        !getAllWorkoutNames().contains(name)) {
-      prev.name = name;
-      await prev.save();
-    } else {
-      print('Error: Name must be unique and non-empty');
-    }
+    prev.name = name;
+    await prev.save();
     return prev;
   }
 
