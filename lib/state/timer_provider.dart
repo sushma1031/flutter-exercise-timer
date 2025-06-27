@@ -117,13 +117,13 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
     }
   }
 
-  Future<void> stopSoundIfPlaying() async {
+  Future<void> stopSound() async {
     _audioStatus = AudioStatus.stopped;
     await widget.player.stop();
   }
 
   Future<void> goPrevious() async {
-    await stopSoundIfPlaying();
+    await stopSound();
 
     if (widget.duration.inSeconds - _timeLeft.inSeconds > 2) {
       restartTimer();
@@ -140,7 +140,7 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
   }
 
   Future<void> goNext() async {
-    await stopSoundIfPlaying();
+    await stopSound();
     _timer.cancel();
     _controller.stop();
     widget.nextExercise(null);
@@ -178,7 +178,7 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
   void dispose() {
     _timer.cancel();
     _controller.dispose();
-    stopSoundIfPlaying();
+    stopSound();
     super.dispose();
   }
 
