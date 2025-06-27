@@ -1,8 +1,9 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import '../models/exercise.dart';
 import './timer_provider.dart';
 import '../widgets/workout_complete.dart';
+import '../services/audio_service.dart';
+import '../services/timer_audio_service.dart';
 
 class WorkoutProvider extends StatefulWidget {
   final List<Exercise> exercises;
@@ -16,28 +17,19 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
   List<Exercise> _exercises = [];
   int _currentIndex = 0;
   bool _isWorkoutComplete = false;
-  late AudioPlayer player;
+  late AudioService player;
 
   @override
   void initState() {
     _exercises = widget.exercises;
     _currentIndex = 0;
-    player = AudioPlayer();
+    player = TimerAudioService("audio/exercise_change.mp3");
     initAudioPlayer();
     super.initState();
   }
 
   Future<void> initAudioPlayer() async {
-    await player.setAudioContext(AudioContext(
-      android: AudioContextAndroid(
-        usageType: AndroidUsageType.notification, 
-				audioFocus: AndroidAudioFocus.gainTransientMayDuck
-			),
-      iOS: AudioContextIOS(
-        category: AVAudioSessionCategory.playback, 
-				options: {AVAudioSessionOptions.mixWithOthers}
-			)
-		));
+    await player.configure();
   }
 
   void nextExercise(_) {
