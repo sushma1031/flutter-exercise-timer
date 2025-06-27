@@ -6,7 +6,6 @@ class CountdownScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var duration = Duration(milliseconds: 2000);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
       body: Container(
@@ -30,7 +29,7 @@ class CountdownScreen extends StatelessWidget {
                     fontFamily: 'EthosNova',
                     fontWeight: FontWeight.bold,
                   ),
-                  duration: duration,
+                  duration: Duration(milliseconds: 1500),
                   onFinished: () => Navigator.pop(context, true),
                 ),
               ),
