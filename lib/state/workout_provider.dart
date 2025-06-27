@@ -67,6 +67,7 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
 
   @override
   void dispose() {
+		player.dispose();
     super.dispose();
   }
 
