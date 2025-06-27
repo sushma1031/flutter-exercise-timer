@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:count_up/widgets/timer_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
-
-enum AudioStatus { playing, paused, stopped }
+import 'package:count_up/services/audio_service.dart';
 
 class TimerProvider extends StatefulWidget {
   final Duration duration;
@@ -14,7 +12,7 @@ class TimerProvider extends StatefulWidget {
   final int noOfExercises;
   final ValueChanged<void> nextExercise;
   final ValueChanged<void> previousExercise;
-  final AudioPlayer player;
+  final AudioService player;
   const TimerProvider(
       {Key? key,
       required this.name,
@@ -33,12 +31,10 @@ class TimerProvider extends StatefulWidget {
 
 class _TimerProviderState extends State<TimerProvider> with SingleTickerProviderStateMixin {
   final String audioPath = "audio/exercise_change.mp3";
-  final AssetSource audioAsset = AssetSource("audio/exercise_change.mp3");
   late Timer _timer;
   late Duration _timeLeft;
   late AnimationController _controller;
   bool _isPaused = false;
-  AudioStatus _audioStatus = AudioStatus.stopped;
   var oneSec = Duration(seconds: 1);
   @override
   void initState() {
@@ -49,7 +45,7 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
       duration: widget.duration + oneSec,
     )..addListener(() {
         setState(() {});
-      });
+    });
     startTimer();
   }
 
@@ -59,11 +55,11 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
       setState(() {
         _timeLeft -= Duration(seconds: 1);
         if (_timeLeft.inSeconds == 3) {
-          playSound();
+        	widget.player.play();
         }
         if (_timeLeft.inSeconds <= -1) {
           timer.cancel();
-          _audioStatus = AudioStatus.stopped;
+          widget.player.status = AudioStatus.stopped;
           widget.nextExercise(null);
         }
       });
@@ -73,13 +69,13 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
   Future<void> pauseTimer() async {
     _timer.cancel();
     _controller.stop();
-    await pauseSoundIfPlaying();
+    await widget.player.pause();
   }
 
   Future<void> resumeTimer() async {
     startTimer();
     _controller.forward(from: _controller.value);
-    await resumeSoundIfPaused();
+    await widget.player.resume();
   }
 
   Future<void> restartTimer() async {
@@ -98,32 +94,8 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
     }
   }
 
-  Future<void> playSound() async {
-    await widget.player.play(audioAsset);
-    _audioStatus = AudioStatus.playing;
-  }
-
-  Future<void> pauseSoundIfPlaying() async {
-    if (_audioStatus == AudioStatus.playing) {
-      _audioStatus = AudioStatus.paused;
-      await widget.player.pause();
-    }
-  }
-
-  Future<void> resumeSoundIfPaused() async {
-    if (_audioStatus == AudioStatus.paused) {
-      _audioStatus = AudioStatus.playing;
-      await widget.player.resume();
-    }
-  }
-
-  Future<void> stopSoundIfPlaying() async {
-    _audioStatus = AudioStatus.stopped;
-    await widget.player.stop();
-  }
-
   Future<void> goPrevious() async {
-    await stopSoundIfPlaying();
+    await widget.player.stop();
 
     if (widget.duration.inSeconds - _timeLeft.inSeconds > 2) {
       restartTimer();
@@ -140,7 +112,7 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
   }
 
   Future<void> goNext() async {
-    await stopSoundIfPlaying();
+    await widget.player.stop();
     _timer.cancel();
     _controller.stop();
     widget.nextExercise(null);
@@ -178,7 +150,7 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
   void dispose() {
     _timer.cancel();
     _controller.dispose();
-    stopSoundIfPlaying();
+    widget.player.stop();
     super.dispose();
   }
 

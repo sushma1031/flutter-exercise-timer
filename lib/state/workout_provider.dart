@@ -1,8 +1,9 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import '../models/exercise.dart';
 import './timer_provider.dart';
 import '../widgets/workout_complete.dart';
+import '../services/audio_service.dart';
+import '../services/timer_audio_service.dart';
 
 class WorkoutProvider extends StatefulWidget {
   final List<Exercise> exercises;
@@ -16,12 +17,19 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
   List<Exercise> _exercises = [];
   int _currentIndex = 0;
   bool _isWorkoutComplete = false;
+  late AudioService player;
 
   @override
   void initState() {
     _exercises = widget.exercises;
     _currentIndex = 0;
+    player = TimerAudioService("audio/exercise_change.mp3");
+    initAudioPlayer();
     super.initState();
+  }
+
+  Future<void> initAudioPlayer() async {
+    await player.configure();
   }
 
   void nextExercise(_) {
@@ -51,26 +59,27 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
 
   @override
   void dispose() {
+		player.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: _isWorkoutComplete
-            ? WorkoutComplete(
-                restartWorkout: restartWorkout,
-              )
-            : TimerProvider(
-                name: _exercises[_currentIndex].name,
-                nextName: _currentIndex < _exercises.length - 1 ? _exercises[_currentIndex + 1].name : null,
-                duration: Duration(seconds: _exercises[_currentIndex].duration),
-                currentIndex: _currentIndex,
-                nextExercise: nextExercise,
-                previousExercise: previousExercise,
-                noOfExercises: _exercises.length - 1,
-                workoutProgress: "${_currentIndex + 1}/${_exercises.length}",
-                player: AudioPlayer(),
-              ));
-  }
+			child: _isWorkoutComplete
+				? WorkoutComplete(
+						restartWorkout: restartWorkout,
+					)
+				: TimerProvider(
+						name: _exercises[_currentIndex].name,
+						nextName: _currentIndex < _exercises.length - 1 ? _exercises[_currentIndex + 1].name : null,
+						duration: Duration(seconds: _exercises[_currentIndex].duration),
+						currentIndex: _currentIndex,
+						nextExercise: nextExercise,
+						previousExercise: previousExercise,
+						noOfExercises: _exercises.length - 1,
+						workoutProgress: "${_currentIndex + 1}/${_exercises.length}",
+						player: player,
+					));
+	}
 }
