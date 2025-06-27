@@ -16,12 +16,28 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
   List<Exercise> _exercises = [];
   int _currentIndex = 0;
   bool _isWorkoutComplete = false;
+  late AudioPlayer player;
 
   @override
   void initState() {
     _exercises = widget.exercises;
     _currentIndex = 0;
+    player = AudioPlayer();
+    initAudioPlayer();
     super.initState();
+  }
+
+  Future<void> initAudioPlayer() async {
+    await player.setAudioContext(AudioContext(
+      android: AudioContextAndroid(
+        usageType: AndroidUsageType.notification, 
+				audioFocus: AndroidAudioFocus.gainTransientMayDuck
+			),
+      iOS: AudioContextIOS(
+        category: AVAudioSessionCategory.playback, 
+				options: {AVAudioSessionOptions.mixWithOthers}
+			)
+		));
   }
 
   void nextExercise(_) {
@@ -70,7 +86,7 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
                 previousExercise: previousExercise,
                 noOfExercises: _exercises.length - 1,
                 workoutProgress: "${_currentIndex + 1}/${_exercises.length}",
-                player: AudioPlayer(),
+						player: player,
               ));
   }
 }
