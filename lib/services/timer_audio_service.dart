@@ -16,10 +16,6 @@ class TimerAudioService extends AudioService{
         usageType: AndroidUsageType.notification,
         audioFocus: AndroidAudioFocus.gainTransientMayDuck,
       ),
-      iOS: AudioContextIOS(
-        category: AVAudioSessionCategory.playback,
-        options: {AVAudioSessionOptions.mixWithOthers},
-      ),
     ));
   }
 
