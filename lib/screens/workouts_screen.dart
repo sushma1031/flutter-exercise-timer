@@ -106,10 +106,10 @@ class WorkoutsScreen extends StatelessWidget {
         message = "Workout structure is incompatible or malformed.";
         break;
       default:
-        message = "Something went wrong while exporting.";
+        message = "Something went wrong while importing.";
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+      SnackBar(content: Text("Error: $message")),
     );
   }
 

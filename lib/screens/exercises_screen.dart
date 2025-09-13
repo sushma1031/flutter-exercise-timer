@@ -101,7 +101,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         message = "Something went wrong while exporting.";
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+      SnackBar(content: Text("Error: $message")),
     );
   }
 
