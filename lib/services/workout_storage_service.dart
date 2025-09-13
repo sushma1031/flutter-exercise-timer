@@ -15,10 +15,10 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   Future<void> loadData() async {
     try {
       workouts = await Hive.openBox<Workout>(boxName);
-    } on HiveError catch (e) {
-      print("Error: Could not load data from Hive.\n$e");
-    } on Exception catch (e) {
-      print("Error: Could not load data from Hive.\n$e");
+    } on HiveError catch (e, stackTrace) {
+      debugPrint("Error: Could not load data from Hive: $e\n$stackTrace");
+    } on Exception catch (e, stackTrace) {
+      debugPrint("Error: Could not load data from Hive: $e\n$stackTrace");
     }
   }
 
@@ -58,8 +58,8 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     try {
       await workouts.add(workout);
       return workouts.length - 1;
-    } on Exception catch (ex) {
-      print('Error: Could not add workout.\n{$ex}');
+    } on Exception catch (ex, stackTrace) {
+      debugPrint('Error: Could not add workout: $ex\n$stackTrace');
     }
     return -1;
   }
@@ -88,7 +88,7 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
 
   Future<Workout?> updateWorkoutName(int index, String name) async {
     if (index < 0 || index > workouts.length - 1) {
-      print('Error: Workout index out of range.\n');
+      debugPrint('Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
       return null;
     }
     Workout prev = workouts.getAt(index)!;
@@ -99,7 +99,7 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
 
   Future<Workout?> addWorkoutExercises(int index, List<Exercise> toAdd) async {
     if (index < 0 || index > workouts.length - 1) {
-      print('Error: Workout index out of range.\n');
+      debugPrint('Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
       return null;
     }
     Workout w = workouts.getAt(index)!;
@@ -110,7 +110,7 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
 
   Future<Workout?> updateWorkoutExercises(int index, List<Exercise> newExercises) async {
     if (index < 0 || index > workouts.length - 1) {
-      print('Error: Workout index out of range.\n');
+      debugPrint('Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
       return null;
     }
     Workout w = getWorkoutByIndex(index)!;
@@ -121,14 +121,14 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
 
   Future<int> modifyExercises(int wIdx, List<Map> data) async {
     if (wIdx < 0 || wIdx > workouts.length - 1) {
-      print('Error: Workout index out of range.\n');
+      debugPrint('Error: Workout index out of range. Length: ${workouts.length}, index: $wIdx\n');
       return 0;
     }
     int modified = 0;
     Workout w = workouts.getAt(wIdx)!;
     for (int i = 0; i < data.length; i++) {
       if (data[i]['index'] < 0 || data[i]['index'] > w.exercises.length - 1) {
-        print('Error: Exercise index out of range.\n');
+        debugPrint('Error: Exercise index out of range. Length: ${w.exercises.length}, index: ${data[i]['index']}\n');
         continue;
       }
       w.exercises[data[i]['index']].name = data[i]['name'];
