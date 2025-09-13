@@ -110,12 +110,8 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
       return null;
     }
     Workout w = workouts.getAt(index)!;
-    if (toAdd.where((e) => e.duration <= 0 || e.duration > 99).isEmpty) {
-      w.exercises.addAll(toAdd);
-      await w.save();
-    } else {
-      print('Error: Some exercises have duration <= 0s or > 99s.\n');
-    }
+    w.exercises.addAll(toAdd);
+    await w.save();
     return w;
   }
 
@@ -138,21 +134,12 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     int modified = 0;
     Workout w = workouts.getAt(wIdx)!;
     for (int i = 0; i < data.length; i++) {
-      var x = data[i];
-      if (x['index'] < 0 || x['index'] > w.exercises.length - 1) {
+      if (data[i]['index'] < 0 || data[i]['index'] > w.exercises.length - 1) {
         print('Error: Exercise index out of range.\n');
         continue;
       }
-      if (x['duration'] <= 0 || x['duration'] > 99) {
-        print('Error: Duration must be within range [1, 99]');
-        continue;
-      }
-      if (x['name'].isEmpty) {
-        print('Error: Name must not be empty');
-        continue;
-      }
-      w.exercises[x['index']].name = x['name'];
-      w.exercises[x['index']].duration = x['duration'];
+      w.exercises[data[i]['index']].name = data[i]['name'];
+      w.exercises[data[i]['index']].duration = data[i]['duration'];
       modified++;
     }
     await w.save();
