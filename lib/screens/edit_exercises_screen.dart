@@ -113,8 +113,7 @@ class _EditExercisesScreenState extends State<EditExercisesScreen> {
                                   });
                                 }
                                 if (toModify.length > 0)
-                                  await widget.modifyExercise(
-                                      widget.workoutIndex, toModify);
+                                  await widget.modifyExercise(widget.workoutIndex, toModify);
                               }
 
                               widget.returnToStaticList();

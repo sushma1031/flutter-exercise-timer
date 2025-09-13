@@ -12,29 +12,31 @@ void main() {
     });
   });
 
-  test('.validateExercise() validates exercise name and duration corrrectly',
-      () {
+  test('.validateExercise() validates exercise name and duration corrrectly', () {
     var l = <String>["Crunches", "15"];
     expect(validateExercise(l), null);
     l = <String>["Crunches", "99"];
     expect(validateExercise(l), null);
+    
     l = ["", "10"];
     expect(validateExercise(l), "Fields cannot be empty");
     l = ["  ", "10"];
     expect(validateExercise(l), "Fields cannot be empty");
-    l = ["*,%\$#@'", "10"];
-    expect(validateExercise(l), "Use only alphanumeric, spaces, ./-");
     l = ["Crunches", ""];
     expect(validateExercise(l), "Fields cannot be empty");
     l = ["", ""];
     expect(validateExercise(l), "Fields cannot be empty");
+
+    l = ["*.,%\$#@'", "10"];
+    expect(validateExercise(l), "Use only alphanumeric, spaces, +-/");
+
     l = ["Crunches", "x"];
-    expect(validateExercise(l), "Duration must be in range [1, 99]");
+    expect(validateExercise(l), "Duration must be in range [1, 999]");
     l = ["Crunches", "0"];
-    expect(validateExercise(l), "Duration must be in range [1, 99]");
+    expect(validateExercise(l), "Duration must be in range [1, 999]");
     l = ["Crunches", "-1"];
-    expect(validateExercise(l), "Duration must be in range [1, 99]");
-    l = ["Crunches", "100"];
-    expect(validateExercise(l), "Duration must be in range [1, 99]");
+    expect(validateExercise(l), "Duration must be in range [1, 999]");
+    l = ["Crunches", "1000"];
+    expect(validateExercise(l), "Duration must be in range [1, 999]");
   });
 }
