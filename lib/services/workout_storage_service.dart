@@ -74,14 +74,7 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   }
 
   Future<int> addEmptyWorkout(String name) async {
-      try {
-        var workout = Workout(name, <Exercise>[]);
-        await workouts.add(workout);
-        return workouts.length - 1;
-      } on Exception catch (ex) {
-        print('Error: Could not add workout.\n{$ex}');
-        return -1;
-      }
+    return addWorkout(Workout(name, []));
   }
 
   Future<int> addManyEmptyWorkouts(List<String> names) async {
