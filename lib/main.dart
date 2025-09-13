@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         secondaryContainer: Colors.deepPurple.shade200,
         error: Color(0xFFCF6765));
     return MaterialApp(
-        title: 'Exercise Timer',
+        title: 'Count Up',
         theme: ThemeData(
             useMaterial3: false,
             brightness: Brightness.dark,
