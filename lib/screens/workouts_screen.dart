@@ -51,7 +51,7 @@ class WorkoutsScreen extends StatelessWidget {
 
     if (result != null && result == false) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Workout no longer available.'), duration: Duration(milliseconds: 2500)),
+        SnackBar(content: Text('Error: Workout no longer available.'), duration: Duration(milliseconds: 2500)),
       );
     }
   }
