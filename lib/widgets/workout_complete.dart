@@ -16,10 +16,14 @@ class WorkoutComplete extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CountdownScreen(),
+          builder: (context) => CountdownScreen(
+            message: "Awesome, let's go for another round!",
+            textSequence: ['Get', 'Set', 'Go!'],
+            fontSize: 40,
+          ),
         )).then((value) {
-      if (value == true) restartWorkout();
-    });
+          if (value == true) restartWorkout();
+        });
   }
 
   WorkoutComplete({Key? key, required this.restartWorkout});

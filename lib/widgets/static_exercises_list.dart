@@ -1,12 +1,30 @@
 import '../models/exercise.dart';
 import 'package:flutter/material.dart';
+import '../screens/countdown_screen.dart';
 import '../screens/timer_screen.dart';
-import 'package:count_up/widgets/exercise_item.dart';
+import '../widgets/exercise_item.dart';
 
 class StaticExerciseList extends StatelessWidget {
   final List<Exercise> exercises;
-  const StaticExerciseList({Key? key, required this.exercises})
-      : super(key: key);
+  const StaticExerciseList({Key? key, required this.exercises}) : super(key: key);
+
+  void countdownAndStart(context) async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CountdownScreen(
+            textSequence: List.generate(5, (i) => (5 - i).toString(), growable: false),
+            fontSize: 50,
+          ),
+        )).then((value) {
+      if (value == true) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => TimerScreen(e: exercises)),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,16 +32,9 @@ class StaticExerciseList extends StatelessWidget {
       Padding(
           padding: EdgeInsets.only(top: 16),
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 8)
-            ),
+            style: ElevatedButton.styleFrom(padding: EdgeInsets.symmetric(horizontal: 8)),
             onPressed: (exercises.length > 0)
-                ? () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TimerScreen(e: exercises)));
-                  }
+                ? () => countdownAndStart(context)
                 : null,
             child: const Text('Start Workout'),
           )),
@@ -34,10 +45,7 @@ class StaticExerciseList extends StatelessWidget {
                 itemCount: exercises.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                      padding: EdgeInsets.only(top: 24),
-                      child: ExerciseItem(
-                          name: exercises[index].name,
-                          duration: '${exercises[index].duration}'));
+                      padding: EdgeInsets.only(top: 24), child: ExerciseItem(name: exercises[index].name, duration: '${exercises[index].duration}'));
                 },
               ))),
     ]);
