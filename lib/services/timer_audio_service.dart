@@ -1,7 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:count_up/services/audio_service.dart';
 
-class TimerAudioService extends AudioService{
+class TimerAudioService extends AudioService {
   AudioPlayer _player = AudioPlayer();
   AudioStatus _status = AudioStatus.stopped;
   final AssetSource _asset;
@@ -17,6 +17,7 @@ class TimerAudioService extends AudioService{
         audioFocus: AndroidAudioFocus.gainTransientMayDuck,
       ),
     ));
+    await _player.setVolume(0.8);
   }
 
 	@override
@@ -47,7 +48,7 @@ class TimerAudioService extends AudioService{
     _status = AudioStatus.stopped;
   }
 
-  Future<void> dispose() async{
+  Future<void> dispose() async {
     await _player.dispose();
   }
 
