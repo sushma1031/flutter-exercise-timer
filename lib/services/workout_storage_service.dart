@@ -17,8 +17,10 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
       workouts = await Hive.openBox<Workout>(boxName);
     } on HiveError catch (e, stackTrace) {
       debugPrint("Error: Could not load data from Hive: $e\n$stackTrace");
+      rethrow;
     } on Exception catch (e, stackTrace) {
       debugPrint("Error: Could not load data from Hive: $e\n$stackTrace");
+      rethrow;
     }
   }
 

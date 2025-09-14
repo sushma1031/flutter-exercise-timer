@@ -6,6 +6,7 @@ import 'services/storage_service_interface.dart';
 import 'services/workout_storage_service.dart';
 import 'state/life_cycle_watcher.dart';
 import 'utils/color.dart';
+import 'utils/errors.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -49,12 +50,17 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final StorageService db;
   const HomePage({Key? key, required this.db}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   Future<void> loadDataWithDelay() async {
-    await db.loadData();
+    await widget.db.loadData();
     await Future.delayed(Duration(seconds: 2));
   }
 
@@ -63,20 +69,7 @@ class HomePage extends StatelessWidget {
     return FutureBuilder<void>(
       future: loadDataWithDelay(),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasError) {
-            return Scaffold(
-              backgroundColor: Theme.of(context).colorScheme.error,
-              body: Center(
-                  child: Text(
-                'Error: ${snapshot.error}',
-                style: TextStyle(color: Theme.of(context).colorScheme.onError),
-              )),
-            );
-          } else {
-            return WorkoutsScreen(db: db);
-          }
-        } else {
+        if (snapshot.connectionState != ConnectionState.done) {
           // loading
           final gradient = LinearGradient(colors: [Colors.indigo.shade200, Colors.indigo]);
           return Scaffold(
@@ -97,6 +90,60 @@ class HomePage extends StatelessWidget {
               ),
             ),
           );
+        }
+        if (snapshot.hasError) {
+          final error = snapshot.error;
+          String message;
+          if (error is HiveError) {
+            message = errorMessages[AppError.dbInitFailed]!;
+          } else {
+            message = errorMessages[AppError.unknown]!;
+          }
+          return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            body: Container(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsetsGeometry.only(bottom: 24),
+                    child: Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.redAccent,
+                    )
+                  ),
+                  Text(
+                    message,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18)
+                  ),
+                  Padding(
+                      padding: EdgeInsetsGeometry.symmetric(vertical: 16),
+                      child: Text(
+                        "Please try again or come back later.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                        ),
+                      )),
+                  Padding(
+                    padding: EdgeInsetsGeometry.symmetric(vertical: 16),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 0)),
+                      onPressed: () {
+                        setState(() {});
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        } else {
+          return WorkoutsScreen(db: widget.db);
         }
       },
     );
