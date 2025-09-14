@@ -22,6 +22,7 @@ dependencies:
   share_plus: ^10.1.2
   file_picker: ^10.1.9
   intl: ^0.20.2
+  wakelock_plus: ^1.4.0
 
 dev_dependencies:
   flutter_test:

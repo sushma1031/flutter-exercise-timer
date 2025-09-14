@@ -4,6 +4,7 @@ import './timer_provider.dart';
 import '../widgets/workout_complete.dart';
 import '../services/audio_service.dart';
 import '../services/timer_audio_service.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class WorkoutProvider extends StatefulWidget {
   final List<Exercise> exercises;
@@ -17,6 +18,7 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
   List<Exercise> _exercises = [];
   int _currentIndex = 0;
   bool _isWorkoutComplete = false;
+  bool _wakeLockEnabled = false;
   late AudioService player;
 
   @override
@@ -59,14 +61,27 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
 
   @override
   void dispose() {
-		player.dispose();
+    player.dispose();
+    if (_wakeLockEnabled) {
+      WakelockPlus.disable();
+      _wakeLockEnabled = false;
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+	// enable wakelock only in the timer screen
+    if (!_isWorkoutComplete && !_wakeLockEnabled) {
+		WakelockPlus.enable();
+		_wakeLockEnabled = true;
+    } else if (_isWorkoutComplete && _wakeLockEnabled) {
+        WakelockPlus.disable();
+        _wakeLockEnabled = false;
+    }
+
     return Center(
-			child: _isWorkoutComplete
+      child: _isWorkoutComplete
 				? WorkoutComplete(
 						restartWorkout: restartWorkout,
 					)
