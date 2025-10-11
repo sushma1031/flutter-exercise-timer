@@ -1,6 +1,7 @@
-import '../models/exercise.dart';
 import 'package:flutter/material.dart';
+import '../models/exercise.dart';
 import '../screens/countdown_screen.dart';
+import '../services/timer_audio_service.dart';
 import '../screens/timer_screen.dart';
 import '../widgets/exercise_item.dart';
 
@@ -14,6 +15,7 @@ class StaticExerciseList extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => CountdownScreen(
             textSequence: List.generate(5, (i) => (5 - i).toString(), growable: false),
+            player: TimerAudioService("audio/workout_start.mp3"),
             fontSize: 50,
           ),
         )).then((value) {
@@ -45,7 +47,10 @@ class StaticExerciseList extends StatelessWidget {
                 itemCount: exercises.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                      padding: EdgeInsets.only(top: 24), child: ExerciseItem(name: exercises[index].name, duration: '${exercises[index].duration}'));
+                      padding: EdgeInsets.only(top: 24),
+                      child: ExerciseItem(
+                          name: exercises[index].name,
+                          duration: '${exercises[index].duration}'));
                 },
               ))),
     ]);

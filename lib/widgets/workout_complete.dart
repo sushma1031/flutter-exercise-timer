@@ -1,6 +1,7 @@
 import 'dart:math';
-import 'package:count_up/screens/countdown_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:count_up/screens/countdown_screen.dart';
+import 'package:count_up/services/timer_audio_service.dart';
 
 class WorkoutComplete extends StatelessWidget {
   final void Function() restartWorkout;
@@ -19,6 +20,7 @@ class WorkoutComplete extends StatelessWidget {
           builder: (context) => CountdownScreen(
             message: "Awesome, let's go for another round!",
             textSequence: ['Get', 'Set', 'Go!'],
+            player: TimerAudioService("audio/workout_start.mp3"),
             fontSize: 40,
           ),
         )).then((value) {

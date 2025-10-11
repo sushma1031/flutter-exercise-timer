@@ -1,6 +1,7 @@
 import 'package:count_up/models/exercise.dart';
 import 'package:flutter/material.dart';
 import '../state/workout_provider.dart';
+import '../services/timer_audio_service.dart';
 
 class TimerScreen extends StatelessWidget {
   final List<Exercise> e;
@@ -17,7 +18,10 @@ class TimerScreen extends StatelessWidget {
             style: TextStyle(
                 fontFamily: "EthosNova", fontWeight: FontWeight.bold)),
       ),
-      body: Center(child: WorkoutProvider(exercises: e)),
+      body: Center(
+          child: WorkoutProvider(
+              exercises: e,
+              player: TimerAudioService("audio/exercise_change.mp3"))),
     );
   }
 }

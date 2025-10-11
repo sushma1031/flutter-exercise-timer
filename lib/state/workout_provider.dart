@@ -3,12 +3,13 @@ import '../models/exercise.dart';
 import './timer_provider.dart';
 import '../widgets/workout_complete.dart';
 import '../services/audio_service.dart';
-import '../services/timer_audio_service.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 class WorkoutProvider extends StatefulWidget {
   final List<Exercise> exercises;
-  WorkoutProvider({Key? key, required this.exercises}) : super(key: key);
+  final AudioService player;
+
+  WorkoutProvider({Key? key, required this.exercises, required this.player}) : super(key: key);
 
   @override
   State<WorkoutProvider> createState() => _WorkoutProviderState();
@@ -19,19 +20,17 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
   int _currentIndex = 0;
   bool _isWorkoutComplete = false;
   bool _wakeLockEnabled = false;
-  late AudioService player;
 
   @override
   void initState() {
     _exercises = widget.exercises;
     _currentIndex = 0;
-    player = TimerAudioService("audio/exercise_change.mp3");
     initAudioPlayer();
     super.initState();
   }
 
   Future<void> initAudioPlayer() async {
-    await player.configure();
+    await widget.player.configure();
   }
 
   void nextExercise(_) {
@@ -61,7 +60,7 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
 
   @override
   void dispose() {
-    player.dispose();
+    widget.player.dispose();
     if (_wakeLockEnabled) {
       WakelockPlus.disable();
       _wakeLockEnabled = false;
@@ -94,7 +93,7 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
 						previousExercise: previousExercise,
 						noOfExercises: _exercises.length - 1,
 						workoutProgress: "${_currentIndex + 1}/${_exercises.length}",
-						player: player,
+						player: widget.player,
 					));
 	}
 }

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:count_up/widgets/scale_text_sequence.dart';
 import 'package:count_up/services/audio_service.dart';
-import 'package:count_up/services/timer_audio_service.dart';
 
 class CountdownScreen extends StatelessWidget {
   final String? message;
   final double fontSize;
   final List<String> textSequence;
-  final AudioService player = TimerAudioService("audio/workout_start.mp3");
-  CountdownScreen({Key? key, required this.textSequence, this.message, this.fontSize = 36}) : super(key: key);
+  final AudioService player;
+  const CountdownScreen({
+    Key? key, 
+    required this.textSequence, 
+    required this.player, 
+    this.message, 
+    this.fontSize = 36
+  }) : super(key: key);
 
   Future<void> initAudioPlayer() async {
     await player.configure();
