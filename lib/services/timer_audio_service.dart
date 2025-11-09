@@ -17,7 +17,11 @@ class TimerAudioService extends AudioService {
         audioFocus: AndroidAudioFocus.gainTransientMayDuck,
       ),
     ));
-    await _player.setVolume(0.8);
+  }
+
+  @override
+  Future<void> setVolume(double volume) async {
+    await _player.setVolume(volume);
   }
 
 	@override
