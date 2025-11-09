@@ -6,18 +6,18 @@ class CountdownScreen extends StatelessWidget {
   final String? message;
   final double fontSize;
   final List<String> textSequence;
-  final AudioService? player;
+  final AudioService? onCompleteAudioPlayer;
   const CountdownScreen({
     Key? key, 
     required this.textSequence, 
-    this.player, 
+    this.onCompleteAudioPlayer, 
     this.message, 
     this.fontSize = 36
   }) : super(key: key);
 
   Future<void> initAudioPlayer() async {
-    if(player != null)
-      await player!.configure();
+    if(onCompleteAudioPlayer != null)
+      await onCompleteAudioPlayer!.configure();
   }
 
   @override
@@ -47,8 +47,8 @@ class CountdownScreen extends StatelessWidget {
                 ),
                 duration: Duration(milliseconds: 1500),
                 onFinished: () async {
-                  if (player != null) {
-                    await player!.play();
+                  if (onCompleteAudioPlayer != null) {
+                    await onCompleteAudioPlayer!.play();
                   }
                   Navigator.pop(context, true);
                 },
