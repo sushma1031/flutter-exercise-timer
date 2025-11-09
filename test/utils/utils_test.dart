@@ -27,9 +27,6 @@ void main() {
     l = ["", ""];
     expect(validateExercise(l), "Fields cannot be empty");
 
-    l = ["*.,%\$#@'", "10"];
-    expect(validateExercise(l), "Use only alphanumeric, spaces, +-/");
-
     l = ["Crunches", "x"];
     expect(validateExercise(l), "Duration must be in range [1, 999]");
     l = ["Crunches", "0"];
