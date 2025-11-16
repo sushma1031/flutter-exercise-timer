@@ -1,9 +1,8 @@
 enum AudioStatus { playing, paused, stopped }
 
 abstract class AudioService {
-  Future<void> configure() async {
-    // Default no-op implementation
-  }
+  Future<void> configure() async {}
+  Future<void> setVolume(double volume) async {}
   Future<void> play();
   Future<void> pause();
   Future<void> resume();

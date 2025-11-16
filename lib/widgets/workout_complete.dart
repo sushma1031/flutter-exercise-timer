@@ -20,7 +20,7 @@ class WorkoutComplete extends StatelessWidget {
           builder: (context) => CountdownScreen(
             message: "Awesome, let's go for another round!",
             textSequence: ['Get', 'Set', 'Go!'],
-            player: TimerAudioService("audio/workout_start.mp3"),
+            onCompleteAudioPlayer: TimerAudioService("audio/workout_start.mp3"),
             fontSize: 40,
           ),
         )).then((value) {

@@ -11,7 +11,12 @@ class ExerciseItem extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [Text(name, style: style), Text('${duration}s', style: style)],
+      children: [
+        Expanded(
+            child: Text(name, style: style, overflow: TextOverflow.ellipsis)
+        ),
+        Text('${duration}s', style: style)
+      ],
     );
   }
 }

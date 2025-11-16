@@ -24,10 +24,10 @@ class WorkoutsScreen extends StatelessWidget {
     final workouts = db.getAllWorkouts();
     for (int i = 0; i < workouts.length; i++) {
       var w = workouts[i];
-      int totalDuration = 0;
-      for (var ex in w.exercises) totalDuration += ex.duration;
-      totalDuration ~/= 60;
-      wd.add(WorkoutDisplay(w.name, w.exercises.length, totalDuration));
+      int total = 0;
+      for (var ex in w.exercises) total += ex.duration;
+      total = (total / 60).ceil();
+      wd.add(WorkoutDisplay(w.name, w.exercises.length, total));
     }
     return wd;
   }

@@ -15,7 +15,7 @@ class StaticExerciseList extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => CountdownScreen(
             textSequence: List.generate(5, (i) => (5 - i).toString(), growable: false),
-            player: TimerAudioService("audio/workout_start.mp3"),
+            onCompleteAudioPlayer: TimerAudioService("audio/workout_start.mp3"),
             fontSize: 50,
           ),
         )).then((value) {

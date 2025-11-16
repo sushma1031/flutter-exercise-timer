@@ -39,6 +39,7 @@ class _OffsetAnimatedTextState extends State<OffsetAnimatedText>
       child: Opacity(
           opacity: _opacityAnm.value,
           child: Text(widget.text,
+              textAlign: TextAlign.center,
               style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20))),
     );
   }
