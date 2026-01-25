@@ -8,13 +8,17 @@ String formatDuration(Duration d) {
   return '${d.inMinutes.toString().padLeft(2, '0')} : ${seconds.toString().padLeft(2, '0')}';
 }
 
-String generateBackupFilename(String name) {
+String generateBackupFilename(String name, {bool withDate = true}) {
   final illegalChars = RegExp(r'[\\/:*?"<>|]');
-  final sanitisedSlug = name.toLowerCase()
-                            .replaceAll(illegalChars, '')
-                            .replaceAll(RegExp(r'\s+'), '-');
+  final sanitisedSlug = name
+      .toLowerCase()
+      .replaceAll(illegalChars, '')
+      .replaceAll(RegExp(r'\s+'), '-');
+  if (!withDate) {
+    return sanitisedSlug;
+  }
   final date = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  return '$sanitisedSlug-$date.json';
+  return '$sanitisedSlug-$date';
 }
 
 String getUniqueWorkoutName(List<String> existingNames, String baseName) {

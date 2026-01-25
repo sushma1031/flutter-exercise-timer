@@ -2,17 +2,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:archive/archive.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:count_up/screens/exercises_screen.dart';
 import 'package:count_up/models/workout_display.dart';
 import 'package:count_up/widgets/workout_card.dart';
 import 'package:count_up/utils/format.dart';
+import 'package:count_up/utils/errors.dart';
 import 'package:count_up/utils/serialise_workout.dart';
 import '../widgets/workout_form.dart';
 import '../services/storage_service_interface.dart';
 
-enum Actions { deleteAll, importWkt }
-
-enum ImportError { format, type, unknown }
+enum Actions { deleteAll, importWkt, exportAll }
 
 class WorkoutsScreen extends StatelessWidget {
   final StorageService db;
@@ -140,6 +143,44 @@ class WorkoutsScreen extends StatelessWidget {
     }
   }
 
+  Future<ExportError?> _exportAllWorkouts() async {
+    final workouts = db.getAllWorkouts();
+    if (workouts.isEmpty) return ExportError.empty;
+    
+    Directory tempDir;
+    try {
+      tempDir = await getApplicationDocumentsDirectory();
+    } on MissingPlatformDirectoryException catch (e) {
+      print('Could not access temporary directory: $e');
+      return ExportError.platform;
+    }
+
+    final archive = Archive();
+    for (var w in workouts) {
+      final workoutJson = exportJson(w);
+      final backupFileName = generateBackupFilename(w.name, withDate: false);
+      final archiveFile = ArchiveFile.string('$backupFileName.json', workoutJson);
+      archive.addFile(archiveFile);
+    }
+    try {
+        final zipData = ZipEncoder().encodeBytes(archive);
+        final file = File('${tempDir.path}/${generateBackupFilename("count-up")}.zip');
+        await file.writeAsBytes(zipData);
+        await Share.shareXFiles([XFile(file.path, mimeType: 'application/zip')]);
+        await file.delete();
+        return null;
+    } on FileSystemException catch (e) {
+      print('File system error: $e');
+      return ExportError.fs;
+    } on PlatformException catch (e) {
+      print('Platform share error: $e');
+      return ExportError.platform;
+    } on Exception catch (e) {
+      print('Unexpected error: $e');
+      return ExportError.unknown;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -166,6 +207,14 @@ class WorkoutsScreen extends StatelessWidget {
                     case Actions.deleteAll:
                       _confirmAndDeleteAllWorkouts(context);
                       break;
+                    case Actions.exportAll:
+                      var error = await _exportAllWorkouts();
+                      if (error != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Error: Something went wrong.")),
+                        );
+                      }
+                      break;
                   }
                 },
                 itemBuilder: (context) => <PopupMenuEntry<Actions>>[
@@ -174,9 +223,13 @@ class WorkoutsScreen extends StatelessWidget {
                         value: Actions.importWkt,
                       ),
                       const PopupMenuItem<Actions>(
+                        child: Text('Export All'),
+                        value: Actions.exportAll,
+                      ),
+                      const PopupMenuItem<Actions>(
                         child: Text('Delete All'),
                         value: Actions.deleteAll,
-                      ),
+                      )
                     ]),
           ],
         ),

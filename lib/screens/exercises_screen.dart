@@ -8,6 +8,7 @@ import 'package:count_up/models/workout.dart';
 import 'package:count_up/screens/edit_workout_screen.dart';
 import 'package:count_up/screens/edit_exercises_screen.dart';
 import 'package:count_up/services/storage_service_interface.dart';
+import 'package:count_up/utils/errors.dart';
 import 'package:count_up/utils/serialise_workout.dart';
 import 'package:count_up/widgets/icon_text_item.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,6 @@ import '../widgets/static_exercises_list.dart';
 enum View { staticList, add, editWorkout, editExercise }
 
 enum WorkoutActions { addEx, editWkt, editEx, delWkt, exportWkt }
-
-enum ExportError { empty, fs, platform, unknown }
 
 class ExercisesScreen extends StatefulWidget {
   final int index;
@@ -112,7 +111,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
       final backupFileName = generateBackupFilename(_w.name);
       final tempDir = await getTemporaryDirectory();
 
-      final file = File('${tempDir.path}/$backupFileName');
+      final file = File('${tempDir.path}/$backupFileName.json');
       await file.writeAsString(workoutJson);
 
       await Share.shareXFiles([XFile(file.path)]);
