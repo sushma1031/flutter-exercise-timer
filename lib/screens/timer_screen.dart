@@ -1,11 +1,15 @@
 import 'package:count_up/models/exercise.dart';
 import 'package:flutter/material.dart';
+import '../state/settings_provider.dart';
 import '../state/workout_provider.dart';
-import '../services/timer_audio_service.dart';
+import '../services/audio_service.dart';
 
 class TimerScreen extends StatelessWidget {
   final List<Exercise> e;
-  const TimerScreen({Key? key, required this.e}) : super(key: key);
+
+  final AudioService player;
+
+  const TimerScreen({Key? key, required this.e, required this.player}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,9 +23,11 @@ class TimerScreen extends StatelessWidget {
                 fontFamily: "EthosNova", fontWeight: FontWeight.bold)),
       ),
       body: Center(
-          child: WorkoutProvider(
-              exercises: e,
-              player: TimerAudioService("audio/exercise_change.mp3"))),
+        child: WorkoutProvider(
+          exercises: e,
+          player: player,
+          timerVolume: SettingsProvider.of(context).timerVolume,
+      )),
     );
   }
 }
