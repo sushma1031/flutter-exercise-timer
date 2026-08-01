@@ -46,7 +46,7 @@ flutter test
 
 ## Building for Release
 
-### Android
+### Android APK
 ```bash
-flutter build apk --release
+flutter build apk --split-per-abi
 ```
