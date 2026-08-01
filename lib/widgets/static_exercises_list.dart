@@ -22,7 +22,7 @@ class StaticExerciseList extends StatelessWidget {
       if (value == true) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => TimerScreen(e: exercises)),
+          MaterialPageRoute(builder: (context) => TimerScreen(e: exercises, player: TimerAudioService("audio/exercise_change.mp3"))),
         );
       }
     });

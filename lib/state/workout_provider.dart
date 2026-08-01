@@ -8,8 +8,14 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 class WorkoutProvider extends StatefulWidget {
   final List<Exercise> exercises;
   final AudioService player;
+  final double timerVolume;
 
-  WorkoutProvider({Key? key, required this.exercises, required this.player}) : super(key: key);
+  WorkoutProvider(
+      {Key? key,
+      required this.exercises,
+      required this.player,
+      this.timerVolume = 0.5})
+      : super(key: key);
 
   @override
   State<WorkoutProvider> createState() => _WorkoutProviderState();
@@ -31,7 +37,7 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
 
   Future<void> initAudioPlayer() async {
     await widget.player.configure();
-    await widget.player.setVolume(0.5);
+    await widget.player.setVolume(widget.timerVolume);
   }
 
   void nextExercise(_) {

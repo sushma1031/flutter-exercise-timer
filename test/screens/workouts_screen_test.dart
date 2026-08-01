@@ -1,18 +1,25 @@
 import 'package:count_up/screens/workouts_screen.dart';
+import 'package:count_up/state/settings_provider.dart';
+import 'package:count_up/widgets/volume_slider.dart';
 import 'package:count_up/widgets/workout_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:count_up/main.dart';
+import 'package:count_up/app.dart';
 
+import '../services/mock_settings_service.dart';
 import '../services/mock_storage_service.dart';
 
 void main() {
   var mockDB = MockStorageService();
   mockDB.loadData();
-  var screen = MaterialApp(home: WorkoutsScreen(db: mockDB));
+  var mockSettings = MockSettingsService();
+  var screen = SettingsProvider(
+    settings: mockSettings,
+    child: MaterialApp(home: WorkoutsScreen(db: mockDB)),
+  );
   group('Workouts Screen loads correctly', () {
     testWidgets('display loading screen', (tester) async {
-      await tester.pumpWidget(MyApp(db: mockDB));
+      await tester.pumpWidget(MyApp(db: mockDB, settings: mockSettings));
       expect(find.text('COUNT UP'), findsOneWidget);
       await tester.pump(Duration(seconds: 3));
     });
@@ -62,5 +69,17 @@ void main() {
     await tester.tap(find.text('Yes'));
     await tester.pump();
     expect(find.byType(WorkoutCard), findsNothing);
+  });
+
+  testWidgets('updates timer volume from settings', (tester) async {
+    await tester.pumpWidget(screen);
+    await tester.tap(find.byIcon(Icons.volume_down));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(VolumeSlider), findsOneWidget);
+
+    await tester.drag(find.byType(Slider), const Offset(100, 0));
+    await tester.pumpAndSettle();
+    expect(mockSettings.timerVolume, 1.0);
   });
 }

@@ -3,11 +3,19 @@ import 'package:count_up/services/audio_service.dart';
 class MockAudioService extends AudioService {
   bool configured = false;
 
+  /// Last value passed to [setVolume], or null if it was never called.
+  double? volume;
+
   AudioStatus _status = AudioStatus.stopped;
 
   @override
   Future<void> configure() async {
     configured = true;
+  }
+
+  @override
+  Future<void> setVolume(double value) async {
+    volume = value;
   }
 
   @override
