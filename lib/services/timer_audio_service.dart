@@ -24,13 +24,13 @@ class TimerAudioService extends AudioService {
     await _player.setVolume(volume);
   }
 
-	@override
+  @override
   Future<void> play() async {
     await _player.play(_asset);
     _status = AudioStatus.playing;
   }
 
-	@override
+  @override
   Future<void> pause() async {
     if (_status == AudioStatus.playing) {
       await _player.pause();
@@ -38,7 +38,7 @@ class TimerAudioService extends AudioService {
     }
   }
 
-	@override
+  @override
   Future<void> resume() async {
     if (_status == AudioStatus.paused) {
       await _player.resume();
@@ -46,7 +46,7 @@ class TimerAudioService extends AudioService {
     }
   }
 
-	@override
+  @override
   Future<void> stop() async {
     await _player.stop();
     _status = AudioStatus.stopped;
@@ -58,7 +58,7 @@ class TimerAudioService extends AudioService {
 
   AudioStatus get status => _status;
 
-	@override
+  @override
   set status(AudioStatus value) {
     _status = value;
   }

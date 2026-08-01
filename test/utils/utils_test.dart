@@ -12,12 +12,13 @@ void main() {
     });
   });
 
-  test('.validateExercise() validates exercise name and duration corrrectly', () {
+  test('.validateExercise() validates exercise name and duration corrrectly',
+      () {
     var l = <String>["Crunches", "15"];
     expect(validateExercise(l), null);
     l = <String>["Crunches", "99"];
     expect(validateExercise(l), null);
-    
+
     l = ["", "10"];
     expect(validateExercise(l), "Fields cannot be empty");
     l = ["  ", "10"];

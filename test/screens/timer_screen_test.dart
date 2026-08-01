@@ -33,8 +33,7 @@ void main() {
     expect(player.volume, 0.5);
   });
 
-  testWidgets('fails when no SettingsProvider is in the tree',
-      (tester) async {
+  testWidgets('fails when no SettingsProvider is in the tree', (tester) async {
     await tester.pumpWidget(
       MaterialApp(home: TimerScreen(e: exercises, player: MockAudioService())),
     );

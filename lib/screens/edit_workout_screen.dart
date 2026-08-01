@@ -9,7 +9,8 @@ class EditWorkoutScreen extends StatefulWidget {
   final List<String> workoutNames;
   final int index;
   final Future<Workout?> Function(int index, String name) updateWorkoutName;
-  final Future<Workout?> Function(int index, List<Exercise> newExercises) updateWorkoutExercises;
+  final Future<Workout?> Function(int index, List<Exercise> newExercises)
+      updateWorkoutExercises;
   final void Function() returnToStaticList;
   final Future<bool> Function() onPop;
 
@@ -45,8 +46,9 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     if (didPop) {
       return;
     }
-   final shouldPop = (widget.workout.name != _name || !listEquals(widget.workout.exercises, _ex)) 
-        ? await widget.onPop() 
+    final shouldPop = (widget.workout.name != _name ||
+            !listEquals(widget.workout.exercises, _ex))
+        ? await widget.onPop()
         : true;
 
     if (shouldPop && context.mounted) {
@@ -60,94 +62,106 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         canPop: false,
         onPopInvokedWithResult: _onPopInvoked,
         child: Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+            backgroundColor:
+                Theme.of(context).colorScheme.surfaceContainerLowest,
             body: Padding(
                 padding: EdgeInsets.only(bottom: 16),
-                child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                  SizedBox(
-                      height: 100,
-                      //seperate this as a component that can be reused
-                      child: Form(
-                          key: _formKey,
-                          child: Padding(
-                              padding: EdgeInsets.only(left: 25, right: 25, top: 10),
-                              child: TextFormField(
-                                textAlign: TextAlign.center,
-                                initialValue: widget.workout.name,
-                                enableSuggestions: true,
-                                validator: (String? value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter a workout name';
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                          height: 100,
+                          //seperate this as a component that can be reused
+                          child: Form(
+                              key: _formKey,
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 25, right: 25, top: 10),
+                                  child: TextFormField(
+                                    textAlign: TextAlign.center,
+                                    initialValue: widget.workout.name,
+                                    enableSuggestions: true,
+                                    validator: (String? value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter a workout name';
+                                      }
+                                      if (value != widget.workout.name &&
+                                          widget.workoutNames.contains(value)) {
+                                        return 'Name already in use';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: const InputDecoration(
+                                        filled: false,
+                                        labelText: 'Workout Name',
+                                        fillColor: Colors.white70),
+                                    onChanged: (value) {
+                                      _name = value;
+                                    },
+                                    onSaved: (value) {
+                                      _name = value!;
+                                    },
+                                  )))),
+                      Expanded(
+                          flex: 2,
+                          child: ReorderableListView(
+                              buildDefaultDragHandles: true,
+                              children: <Widget>[
+                                for (int index = 0; index < _ex.length; index++)
+                                  ListTile(
+                                    key: Key('$index'),
+                                    leading: IconButton(
+                                      icon: Icon(
+                                        Icons.remove_circle_outline,
+                                        size: 20,
+                                        color:
+                                            Colors.white.withValues(alpha: 0.7),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _ex.removeAt(index);
+                                        });
+                                      },
+                                    ),
+                                    title: ExerciseItem(
+                                        name: _ex[index].name,
+                                        duration: '${_ex[index].duration}'),
+                                    trailing: ReorderableDragStartListener(
+                                      index: index,
+                                      child: Icon(
+                                        Icons.drag_handle,
+                                        color:
+                                            Colors.white.withValues(alpha: 0.7),
+                                      ),
+                                    ),
+                                  )
+                              ],
+                              onReorder: (int oldIndex, int newIndex) {
+                                setState(() {
+                                  if (oldIndex < newIndex) {
+                                    newIndex -= 1;
                                   }
-                                  if (value != widget.workout.name && widget.workoutNames.contains(value)) {
-                                    return 'Name already in use';
-                                  }
-                                  return null;
-                                },
-                                decoration: const InputDecoration(
-                                    filled: false, labelText: 'Workout Name', fillColor: Colors.white70
-                                ),
-                                onChanged: (value) {
-                                  _name = value;
-                                },
-                                onSaved: (value) {
-                                  _name = value!;
-                                },
-                              )))),
-                  Expanded(
-                      flex: 2,
-                      child: ReorderableListView(
-                          buildDefaultDragHandles: true,
-                          children: <Widget>[
-                            for (int index = 0; index < _ex.length; index++)
-                              ListTile(
-                                key: Key('$index'),
-                                leading: IconButton(
-                                  icon: Icon(
-                                    Icons.remove_circle_outline,
-                                    size: 20,
-                                    color: Colors.white.withValues(alpha: 0.7),
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _ex.removeAt(index);
-                                    });
-                                  },
-                                ),
-                                title: ExerciseItem(name: _ex[index].name, duration: '${_ex[index].duration}'),
-                                trailing: ReorderableDragStartListener(
-                                  index: index,
-                                  child: Icon(
-                                    Icons.drag_handle,
-                                    color: Colors.white.withValues(alpha: 0.7),
-                                  ),
-                                ),
-                              )
-                          ],
-                          onReorder: (int oldIndex, int newIndex) {
-                            setState(() {
-                              if (oldIndex < newIndex) {
-                                newIndex -= 1;
-                              }
-                              final Exercise item = _ex.removeAt(oldIndex);
-                              _ex.insert(newIndex, item);
-                            });
-                          })),
-                  ElevatedButton(
-                      onPressed: () async {
-                        var valid = _formKey.currentState!.validate();
-                        if (!valid) {
-                          return;
-                        }
-                        _formKey.currentState!.save();
-                        if (widget.workout.name != _name) {
-                          await widget.updateWorkoutName(widget.index, _name);
-                        }
-                        if (!listEquals(widget.workout.exercises, _ex))
-                          await widget.updateWorkoutExercises(widget.index, _ex);
-                        widget.returnToStaticList();
-                      },
-                      child: Text('Save'))
-                ]))));
+                                  final Exercise item = _ex.removeAt(oldIndex);
+                                  _ex.insert(newIndex, item);
+                                });
+                              })),
+                      ElevatedButton(
+                          onPressed: () async {
+                            var valid = _formKey.currentState!.validate();
+                            if (!valid) {
+                              return;
+                            }
+                            _formKey.currentState!.save();
+                            if (widget.workout.name != _name) {
+                              await widget.updateWorkoutName(
+                                  widget.index, _name);
+                            }
+                            if (!listEquals(widget.workout.exercises, _ex))
+                              await widget.updateWorkoutExercises(
+                                  widget.index, _ex);
+                            widget.returnToStaticList();
+                          },
+                          child: Text('Save'))
+                    ]))));
   }
 }

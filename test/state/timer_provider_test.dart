@@ -55,11 +55,14 @@ void main() {
   });
 
   testWidgets('play sound at 3 seconds remaining', (WidgetTester tester) async {
-    final GlobalKey<State<TimerProvider>> timerProviderKey = GlobalKey(); // create unique key to identify widget
-    Widget testWidget = createWidgetUnderTest(Duration(seconds: 5), key: timerProviderKey);
+    final GlobalKey<State<TimerProvider>> timerProviderKey =
+        GlobalKey(); // create unique key to identify widget
+    Widget testWidget =
+        createWidgetUnderTest(Duration(seconds: 5), key: timerProviderKey);
     await tester.pumpWidget(testWidget);
     await tester.pump(Duration(seconds: 1));
-    expect(mockPlayer.status, AudioStatus.stopped); // Ensure no sound played yet
+    expect(
+        mockPlayer.status, AudioStatus.stopped); // Ensure no sound played yet
     await tester.pump(Duration(seconds: 1));
     expect(mockPlayer.status, AudioStatus.playing); // Ensure sound played
   });

@@ -19,7 +19,8 @@ abstract class StorageService<T> {
   Future<int> addManyWorkouts(List<Workout> workouts);
   Future<Workout?> updateWorkoutName(int index, String name);
   Future<Workout?> addWorkoutExercises(int index, List<Exercise> toAdd);
-  Future<Workout?> updateWorkoutExercises(int index, List<Exercise> newExercises);
+  Future<Workout?> updateWorkoutExercises(
+      int index, List<Exercise> newExercises);
   Future<int> modifyExercises(int wIdx, List<Map> data);
   Future<void> deleteWorkout(int index);
   Future<void> close();

@@ -7,14 +7,16 @@ import '../widgets/exercise_item.dart';
 
 class StaticExerciseList extends StatelessWidget {
   final List<Exercise> exercises;
-  const StaticExerciseList({Key? key, required this.exercises}) : super(key: key);
+  const StaticExerciseList({Key? key, required this.exercises})
+      : super(key: key);
 
   void countdownAndStart(context) async {
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => CountdownScreen(
-            textSequence: List.generate(5, (i) => (5 - i).toString(), growable: false),
+            textSequence:
+                List.generate(5, (i) => (5 - i).toString(), growable: false),
             onCompleteAudioPlayer: TimerAudioService("audio/workout_start.mp3"),
             fontSize: 50,
           ),
@@ -22,7 +24,10 @@ class StaticExerciseList extends StatelessWidget {
       if (value == true) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => TimerScreen(e: exercises, player: TimerAudioService("audio/exercise_change.mp3"))),
+          MaterialPageRoute(
+              builder: (context) => TimerScreen(
+                  e: exercises,
+                  player: TimerAudioService("audio/exercise_change.mp3"))),
         );
       }
     });
@@ -34,7 +39,8 @@ class StaticExerciseList extends StatelessWidget {
       Padding(
           padding: EdgeInsets.only(top: 16),
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(padding: EdgeInsets.symmetric(horizontal: 8)),
+            style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 8)),
             onPressed: (exercises.length > 0)
                 ? () => countdownAndStart(context)
                 : null,

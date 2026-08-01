@@ -37,7 +37,9 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
   }
 
   bool hasWorkoutAt(int index) {
-    return index >= 0 && index < workouts.length && workouts.getAt(index) != null;
+    return index >= 0 &&
+        index < workouts.length &&
+        workouts.getAt(index) != null;
   }
 
   Workout? getWorkoutByIndex(int index) {
@@ -90,7 +92,8 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
 
   Future<Workout?> updateWorkoutName(int index, String name) async {
     if (index < 0 || index > workouts.length - 1) {
-      debugPrint('Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
+      debugPrint(
+          'Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
       return null;
     }
     Workout prev = workouts.getAt(index)!;
@@ -101,7 +104,8 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
 
   Future<Workout?> addWorkoutExercises(int index, List<Exercise> toAdd) async {
     if (index < 0 || index > workouts.length - 1) {
-      debugPrint('Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
+      debugPrint(
+          'Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
       return null;
     }
     Workout w = workouts.getAt(index)!;
@@ -110,9 +114,11 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return w;
   }
 
-  Future<Workout?> updateWorkoutExercises(int index, List<Exercise> newExercises) async {
+  Future<Workout?> updateWorkoutExercises(
+      int index, List<Exercise> newExercises) async {
     if (index < 0 || index > workouts.length - 1) {
-      debugPrint('Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
+      debugPrint(
+          'Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
       return null;
     }
     Workout w = getWorkoutByIndex(index)!;
@@ -123,14 +129,16 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
 
   Future<int> modifyExercises(int wIdx, List<Map> data) async {
     if (wIdx < 0 || wIdx > workouts.length - 1) {
-      debugPrint('Error: Workout index out of range. Length: ${workouts.length}, index: $wIdx\n');
+      debugPrint(
+          'Error: Workout index out of range. Length: ${workouts.length}, index: $wIdx\n');
       return 0;
     }
     int modified = 0;
     Workout w = workouts.getAt(wIdx)!;
     for (int i = 0; i < data.length; i++) {
       if (data[i]['index'] < 0 || data[i]['index'] > w.exercises.length - 1) {
-        debugPrint('Error: Exercise index out of range. Length: ${w.exercises.length}, index: ${data[i]['index']}\n');
+        debugPrint(
+            'Error: Exercise index out of range. Length: ${w.exercises.length}, index: ${data[i]['index']}\n');
         continue;
       }
       w.exercises[data[i]['index']].name = data[i]['name'];

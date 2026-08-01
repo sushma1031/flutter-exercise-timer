@@ -41,7 +41,6 @@ class MockStorageService implements StorageService<List<Workout>> {
     return index >= 0 && index < workouts.length;
   }
 
-
   Workout? getWorkoutByIndex(int index) {
     if (index < 0 || index > workouts.length) {
       print('Error: Workout index out of range.\n');
@@ -66,6 +65,7 @@ class MockStorageService implements StorageService<List<Workout>> {
     notifier.update(workouts);
     return Future.value(names.length);
   }
+
   Future<int> addWorkout(Workout wkt) async {
     workouts.add(wkt);
     notifier.update(workouts);
@@ -91,7 +91,8 @@ class MockStorageService implements StorageService<List<Workout>> {
     return Future.value(w);
   }
 
-  Future<Workout?> updateWorkoutExercises(int index, List<Exercise> newExercises) async {
+  Future<Workout?> updateWorkoutExercises(
+      int index, List<Exercise> newExercises) async {
     workouts[index].exercises = newExercises;
     notifier.update(workouts);
     return Future.value(workouts[index]);

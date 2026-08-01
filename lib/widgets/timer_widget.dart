@@ -38,8 +38,9 @@ class TimerWidget extends StatelessWidget {
                   ? Container()
                   : Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: OffsetAnimatedText(
-                        nextName != null ? 'Next Up: $nextName' : 'Last one!'))),
+                      child: OffsetAnimatedText(nextName != null
+                          ? 'Next Up: $nextName'
+                          : 'Last one!'))),
           SizedBox(
               height: 500,
               child: Column(
@@ -65,7 +66,8 @@ class TimerWidget extends StatelessWidget {
                                           child: Container(
                                               width: 200,
                                               child: Text(name,
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     fontSize: 18,

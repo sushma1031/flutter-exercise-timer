@@ -39,7 +39,9 @@ class WorkoutsScreen extends StatelessWidget {
   Future<void> _goToWorkout(BuildContext context, int index) async {
     if (!db.hasWorkoutAt(index)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Workout not found."), duration: Duration(milliseconds: 2500)),
+        SnackBar(
+            content: Text("Workout not found."),
+            duration: Duration(milliseconds: 2500)),
       );
       return;
     }
@@ -55,7 +57,9 @@ class WorkoutsScreen extends StatelessWidget {
 
     if (result != null && result == false) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: Workout no longer available.'), duration: Duration(milliseconds: 2500)),
+        SnackBar(
+            content: Text('Error: Workout no longer available.'),
+            duration: Duration(milliseconds: 2500)),
       );
     }
   }
@@ -67,12 +71,15 @@ class WorkoutsScreen extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Wrap(spacing: 20, crossAxisAlignment: WrapCrossAlignment.center, children: [
-              Icon(Icons.error, color: Theme.of(context).colorScheme.error),
-              Text(
-                'Danger Zone',
-              )
-            ]),
+            title: Wrap(
+                spacing: 20,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+                  Text(
+                    'Danger Zone',
+                  )
+                ]),
             content: Text(
               'Are you sure you want to delete $len workouts? This action is irreversible.',
             ),
@@ -129,7 +136,8 @@ class WorkoutsScreen extends StatelessWidget {
     String workoutJson = await file.readAsString();
     try {
       var workout = importFromJson(workoutJson);
-      workout.name = getUniqueWorkoutName(db.getAllWorkoutNames(), workout.name);
+      workout.name =
+          getUniqueWorkoutName(db.getAllWorkoutNames(), workout.name);
       await db.addWorkout(workout);
       return null;
     } on FormatException catch (e) {
@@ -147,7 +155,7 @@ class WorkoutsScreen extends StatelessWidget {
   Future<ExportError?> _exportAllWorkouts() async {
     final workouts = db.getAllWorkouts();
     if (workouts.isEmpty) return ExportError.empty;
-    
+
     Directory tempDir;
     try {
       tempDir = await getApplicationDocumentsDirectory();
@@ -160,16 +168,18 @@ class WorkoutsScreen extends StatelessWidget {
     for (var w in workouts) {
       final workoutJson = exportJson(w);
       final backupFileName = generateBackupFilename(w.name, withDate: false);
-      final archiveFile = ArchiveFile.string('$backupFileName.json', workoutJson);
+      final archiveFile =
+          ArchiveFile.string('$backupFileName.json', workoutJson);
       archive.addFile(archiveFile);
     }
     try {
-        final zipData = ZipEncoder().encodeBytes(archive);
-        final file = File('${tempDir.path}/${generateBackupFilename("count-up")}.zip');
-        await file.writeAsBytes(zipData);
-        await Share.shareXFiles([XFile(file.path, mimeType: 'application/zip')]);
-        await file.delete();
-        return null;
+      final zipData = ZipEncoder().encodeBytes(archive);
+      final file =
+          File('${tempDir.path}/${generateBackupFilename("count-up")}.zip');
+      await file.writeAsBytes(zipData);
+      await Share.shareXFiles([XFile(file.path, mimeType: 'application/zip')]);
+      await file.delete();
+      return null;
     } on FileSystemException catch (e) {
       print('File system error: $e');
       return ExportError.fs;
@@ -184,7 +194,6 @@ class WorkoutsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
         appBar: AppBar(
@@ -192,7 +201,8 @@ class WorkoutsScreen extends StatelessWidget {
           elevation: 0,
           title: const Text(
             'Workouts',
-            style: TextStyle(fontFamily: "EthosNova", fontWeight: FontWeight.bold),
+            style:
+                TextStyle(fontFamily: "EthosNova", fontWeight: FontWeight.bold),
           ),
           actions: [
             IconButton(
@@ -238,7 +248,8 @@ class WorkoutsScreen extends StatelessWidget {
                       var error = await _exportAllWorkouts();
                       if (error != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Error: Something went wrong.")),
+                          SnackBar(
+                              content: Text("Error: Something went wrong.")),
                         );
                       }
                       break;

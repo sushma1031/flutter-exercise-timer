@@ -10,9 +10,10 @@ void main() {
   final exercises = [Exercise('Plank', 6), Exercise('Crunches', 5)];
   MockAudioService mockPlayer = MockAudioService();
   final Widget testWidget = MaterialApp(
-    home: Scaffold(body: WorkoutProvider(exercises: exercises, player: mockPlayer))
-  );
-  testWidgets('initial exercise and timer duration', (WidgetTester tester) async {
+      home: Scaffold(
+          body: WorkoutProvider(exercises: exercises, player: mockPlayer)));
+  testWidgets('initial exercise and timer duration',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testWidget);
 
     expect(find.text('6'), findsOneWidget);
@@ -37,7 +38,8 @@ void main() {
     expect(find.text('Crunches'), findsOneWidget);
   });
 
-  testWidgets('navigate manually to previous exercise', (WidgetTester tester) async {
+  testWidgets('navigate manually to previous exercise',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testWidget);
     await tester.pump(Duration(seconds: 7)); //progress to next exercise
 
@@ -57,7 +59,8 @@ void main() {
     expect(find.text('Plank'), findsOneWidget);
   });
 
-  testWidgets('complete workout and show completion screen', (WidgetTester tester) async {
+  testWidgets('complete workout and show completion screen',
+      (WidgetTester tester) async {
     final Widget testWidget = MaterialApp(
         home: Scaffold(
             body: WorkoutProvider(
@@ -70,7 +73,8 @@ void main() {
     expect(find.byType(WorkoutComplete), findsOneWidget);
   });
 
-  testWidgets('disable next button for last exercise', (WidgetTester tester) async {
+  testWidgets('disable next button for last exercise',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testWidget);
     final nextIconBtn = find.widgetWithIcon(IconButton, Icons.skip_next);
     expect(tester.widget<IconButton>(nextIconBtn).onPressed == null, false);

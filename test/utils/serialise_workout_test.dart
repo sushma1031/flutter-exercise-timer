@@ -58,7 +58,8 @@ void main() {
             ]
         }
         ''';
-      expect(() => importFromJson(json), throwsA(TypeMatcher<FormatException>()));
+      expect(
+          () => importFromJson(json), throwsA(TypeMatcher<FormatException>()));
     });
     test('throws TypeError for incorrect Workout structure', () {
       final json = '''

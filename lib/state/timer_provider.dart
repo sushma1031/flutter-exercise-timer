@@ -29,7 +29,8 @@ class TimerProvider extends StatefulWidget {
   State<TimerProvider> createState() => _TimerProviderState();
 }
 
-class _TimerProviderState extends State<TimerProvider> with SingleTickerProviderStateMixin {
+class _TimerProviderState extends State<TimerProvider>
+    with SingleTickerProviderStateMixin {
   final String audioPath = "audio/exercise_change.mp3";
   late Timer _timer;
   late Duration _timeLeft;
@@ -45,7 +46,7 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
       duration: widget.duration + oneSec,
     )..addListener(() {
         setState(() {});
-    });
+      });
     startTimer();
   }
 
@@ -55,7 +56,7 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
       setState(() {
         _timeLeft -= Duration(seconds: 1);
         if (_timeLeft.inSeconds == 3) {
-        	widget.player.play();
+          widget.player.play();
         }
         if (_timeLeft.inSeconds <= -1) {
           timer.cancel();
@@ -167,8 +168,12 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
                 'Current workout progress will be lost. Are you sure you want to exit?',
               ),
               actions: <Widget>[
-                TextButton(child: Text('Yes'), onPressed: () => Navigator.of(context).pop(true)),
-                TextButton(child: Text('No'), onPressed: () => Navigator.of(context).pop(false)),
+                TextButton(
+                    child: Text('Yes'),
+                    onPressed: () => Navigator.of(context).pop(true)),
+                TextButton(
+                    child: Text('No'),
+                    onPressed: () => Navigator.of(context).pop(false)),
               ],
               elevation: 20,
             );
@@ -202,7 +207,8 @@ class _TimerProviderState extends State<TimerProvider> with SingleTickerProvider
         child: TimerWidget(
           name: widget.name,
           nextName: widget.nextName,
-          nextBtnFunction: widget.currentIndex == widget.noOfExercises ? null : goNext,
+          nextBtnFunction:
+              widget.currentIndex == widget.noOfExercises ? null : goNext,
           pauseResume: _isPaused ? Icons.play_arrow : Icons.pause,
           togglePauseResume: togglePauseResume,
           timeLeft: _timeLeft,

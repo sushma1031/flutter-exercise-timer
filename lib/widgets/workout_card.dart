@@ -4,12 +4,14 @@ import 'package:count_up/models/workout_display.dart';
 class WorkoutCard extends StatelessWidget {
   final WorkoutDisplay workout;
   final void Function() onTap;
-  const WorkoutCard({Key? key, required this.workout, required this.onTap}) : super(key: key);
+  const WorkoutCard({Key? key, required this.workout, required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Color primary = Theme.of(context).colorScheme.primary.withValues(alpha: 0.08);
-    Color darkBase =Theme.of(context).colorScheme.surface;
+    Color primary =
+        Theme.of(context).colorScheme.primary.withValues(alpha: 0.08);
+    Color darkBase = Theme.of(context).colorScheme.surface;
     return Card(
       elevation: 24,
       child: Container(
@@ -20,7 +22,10 @@ class WorkoutCard extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: <Color>[
               Color.alphaBlend(primary, darkBase),
-              Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.25)
+              Theme.of(context)
+                  .colorScheme
+                  .primaryContainer
+                  .withValues(alpha: 0.25)
             ],
             tileMode: TileMode.mirror,
           ),
@@ -45,24 +50,38 @@ class WorkoutCard extends StatelessWidget {
                         Padding(
                             padding: EdgeInsets.only(right: 12),
                             child: Chip(
-                              backgroundColor: Color.alphaBlend(primary, darkBase),
+                              backgroundColor:
+                                  Color.alphaBlend(primary, darkBase),
                               label: Text(
                                 "${workout.totalDuration} Min",
-                                style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
                               ),
                               shape: RoundedRectangleBorder(
-                                  side: BorderSide(color: Theme.of(context).colorScheme.secondary),
+                                  side: BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary),
                                   borderRadius: BorderRadius.circular(5)),
                             )),
                         Chip(
                             elevation: 0,
-                            backgroundColor: Theme.of(context).colorScheme.secondary,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
                             label: Text(
                               "${workout.noOfExercises} Sets",
-                              style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondary),
                             ),
                             shape: RoundedRectangleBorder(
-                                side: BorderSide(color: Theme.of(context).colorScheme.secondary),
+                                side: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
                                 borderRadius: BorderRadius.circular(5))),
                       ],
                     )

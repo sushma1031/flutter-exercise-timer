@@ -77,30 +77,32 @@ class _WorkoutProviderState extends State<WorkoutProvider> {
 
   @override
   Widget build(BuildContext context) {
-	// enable wakelock only in the timer screen
+    // enable wakelock only in the timer screen
     if (!_isWorkoutComplete && !_wakeLockEnabled) {
-		WakelockPlus.enable();
-		_wakeLockEnabled = true;
+      WakelockPlus.enable();
+      _wakeLockEnabled = true;
     } else if (_isWorkoutComplete && _wakeLockEnabled) {
-        WakelockPlus.disable();
-        _wakeLockEnabled = false;
+      WakelockPlus.disable();
+      _wakeLockEnabled = false;
     }
 
     return Center(
-      child: _isWorkoutComplete
-				? WorkoutComplete(
-						restartWorkout: restartWorkout,
-					)
-				: TimerProvider(
-						name: _exercises[_currentIndex].name,
-						nextName: _currentIndex < _exercises.length - 1 ? _exercises[_currentIndex + 1].name : null,
-						duration: Duration(seconds: _exercises[_currentIndex].duration),
-						currentIndex: _currentIndex,
-						nextExercise: nextExercise,
-						previousExercise: previousExercise,
-						noOfExercises: _exercises.length - 1,
-						workoutProgress: "${_currentIndex + 1}/${_exercises.length}",
-						player: widget.player,
-					));
-	}
+        child: _isWorkoutComplete
+            ? WorkoutComplete(
+                restartWorkout: restartWorkout,
+              )
+            : TimerProvider(
+                name: _exercises[_currentIndex].name,
+                nextName: _currentIndex < _exercises.length - 1
+                    ? _exercises[_currentIndex + 1].name
+                    : null,
+                duration: Duration(seconds: _exercises[_currentIndex].duration),
+                currentIndex: _currentIndex,
+                nextExercise: nextExercise,
+                previousExercise: previousExercise,
+                noOfExercises: _exercises.length - 1,
+                workoutProgress: "${_currentIndex + 1}/${_exercises.length}",
+                player: widget.player,
+              ));
+  }
 }

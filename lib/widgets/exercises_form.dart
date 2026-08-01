@@ -47,7 +47,8 @@ class _ExercisesFormState extends State<ExercisesForm> {
         canPop: _rows == 0,
         onPopInvokedWithResult: _onPopInvoked,
         child: Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+            backgroundColor:
+                Theme.of(context).colorScheme.surfaceContainerLowest,
             body: Form(
                 key: _formKey,
                 child: Padding(

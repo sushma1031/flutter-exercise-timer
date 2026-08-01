@@ -52,7 +52,6 @@ class _EditExercisesScreenState extends State<EditExercisesScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return PopScope(
         canPop: false,
         onPopInvokedWithResult: _onPopInvoked,
@@ -113,7 +112,8 @@ class _EditExercisesScreenState extends State<EditExercisesScreen> {
                                   });
                                 }
                                 if (toModify.length > 0)
-                                  await widget.modifyExercise(widget.workoutIndex, toModify);
+                                  await widget.modifyExercise(
+                                      widget.workoutIndex, toModify);
                               }
 
                               widget.returnToStaticList();

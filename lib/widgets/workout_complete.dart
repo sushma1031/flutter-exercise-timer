@@ -24,8 +24,8 @@ class WorkoutComplete extends StatelessWidget {
             fontSize: 40,
           ),
         )).then((value) {
-          if (value == true) restartWorkout();
-        });
+      if (value == true) restartWorkout();
+    });
   }
 
   WorkoutComplete({Key? key, required this.restartWorkout});

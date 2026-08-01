@@ -9,7 +9,8 @@ class TimerScreen extends StatelessWidget {
 
   final AudioService player;
 
-  const TimerScreen({Key? key, required this.e, required this.player}) : super(key: key);
+  const TimerScreen({Key? key, required this.e, required this.player})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,10 +24,10 @@ class TimerScreen extends StatelessWidget {
                 fontFamily: "EthosNova", fontWeight: FontWeight.bold)),
       ),
       body: Center(
-        child: WorkoutProvider(
-          exercises: e,
-          player: player,
-          timerVolume: SettingsProvider.of(context).timerVolume,
+          child: WorkoutProvider(
+        exercises: e,
+        player: player,
+        timerVolume: SettingsProvider.of(context).timerVolume,
       )),
     );
   }
