@@ -23,7 +23,7 @@ A minimalist exercise timer app built with Flutter that helps track workout rout
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/sushma1031/flutter-exercise-timer.git
+   git clone https://github.com/sushma1031/count-up.git
    cd flutter-exercise-timer
    ```
 
