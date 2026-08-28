@@ -13,10 +13,10 @@ class HiveSettingsService implements SettingsService {
     try {
       settingsBox = await Hive.openBox(_boxName);
     } on HiveError catch (e, stackTrace) {
-      debugPrint("Error: Could not load data from Hive: $e\n$stackTrace");
+      debugPrint("Could not load data from Hive: Hive Error: $e\n$stackTrace");
       rethrow;
     } on Exception catch (e, stackTrace) {
-      debugPrint("Error: Could not load data from Hive: $e\n$stackTrace");
+      debugPrint("Could not load data from Hive: Error: $e\n$stackTrace");
       rethrow;
     }
   }
@@ -28,6 +28,6 @@ class HiveSettingsService implements SettingsService {
 
   @override
   Future<void> setTimerVolume(double value) async {
-    await settingsBox.put(_timerVolume, value.clamp(0.0, 1.0));
+    await settingsBox.put(_timerVolume, value.clamp(0.2, 1.0));
   }
 }

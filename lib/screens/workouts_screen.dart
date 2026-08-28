@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:count_up/screens/exercises_screen.dart';
 import 'package:count_up/models/workout_display.dart';
 import 'package:count_up/widgets/workout_card.dart';
-import 'package:count_up/widgets/volume_slider.dart';
+import 'package:count_up/widgets/volume_settings.dart';
 import 'package:count_up/utils/format.dart';
 import 'package:count_up/utils/errors.dart';
 import 'package:count_up/utils/serialise_workout.dart';
@@ -205,19 +205,11 @@ class WorkoutsScreen extends StatelessWidget {
                         return Dialog(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text('Timer', style: TextStyle(fontSize: 16)),
-                                VolumeSlider(
-                                    initial: settings.timerVolume,
-                                    min: 0.2,
-                                    onChanged: (value) =>
-                                        settings.setTimerVolume(value)),
-                              ],
-                            ),
+                            child: VolumeSettings(
+                                initial: settings.timerVolume,
+                                min: 0.2,
+                                onChanged: (value) =>
+                                    settings.setTimerVolume(value)),
                           ),
                         );
                       },

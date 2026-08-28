@@ -56,7 +56,7 @@ class StaticExerciseList extends StatelessWidget {
                       padding: EdgeInsets.only(top: 24),
                       child: ExerciseItem(
                           name: exercises[index].name,
-                          duration: '${exercises[index].duration}'));
+                          duration: exercises[index].duration));
                 },
               ))),
     ]);

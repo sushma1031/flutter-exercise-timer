@@ -4,7 +4,7 @@ class VolumeSlider extends StatefulWidget {
   final double initial;
   final double min;
   final double max;
-  final int divisions;
+  final double step;
   final void Function(double) onChanged;
 
   const VolumeSlider(
@@ -12,9 +12,11 @@ class VolumeSlider extends StatefulWidget {
       this.initial = 0.5,
       this.min = 0.0,
       this.max = 1.0,
-      this.divisions = 10,
+      this.step = 0.1,
       required this.onChanged})
-      : super(key: key);
+      : assert(step > 0),
+        assert(max > min),
+        super(key: key);
 
   @override
   State<VolumeSlider> createState() => _VolumeSliderState();
@@ -23,27 +25,46 @@ class VolumeSlider extends StatefulWidget {
 class _VolumeSliderState extends State<VolumeSlider> {
   late double _currentSliderValue;
 
+  double _roundToStep(double value) {
+    return widget.min + ((value - widget.min) / widget.step).round();
+  }
+
   @override
   void initState() {
     super.initState();
-    _currentSliderValue = widget.initial;
+    _currentSliderValue = widget.initial.clamp(widget.min, widget.max);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Slider(
-      value: _currentSliderValue,
-      min: widget.min,
-      max: widget.max,
-      divisions: widget.divisions,
-      onChanged: (double value) {
-        setState(() {
-          _currentSliderValue = value;
-        });
-      },
-      onChangeEnd: (double value) {
-        widget.onChanged(value.roundToDouble().clamp(widget.min, 1.0));
-      },
+    final divisions = ((widget.max - widget.min) / widget.step).round();
+
+    return Row(
+      children: [
+        Expanded(
+          child: Slider(
+            value: _currentSliderValue,
+            min: widget.min,
+            max: widget.max,
+            divisions: divisions,
+            onChanged: (double value) {
+              setState(() {
+                _currentSliderValue = value;
+              });
+            },
+            onChangeEnd: (double value) {
+              widget.onChanged(_roundToStep(value).clamp(widget.min, widget.max));
+            },
+          ),
+        ),
+        SizedBox(
+          width: 36,
+          child: Text(
+            '${(_currentSliderValue * 100).round()}%',
+            textAlign: TextAlign.end,
+          ),
+        ),
+      ],
     );
   }
 }

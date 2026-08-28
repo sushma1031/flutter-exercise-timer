@@ -78,7 +78,7 @@ void main() {
 
     expect(find.byType(VolumeSlider), findsOneWidget);
 
-    await tester.drag(find.byType(Slider), const Offset(100, 0));
+    await tester.drag(find.byType(Slider), const Offset(500, 0));
     await tester.pumpAndSettle();
     expect(mockSettings.timerVolume, 1.0);
   });

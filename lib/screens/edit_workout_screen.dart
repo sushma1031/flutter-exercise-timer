@@ -125,7 +125,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                     ),
                                     title: ExerciseItem(
                                         name: _ex[index].name,
-                                        duration: '${_ex[index].duration}'),
+                                        duration: _ex[index].duration),
                                     trailing: ReorderableDragStartListener(
                                       index: index,
                                       child: Icon(

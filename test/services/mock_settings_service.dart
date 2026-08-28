@@ -10,6 +10,6 @@ class MockSettingsService implements SettingsService {
 
   @override
   Future<void> setTimerVolume(double value) async {
-    _timerVolume = value.roundToDouble().clamp(0.0, 1.0);
+    _timerVolume = value.clamp(0.0, 1.0);
   }
 }
