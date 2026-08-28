@@ -6,14 +6,14 @@ import '../models/exercise.dart';
 class ExercisesForm extends StatefulWidget {
   final Future<void> Function(int, List<Exercise>) addWorkoutExercises;
   final void Function() returnToStaticList;
-  final int workoutIndex;
+  final int workoutKey;
   final Future<bool> Function() onPop;
   const ExercisesForm(
       {Key? key,
       required this.addWorkoutExercises,
       required this.returnToStaticList,
       required this.onPop,
-      required this.workoutIndex})
+      required this.workoutKey})
       : super(key: key);
   @override
   State<ExercisesForm> createState() => _ExercisesFormState();
@@ -145,7 +145,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                       .toList();
 
                                   await widget.addWorkoutExercises(
-                                      widget.workoutIndex, ex);
+                                      widget.workoutKey, ex);
                                   widget.returnToStaticList();
                                 },
                                 child: const Text('Save'),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:count_up/utils/validate_exercise.dart';
 
 class EditExercisesScreen extends StatefulWidget {
-  final int workoutIndex;
+  final int workoutKey;
   final List<Exercise> exercises;
   final Future<int> Function(int, List<Map>) modifyExercise;
   final void Function() returnToStaticList;
@@ -14,7 +14,7 @@ class EditExercisesScreen extends StatefulWidget {
       required this.modifyExercise,
       required this.returnToStaticList,
       required this.onPop,
-      required this.workoutIndex,
+      required this.workoutKey,
       required this.exercises})
       : super(key: key);
 
@@ -112,8 +112,7 @@ class _EditExercisesScreenState extends State<EditExercisesScreen> {
                                   });
                                 }
                                 if (toModify.length > 0)
-                                  await widget.modifyExercise(
-                                      widget.workoutIndex, toModify);
+                                  await widget.modifyExercise(widget.workoutKey, toModify);
                               }
 
                               widget.returnToStaticList();

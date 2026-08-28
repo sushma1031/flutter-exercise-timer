@@ -25,31 +25,23 @@ class WorkoutsScreen extends StatelessWidget {
 
   List<WorkoutDisplay> _getAllWorkoutsForDisplay() {
     List<WorkoutDisplay> wd = [];
-    final workouts = db.getAllWorkouts();
-    for (int i = 0; i < workouts.length; i++) {
-      var w = workouts[i];
+    final workouts = db.getWorkoutEntries();
+    for (var entry in workouts) {
+      var w = entry.value;
       int total = 0;
       for (var ex in w.exercises) total += ex.duration;
       total = (total / 60).ceil();
-      wd.add(WorkoutDisplay(w.name, w.exercises.length, total));
+      wd.add(WorkoutDisplay(entry.key, w.name, w.exercises.length, total));
     }
     return wd;
   }
 
-  Future<void> _goToWorkout(BuildContext context, int index) async {
-    if (!db.hasWorkoutAt(index)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text("Workout not found."),
-            duration: Duration(milliseconds: 2500)),
-      );
-      return;
-    }
+  Future<void> _goToWorkout(BuildContext context, int workoutKey) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ExercisesScreen(
-          index: index,
+          workoutKey: workoutKey,
           db: db,
         ),
       ),
@@ -275,7 +267,7 @@ class WorkoutsScreen extends StatelessWidget {
           shape: StadiumBorder(),
           child: Icon(Icons.add),
           onPressed: () async {
-            var wIdx = await showDialog(
+            var workoutKey = await showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
@@ -290,7 +282,7 @@ class WorkoutsScreen extends StatelessWidget {
                 );
               },
             );
-            if (wIdx != null) _goToWorkout(context, wIdx);
+            if (workoutKey != null) _goToWorkout(context, workoutKey);
           },
         ),
         body: ValueListenableBuilder(
@@ -307,7 +299,7 @@ class WorkoutsScreen extends StatelessWidget {
                           padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: WorkoutCard(
                             workout: workouts[index],
-                            onTap: () => _goToWorkout(context, index),
+                            onTap: () => _goToWorkout(context, workouts[index].key),
                           ));
                     },
                   ),

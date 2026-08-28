@@ -3,26 +3,25 @@ import '../models/exercise.dart';
 import '../models/workout.dart';
 
 abstract class StorageService<T> {
-  late T workouts;
   int get size;
 
   Future<void> loadData();
   ValueListenable<T> getListenable();
   List<Workout> getAllWorkouts();
+  List<MapEntry<int, Workout>> getWorkoutEntries();
   List<String> getAllWorkoutNames();
-  bool hasWorkoutAt(int index);
-  Workout? getWorkoutByIndex(int index);
-  List<Exercise> getWorkoutExercises(int index);
+  Workout? getWorkout(int key);
+  List<Exercise> getWorkoutExercises(int key);
   Future<int> addEmptyWorkout(String name);
   Future<int> addManyEmptyWorkouts(List<String> names);
   Future<int> addWorkout(Workout workout);
   Future<int> addManyWorkouts(List<Workout> workouts);
-  Future<Workout?> updateWorkoutName(int index, String name);
-  Future<Workout?> addWorkoutExercises(int index, List<Exercise> toAdd);
+  Future<Workout?> updateWorkoutName(int key, String name);
+  Future<Workout?> addWorkoutExercises(int key, List<Exercise> toAdd);
   Future<Workout?> updateWorkoutExercises(
-      int index, List<Exercise> newExercises);
-  Future<int> modifyExercises(int wIdx, List<Map> data);
-  Future<void> deleteWorkout(int index);
+      int key, List<Exercise> newExercises);
+  Future<int> modifyExercises(int workoutKey, List<Map> data);
+  Future<void> deleteWorkout(int key);
   Future<void> close();
   Future<void> clear();
   Future<void> delete();

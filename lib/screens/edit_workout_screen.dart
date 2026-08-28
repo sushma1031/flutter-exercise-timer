@@ -7,9 +7,9 @@ import 'package:flutter/foundation.dart';
 class EditWorkoutScreen extends StatefulWidget {
   final Workout workout;
   final List<String> workoutNames;
-  final int index;
-  final Future<Workout?> Function(int index, String name) updateWorkoutName;
-  final Future<Workout?> Function(int index, List<Exercise> newExercises)
+  final int workoutKey;
+  final Future<Workout?> Function(int key, String name) updateWorkoutName;
+  final Future<Workout?> Function(int key, List<Exercise> newExercises)
       updateWorkoutExercises;
   final void Function() returnToStaticList;
   final Future<bool> Function() onPop;
@@ -18,7 +18,7 @@ class EditWorkoutScreen extends StatefulWidget {
       {Key? key,
       required this.workout,
       required this.workoutNames,
-      required this.index,
+      required this.workoutKey,
       required this.updateWorkoutName,
       required this.updateWorkoutExercises,
       required this.returnToStaticList,
@@ -153,12 +153,10 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                             }
                             _formKey.currentState!.save();
                             if (widget.workout.name != _name) {
-                              await widget.updateWorkoutName(
-                                  widget.index, _name);
+                              await widget.updateWorkoutName(widget.workoutKey, _name);
                             }
                             if (!listEquals(widget.workout.exercises, _ex))
-                              await widget.updateWorkoutExercises(
-                                  widget.index, _ex);
+                              await widget.updateWorkoutExercises(widget.workoutKey, _ex);
                             widget.returnToStaticList();
                           },
                           child: Text('Save'))

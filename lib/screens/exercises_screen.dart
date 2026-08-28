@@ -20,9 +20,9 @@ enum View { staticList, add, editWorkout, editExercise }
 enum WorkoutActions { addEx, editWkt, editEx, delWkt, exportWkt }
 
 class ExercisesScreen extends StatefulWidget {
-  final int index;
+  final int workoutKey;
   final StorageService db;
-  const ExercisesScreen({Key? key, required this.db, required this.index})
+  const ExercisesScreen({Key? key, required this.db, required this.workoutKey})
       : super(key: key);
 
   @override
@@ -60,7 +60,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         false;
   }
 
-  Future<bool> _confirmAndDeleteWorkout(int index) async {
+  Future<bool> _confirmAndDeleteWorkout(int workoutKey) async {
     return await showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -83,7 +83,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                     child: Text('Yes'),
                     onPressed: () async {
                       await widget.db
-                          .deleteWorkout(index)
+                          .deleteWorkout(workoutKey)
                           .then((value) => Navigator.pop(context, true));
                     }),
                 TextButton(
@@ -117,7 +117,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     );
   }
 
-  Future<ExportError?> _exportWorkout(int index) async {
+  Future<ExportError?> _exportWorkout() async {
     if (_w.exercises.length == 0) return ExportError.empty;
     try {
       final workoutJson = exportJson(_w);
@@ -143,7 +143,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
   void initState() {
     super.initState();
-    final workout = widget.db.getWorkoutByIndex(widget.index);
+    final workout = widget.db.getWorkout(widget.workoutKey);
     if (workout == null) {
       _invalid = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -203,7 +203,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                               setState(() {
                                 _currentView = View.add;
                                 _child = ExercisesForm(
-                                  workoutIndex: widget.index,
+                                  workoutKey: widget.workoutKey,
                                   addWorkoutExercises:
                                       widget.db.addWorkoutExercises,
                                   returnToStaticList: _returnToStaticList,
@@ -218,7 +218,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                     workout: _w,
                                     workoutNames:
                                         widget.db.getAllWorkoutNames(),
-                                    index: widget.index,
+                                    workoutKey: widget.workoutKey,
                                     updateWorkoutName:
                                         widget.db.updateWorkoutName,
                                     updateWorkoutExercises:
@@ -233,19 +233,20 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                 _child = EditExercisesScreen(
                                     exercises: _w.exercises,
                                     modifyExercise: widget.db.modifyExercises,
-                                    workoutIndex: widget.index,
+                                    workoutKey: widget.workoutKey,
                                     returnToStaticList: _returnToStaticList,
                                     onPop: _onPop);
                               });
                               break;
                             case WorkoutActions.exportWkt:
-                              var error = await _exportWorkout(widget.index);
+                              var error =
+                                  await _exportWorkout();
                               if (error != null) {
                                 _showExportErrorSnackbar(error);
                               }
                               break;
                             case WorkoutActions.delWkt:
-                              await _confirmAndDeleteWorkout(widget.index)
+                              await _confirmAndDeleteWorkout(widget.workoutKey)
                                   .then((value) {
                                 if (value) Navigator.pop(context);
                               });

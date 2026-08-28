@@ -32,36 +32,33 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return workouts.values.toList();
   }
 
+  List<MapEntry<int, Workout>> getWorkoutEntries() {
+    return workouts
+        .toMap()
+        .entries
+        .map((e) => MapEntry(e.key as int, e.value))
+        .toList();
+  }
+
   List<String> getAllWorkoutNames() {
     return workouts.values.map((w) => w.name).toList();
   }
 
-  bool hasWorkoutAt(int index) {
-    return index >= 0 &&
-        index < workouts.length &&
-        workouts.getAt(index) != null;
-  }
-
-  Workout? getWorkoutByIndex(int index) {
-    if (index < 0 || index >= workouts.length) {
-      print('Error: Workout index out of range.\n');
-      return null;
-    }
-    var w = workouts.getAt(index);
+  Workout? getWorkout(int key) {
+    var w = workouts.get(key);
     if (w == null) {
-      print('Error: Workout at index $index is null.\n');
+      print('Error: Workout with key $key not found.\n');
     }
     return w;
   }
 
-  List<Exercise> getWorkoutExercises(int index) {
-    return workouts.getAt(index)!.exercises;
+  List<Exercise> getWorkoutExercises(int key) {
+    return workouts.get(key)!.exercises;
   }
 
   Future<int> addWorkout(Workout workout) async {
     try {
-      await workouts.add(workout);
-      return workouts.length - 1;
+      return await workouts.add(workout);
     } on Exception catch (ex, stackTrace) {
       debugPrint('Error: Could not add workout: $ex\n$stackTrace');
     }
@@ -90,51 +87,47 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return addedCount;
   }
 
-  Future<Workout?> updateWorkoutName(int index, String name) async {
-    if (index < 0 || index > workouts.length - 1) {
-      debugPrint(
-          'Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
+  Future<Workout?> updateWorkoutName(int key, String name) async {
+    Workout? prev = workouts.get(key);
+    if (prev == null) {
+      debugPrint('Error: Workout with key $key not found.\n');
       return null;
     }
-    Workout prev = workouts.getAt(index)!;
     prev.name = name;
     await prev.save();
     return prev;
   }
 
-  Future<Workout?> addWorkoutExercises(int index, List<Exercise> toAdd) async {
-    if (index < 0 || index > workouts.length - 1) {
-      debugPrint(
-          'Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
+  Future<Workout?> addWorkoutExercises(int key, List<Exercise> toAdd) async {
+    Workout? w = workouts.get(key);
+    if (w == null) {
+      debugPrint('Error: Workout with key $key not found.\n');
       return null;
     }
-    Workout w = workouts.getAt(index)!;
     w.exercises.addAll(toAdd);
     await w.save();
     return w;
   }
 
   Future<Workout?> updateWorkoutExercises(
-      int index, List<Exercise> newExercises) async {
-    if (index < 0 || index > workouts.length - 1) {
-      debugPrint(
-          'Error: Workout index out of range. Length: ${workouts.length}, index: $index\n');
+      int key, List<Exercise> newExercises) async {
+    Workout? w = getWorkout(key);
+    if (w == null) {
+      debugPrint('Error: Workout with key $key not found.\n');
       return null;
     }
-    Workout w = getWorkoutByIndex(index)!;
     w.exercises = newExercises;
     await w.save();
     return w;
   }
 
-  Future<int> modifyExercises(int wIdx, List<Map> data) async {
-    if (wIdx < 0 || wIdx > workouts.length - 1) {
-      debugPrint(
-          'Error: Workout index out of range. Length: ${workouts.length}, index: $wIdx\n');
+  Future<int> modifyExercises(int workoutKey, List<Map> data) async {
+    Workout? w = workouts.get(workoutKey);
+    if (w == null) {
+      debugPrint('Error: Workout with key $workoutKey not found.\n');
       return 0;
     }
     int modified = 0;
-    Workout w = workouts.getAt(wIdx)!;
     for (int i = 0; i < data.length; i++) {
       if (data[i]['index'] < 0 || data[i]['index'] > w.exercises.length - 1) {
         debugPrint(
@@ -149,8 +142,8 @@ class WorkoutStorageService implements StorageService<Box<Workout>> {
     return modified;
   }
 
-  Future<void> deleteWorkout(int index) async {
-    await workouts.deleteAt(index);
+  Future<void> deleteWorkout(int key) async {
+    await workouts.delete(key);
   }
 
   Future<void> close() async {
