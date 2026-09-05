@@ -3,6 +3,7 @@ import 'package:count_up/models/workout.dart';
 import 'package:count_up/widgets/exercise_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
   final Workout workout;
@@ -58,6 +59,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return PopScope(
         canPop: false,
         onPopInvokedWithResult: _onPopInvoked,
@@ -83,17 +85,17 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                     enableSuggestions: true,
                                     validator: (String? value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please enter a workout name';
+                                        return l10n.workoutNameRequired;
                                       }
                                       if (value != widget.workout.name &&
                                           widget.workoutNames.contains(value)) {
-                                        return 'Name already in use';
+                                        return l10n.workoutNameAlreadyInUse;
                                       }
                                       return null;
                                     },
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
                                         filled: false,
-                                        labelText: 'Workout Name',
+                                        labelText: l10n.workoutNameLabel,
                                         fillColor: Colors.white70),
                                     onChanged: (value) {
                                       _name = value;
@@ -159,7 +161,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                               await widget.updateWorkoutExercises(widget.workoutKey, _ex);
                             widget.returnToStaticList();
                           },
-                          child: Text('Save'))
+                          child: Text(l10n.saveBtn))
                     ]))));
   }
 }

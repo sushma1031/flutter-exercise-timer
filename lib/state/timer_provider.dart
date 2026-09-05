@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:count_up/widgets/timer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:count_up/services/audio_service.dart';
+import 'package:count_up/utils/assets.dart';
 
 class TimerProvider extends StatefulWidget {
   final Duration duration;
@@ -31,7 +32,7 @@ class TimerProvider extends StatefulWidget {
 
 class _TimerProviderState extends State<TimerProvider>
     with SingleTickerProviderStateMixin {
-  final String audioPath = "audio/exercise_change.mp3";
+  final String audioPath = Assets.audioExerciseChange;
   late Timer _timer;
   late Duration _timeLeft;
   late AnimationController _controller;

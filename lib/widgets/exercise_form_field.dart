@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 
 class ExerciseInput extends StatefulWidget {
   const ExerciseInput(
@@ -19,6 +20,7 @@ class ExerciseInput extends StatefulWidget {
 class _ExerciseInputState extends State<ExerciseInput> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -27,7 +29,7 @@ class _ExerciseInputState extends State<ExerciseInput> {
               flex: 2,
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Name',
+                  hintText: l10n.exerciseNameHint,
                 ),
                 enableSuggestions: true,
                 controller: widget.nameController,
@@ -40,7 +42,7 @@ class _ExerciseInputState extends State<ExerciseInput> {
           Expanded(
               child: TextField(
             decoration: InputDecoration(
-              hintText: 'Secs',
+              hintText: l10n.exerciseDurationHint,
             ),
             controller: widget.durationController,
             keyboardType: TextInputType.number,

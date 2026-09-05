@@ -2,6 +2,7 @@ import 'package:count_up/utils/validate_exercise.dart';
 import 'package:count_up/widgets/exercise_form_field.dart';
 import 'package:flutter/material.dart';
 import '../models/exercise.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 
 class ExercisesForm extends StatefulWidget {
   final Future<void> Function(int, List<Exercise>) addWorkoutExercises;
@@ -43,6 +44,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return PopScope(
         canPop: _rows == 0,
         onPopInvokedWithResult: _onPopInvoked,
@@ -96,7 +98,8 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                           onSaved: (newValue) {
                                             updateAllData(newValue!, index);
                                           },
-                                          validator: validateExercise,
+                                          validator: validateExercise(
+                                              AppLocalizations.of(context)),
                                         )),
                                         SizedBox(
                                             width: 45,
@@ -125,7 +128,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                                       size: 20,
                                                     ),
                                                     tooltip:
-                                                        'Add another exercise',
+                                                        l10n.addAnotherExerciseTooltip,
                                                   ))
                                       ]);
                                 }),
@@ -148,7 +151,7 @@ class _ExercisesFormState extends State<ExercisesForm> {
                                       widget.workoutKey, ex);
                                   widget.returnToStaticList();
                                 },
-                                child: const Text('Save'),
+                                child: Text(l10n.saveBtn),
                               ))
                         ])))));
   }

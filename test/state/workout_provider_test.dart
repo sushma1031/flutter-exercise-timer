@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:count_up/models/exercise.dart';
 import 'package:count_up/state/workout_provider.dart';
 import 'package:count_up/widgets/workout_complete.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../services/mock_audio_service.dart';
@@ -10,6 +11,8 @@ void main() {
   final exercises = [Exercise('Plank', 6), Exercise('Crunches', 5)];
   MockAudioService mockPlayer = MockAudioService();
   final Widget testWidget = MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
           body: WorkoutProvider(exercises: exercises, player: mockPlayer)));
   testWidgets('initial exercise and timer duration',
@@ -62,6 +65,8 @@ void main() {
   testWidgets('complete workout and show completion screen',
       (WidgetTester tester) async {
     final Widget testWidget = MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
             body: WorkoutProvider(
                 exercises: [Exercise('Plank', 2)], player: mockPlayer)));

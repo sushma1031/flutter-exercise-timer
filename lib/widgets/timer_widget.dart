@@ -2,6 +2,7 @@ import 'package:count_up/utils/format.dart';
 import 'package:count_up/widgets/offset_animated_text.dart';
 import 'package:count_up/widgets/reverse_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 
 class TimerWidget extends StatelessWidget {
   final AnimationController controller;
@@ -29,6 +30,7 @@ class TimerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
         padding: EdgeInsets.only(top: 32),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -39,8 +41,8 @@ class TimerWidget extends StatelessWidget {
                   : Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: OffsetAnimatedText(nextName != null
-                          ? 'Next Up: $nextName'
-                          : 'Last one!'))),
+                          ? l10n.nextUp(nextName!)
+                          : l10n.lastOne))),
           SizedBox(
               height: 500,
               child: Column(
@@ -95,15 +97,15 @@ class TimerWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
-                            tooltip: 'Previous',
+                            tooltip: l10n.previousTooltip,
                             onPressed: prevBtnFunction,
                             icon: Icon(Icons.skip_previous)),
                         IconButton(
-                            tooltip: 'Pause/Resume',
+                            tooltip: l10n.pauseResumeTooltip,
                             onPressed: togglePauseResume,
                             icon: Icon(pauseResume)),
                         IconButton(
-                          tooltip: 'Next',
+                          tooltip: l10n.nextTooltip,
                           onPressed: nextBtnFunction,
                           icon: Icon(Icons.skip_next),
                         )

@@ -6,6 +6,7 @@ import 'state/life_cycle_watcher.dart';
 import 'state/settings_provider.dart';
 import 'utils/color.dart';
 import 'utils/errors.dart';
+import 'gen/l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MyApp extends StatelessWidget {
@@ -26,6 +27,8 @@ class MyApp extends StatelessWidget {
       settings: settings,
       child: MaterialApp(
           title: 'Count Up',
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           theme: ThemeData(
               useMaterial3: false,
               brightness: Brightness.dark,
@@ -60,6 +63,7 @@ class _HomePageState extends State<HomePage> {
     return FutureBuilder<void>(
       future: loadDataWithDelay(),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        final l10n = AppLocalizations.of(context);
         if (snapshot.connectionState != ConnectionState.done) {
           final gradient =
               LinearGradient(colors: [Colors.indigo.shade200, Colors.indigo]);
@@ -72,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                   Rect.fromLTWH(0, 0, bounds.width, bounds.height),
                 ),
                 child: Text(
-                  'COUNT UP',
+                  l10n.splashTitle,
                   style: TextStyle(
                     fontSize: 40,
                     fontFamily: "EthosNova",
@@ -86,9 +90,9 @@ class _HomePageState extends State<HomePage> {
           final error = snapshot.error;
           String message;
           if (error is HiveError) {
-            message = errorMessages[AppError.dbInitFailed]!;
+            message = errorMessageFor(context, AppError.dbInitFailed);
           } else {
-            message = errorMessages[AppError.unknown]!;
+            message = errorMessageFor(context, AppError.unknown);
           }
           return Scaffold(
             backgroundColor: Theme.of(context).colorScheme.surface,
@@ -110,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                       padding: EdgeInsetsGeometry.symmetric(vertical: 16),
                       child: Text(
-                        "Please try again or come back later.",
+                        l10n.tryAgainMessage,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Theme.of(context)
@@ -127,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () {
                         setState(() {});
                       },
-                      child: const Text('Retry'),
+                      child: Text(l10n.retryBtn),
                     ),
                   )
                 ],

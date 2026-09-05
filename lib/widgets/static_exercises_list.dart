@@ -3,7 +3,9 @@ import '../models/exercise.dart';
 import '../screens/countdown_screen.dart';
 import '../services/timer_audio_service.dart';
 import '../screens/timer_screen.dart';
+import '../utils/assets.dart';
 import '../widgets/exercise_item.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 
 class StaticExerciseList extends StatelessWidget {
   final List<Exercise> exercises;
@@ -17,7 +19,7 @@ class StaticExerciseList extends StatelessWidget {
           builder: (context) => CountdownScreen(
             textSequence:
                 List.generate(5, (i) => (5 - i).toString(), growable: false),
-            onCompleteAudioPlayer: TimerAudioService("audio/workout_start.mp3"),
+            onCompleteAudioPlayer: TimerAudioService(Assets.audioWorkoutStart),
             fontSize: 50,
           ),
         )).then((value) {
@@ -27,7 +29,7 @@ class StaticExerciseList extends StatelessWidget {
           MaterialPageRoute(
               builder: (context) => TimerScreen(
                   e: exercises,
-                  player: TimerAudioService("audio/exercise_change.mp3"))),
+                  player: TimerAudioService(Assets.audioExerciseChange))),
         );
       }
     });
@@ -44,7 +46,7 @@ class StaticExerciseList extends StatelessWidget {
             onPressed: (exercises.length > 0)
                 ? () => countdownAndStart(context)
                 : null,
-            child: const Text('Start Workout'),
+            child: Text(AppLocalizations.of(context).startWorkoutBtn),
           )),
       Expanded(
           child: Padding(

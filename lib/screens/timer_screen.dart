@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../state/settings_provider.dart';
 import '../state/workout_provider.dart';
 import '../services/audio_service.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 
 class TimerScreen extends StatelessWidget {
   final List<Exercise> e;
@@ -19,7 +20,7 @@ class TimerScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Timer',
+        title: Text(AppLocalizations.of(context).timerScreenTitle,
             style: TextStyle(
                 fontFamily: "EthosNova", fontWeight: FontWeight.bold)),
       ),

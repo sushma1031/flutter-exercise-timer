@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 
 class ReverseCircularProgressIndicator extends StatelessWidget {
   final AnimationController controller;
@@ -18,7 +19,7 @@ class ReverseCircularProgressIndicator extends StatelessWidget {
           color: Theme.of(context).colorScheme.secondary,
           strokeWidth: 8,
           value: 1 - controller.value,
-          semanticsLabel: 'Time left for current exercise',
+          semanticsLabel: AppLocalizations.of(context).timeLeftSemanticLabel,
         ));
   }
 }

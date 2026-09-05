@@ -2,6 +2,7 @@ import 'package:count_up/models/exercise.dart';
 import 'package:count_up/screens/timer_screen.dart';
 import 'package:count_up/state/settings_provider.dart';
 import 'package:count_up/state/workout_provider.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -14,7 +15,11 @@ void main() {
   Widget buildScreen(MockAudioService player, double timerVolume) {
     return SettingsProvider(
       settings: MockSettingsService(timerVolume: timerVolume),
-      child: MaterialApp(home: TimerScreen(e: exercises, player: player)),
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: TimerScreen(e: exercises, player: player),
+      ),
     );
   }
 
@@ -35,7 +40,11 @@ void main() {
 
   testWidgets('fails when no SettingsProvider is in the tree', (tester) async {
     await tester.pumpWidget(
-      MaterialApp(home: TimerScreen(e: exercises, player: MockAudioService())),
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: TimerScreen(e: exercises, player: MockAudioService()),
+      ),
     );
 
     expect(tester.takeException(), isA<FlutterError>());

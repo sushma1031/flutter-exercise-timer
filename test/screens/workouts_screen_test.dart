@@ -2,6 +2,7 @@ import 'package:count_up/screens/workouts_screen.dart';
 import 'package:count_up/state/settings_provider.dart';
 import 'package:count_up/widgets/volume_slider.dart';
 import 'package:count_up/widgets/workout_card.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:count_up/app.dart';
@@ -15,7 +16,11 @@ void main() {
   var mockSettings = MockSettingsService();
   var screen = SettingsProvider(
     settings: mockSettings,
-    child: MaterialApp(home: WorkoutsScreen(db: mockDB)),
+    child: MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: WorkoutsScreen(db: mockDB),
+    ),
   );
   group('Workouts Screen loads correctly', () {
     testWidgets('display loading screen', (tester) async {

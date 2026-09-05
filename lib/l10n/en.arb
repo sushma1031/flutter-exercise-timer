@@ -1,0 +1,121 @@
+{
+  "@@locale": "en",
+  "appTitle": "Count Up",
+  "splashTitle": "COUNT UP",
+  "dbInitFailedError": "Could not load workout data.",
+  "unknownError": "Oops! Something went wrong.",
+  "tryAgainMessage": "Please try again or come back later.",
+  "retryBtn": "Retry",
+  "workoutsScreenTitle": "Workouts",
+  "workoutNoLongerAvailable": "Error: Workout no longer available.",
+  "dangerZoneTitle": "Danger Zone",
+  "confirmDeleteWorkouts": "Are you sure you want to delete {count} workouts? This action is irreversible.",
+  "@confirmDeleteWorkouts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "yesBtn": "Yes",
+  "noBtn": "No",
+  "importErrorFormat": "Invalid file format.",
+  "importErrorType": "Workout structure is incompatible or malformed.",
+  "importErrorUnknown": "Something went wrong while importing.",
+  "errorWithMessage": "Error: {message}",
+  "@errorWithMessage": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "importWorkoutMenuItem": "Import Workout",
+  "exportAllMenuItem": "Export All",
+  "deleteAllMenuItem": "Delete All",
+  "exportAllGenericError": "Error: Something went wrong.",
+  "unsavedChangesTitle": "Unsaved Changes!",
+  "discardChangesConfirm": "Are you sure you want to discard all changes?",
+  "confirmDeleteWorkout": "Are you sure you want to delete {name} ({count} exercises)?",
+  "@confirmDeleteWorkout": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exportErrorEmpty": "Cannot export empty workout.",
+  "exportErrorFS": "Failed to save the workout file.",
+  "exportErrorPlatform": "Could not open share interface.",
+  "exportErrorUnknown": "Something went wrong while exporting.",
+  "addExercisesTitle": "Add Exercises",
+  "editWorkoutTitle": "Edit Workout",
+  "editExercisesTitle": "Edit Exercises",
+  "exportMenuItem": "Export",
+  "deleteWorkoutMenuItem": "Delete Workout",
+  "workoutNameRequired": "Please enter a workout name",
+  "workoutNameAlreadyInUse": "Name already in use",
+  "workoutNameLabel": "Workout Name",
+  "saveBtn": "Save",
+  "nameRequired": "Please enter a name",
+  "newWorkoutLabel": "New Workout",
+  "addBtn": "Add",
+  "addAnotherExerciseTooltip": "Add another exercise",
+  "exerciseNameHint": "Name",
+  "exerciseDurationHint": "Secs",
+  "fieldsCannotBeEmpty": "Fields cannot be empty",
+  "durationRangeError": "Duration must be in range [1, 999]",
+  "nextUp": "Next Up: {name}",
+  "@nextUp": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "lastOne": "Last one!",
+  "previousTooltip": "Previous",
+  "pauseResumeTooltip": "Pause/Resume",
+  "nextTooltip": "Next",
+  "timerScreenTitle": "Timer",
+  "startWorkoutBtn": "Start Workout",
+  "workoutCompleteMessage1": "You did something today that your future self will be thankful for!",
+  "workoutCompleteMessage2": "Keep doing what you have to do so you can do what you want to do.",
+  "workoutCompleteMessage3": "Some days you wish it would happen, today you made it happen!",
+  "workoutCompleteMessage4": "Your body is grateful to you for believing in it.",
+  "anotherRoundMessage": "Awesome, let's go for another round!",
+  "countdownGet": "Get",
+  "countdownSet": "Set",
+  "countdownGo": "Go!",
+  "workoutCompleteTitle": "WORKOUT COMPLETE",
+  "repeatBtn": "Repeat",
+  "homeBtn": "Home",
+  "timeLeftSemanticLabel": "Time left for current exercise",
+  "workoutDurationMinutes": "{min} Min",
+  "@workoutDurationMinutes": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "workoutExerciseCount": "{count} Sets",
+  "@workoutExerciseCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exerciseDurationSec": "{sec}s",
+  "@exerciseDurationSec": {
+    "placeholders": {
+      "sec": {
+        "type": "int"
+      }
+    }
+  }
+}

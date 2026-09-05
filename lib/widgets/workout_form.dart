@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 
 class WorkoutForm extends StatefulWidget {
   final Future<int> Function(String) addWorkout;
@@ -17,6 +18,7 @@ class _WorkoutFormState extends State<WorkoutForm> {
   String _name = '';
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Form(
         key: _formKey,
         child: Container(
@@ -31,15 +33,15 @@ class _WorkoutFormState extends State<WorkoutForm> {
                     enableSuggestions: true,
                     validator: (String? value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a name';
+                        return l10n.nameRequired;
                       }
                       if (!widget.isUnique(value)) {
-                        return 'Name already in use';
+                        return l10n.workoutNameAlreadyInUse;
                       }
                       return null;
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'New Workout',
+                    decoration: InputDecoration(
+                      labelText: l10n.newWorkoutLabel,
                     ),
                     onSaved: (value) {
                       _name = value!;
@@ -56,7 +58,7 @@ class _WorkoutFormState extends State<WorkoutForm> {
                       _formKey.currentState?.reset();
                       Navigator.pop(context, wIdx);
                     },
-                    child: const Text('Add'),
+                    child: Text(l10n.addBtn),
                   )
                 ])));
   }

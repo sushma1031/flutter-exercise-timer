@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:count_up/utils/format.dart';
 import 'package:count_up/utils/validate_exercise.dart';
+import 'package:count_up/gen/l10n/app_localizations_en.dart';
 
 void main() {
   group('Utility functions work correctly', () {
@@ -14,27 +15,29 @@ void main() {
 
   test('.validateExercise() validates exercise name and duration corrrectly',
       () {
+    final validate = validateExercise(AppLocalizationsEn());
+
     var l = <String>["Crunches", "15"];
-    expect(validateExercise(l), null);
+    expect(validate(l), null);
     l = <String>["Crunches", "99"];
-    expect(validateExercise(l), null);
+    expect(validate(l), null);
 
     l = ["", "10"];
-    expect(validateExercise(l), "Fields cannot be empty");
+    expect(validate(l), "Fields cannot be empty");
     l = ["  ", "10"];
-    expect(validateExercise(l), "Fields cannot be empty");
+    expect(validate(l), "Fields cannot be empty");
     l = ["Crunches", ""];
-    expect(validateExercise(l), "Fields cannot be empty");
+    expect(validate(l), "Fields cannot be empty");
     l = ["", ""];
-    expect(validateExercise(l), "Fields cannot be empty");
+    expect(validate(l), "Fields cannot be empty");
 
     l = ["Crunches", "x"];
-    expect(validateExercise(l), "Duration must be in range [1, 999]");
+    expect(validate(l), "Duration must be in range [1, 999]");
     l = ["Crunches", "0"];
-    expect(validateExercise(l), "Duration must be in range [1, 999]");
+    expect(validate(l), "Duration must be in range [1, 999]");
     l = ["Crunches", "-1"];
-    expect(validateExercise(l), "Duration must be in range [1, 999]");
+    expect(validate(l), "Duration must be in range [1, 999]");
     l = ["Crunches", "1000"];
-    expect(validateExercise(l), "Duration must be in range [1, 999]");
+    expect(validate(l), "Duration must be in range [1, 999]");
   });
 }

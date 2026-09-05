@@ -15,6 +15,7 @@ import 'package:count_up/utils/serialise_workout.dart';
 import '../widgets/workout_form.dart';
 import '../services/storage_service_interface.dart';
 import '../state/settings_provider.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 
 enum Actions { deleteAll, importWkt, exportAll }
 
@@ -50,7 +51,8 @@ class WorkoutsScreen extends StatelessWidget {
     if (result != null && result == false) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('Error: Workout no longer available.'),
+            content:
+                Text(AppLocalizations.of(context).workoutNoLongerAvailable),
             duration: Duration(milliseconds: 2500)),
       );
     }
@@ -62,6 +64,7 @@ class WorkoutsScreen extends StatelessWidget {
       showDialog(
         context: context,
         builder: (BuildContext context) {
+          final l10n = AppLocalizations.of(context);
           return AlertDialog(
             title: Wrap(
                 spacing: 20,
@@ -69,16 +72,16 @@ class WorkoutsScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.error, color: Theme.of(context).colorScheme.error),
                   Text(
-                    'Danger Zone',
+                    l10n.dangerZoneTitle,
                   )
                 ]),
             content: Text(
-              'Are you sure you want to delete $len workouts? This action is irreversible.',
+              l10n.confirmDeleteWorkouts(len),
             ),
             actions: <Widget>[
               TextButton(
                   child: Text(
-                    'Yes',
+                    l10n.yesBtn,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   onPressed: () async {
@@ -87,7 +90,7 @@ class WorkoutsScreen extends StatelessWidget {
                   }),
               TextButton(
                   child: Text(
-                    'No',
+                    l10n.noBtn,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   onPressed: () => Navigator.pop(context)),
@@ -100,19 +103,20 @@ class WorkoutsScreen extends StatelessWidget {
   }
 
   void _showImportErrorSnackbar(BuildContext context, ImportError error) {
+    final l10n = AppLocalizations.of(context);
     String message;
     switch (error) {
       case ImportError.format:
-        message = "Invalid file format.";
+        message = l10n.importErrorFormat;
         break;
       case ImportError.type:
-        message = "Workout structure is incompatible or malformed.";
+        message = l10n.importErrorType;
         break;
       default:
-        message = "Something went wrong while importing.";
+        message = l10n.importErrorUnknown;
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Error: $message")),
+      SnackBar(content: Text(l10n.errorWithMessage(message))),
     );
   }
 
@@ -186,13 +190,14 @@ class WorkoutsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          title: const Text(
-            'Workouts',
+          title: Text(
+            l10n.workoutsScreenTitle,
             style:
                 TextStyle(fontFamily: "EthosNova", fontWeight: FontWeight.bold),
           ),
@@ -207,7 +212,6 @@ class WorkoutsScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: VolumeSettings(
                                 initial: settings.timerVolume,
-                                min: 0.2,
                                 onChanged: (value) =>
                                     settings.setTimerVolume(value)),
                           ),
@@ -233,23 +237,23 @@ class WorkoutsScreen extends StatelessWidget {
                       if (error != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                              content: Text("Error: Something went wrong.")),
+                              content: Text(l10n.exportAllGenericError)),
                         );
                       }
                       break;
                   }
                 },
                 itemBuilder: (context) => <PopupMenuEntry<Actions>>[
-                      const PopupMenuItem<Actions>(
-                        child: Text('Import Workout'),
+                      PopupMenuItem<Actions>(
+                        child: Text(l10n.importWorkoutMenuItem),
                         value: Actions.importWkt,
                       ),
-                      const PopupMenuItem<Actions>(
-                        child: Text('Export All'),
+                      PopupMenuItem<Actions>(
+                        child: Text(l10n.exportAllMenuItem),
                         value: Actions.exportAll,
                       ),
-                      const PopupMenuItem<Actions>(
-                        child: Text('Delete All'),
+                      PopupMenuItem<Actions>(
+                        child: Text(l10n.deleteAllMenuItem),
                         value: Actions.deleteAll,
                       )
                     ]),

@@ -2,6 +2,7 @@ import 'package:count_up/models/exercise.dart';
 import 'package:count_up/widgets/exercise_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:count_up/utils/validate_exercise.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 
 class EditExercisesScreen extends StatefulWidget {
   final int workoutKey;
@@ -52,6 +53,7 @@ class _EditExercisesScreenState extends State<EditExercisesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return PopScope(
         canPop: false,
         onPopInvokedWithResult: _onPopInvoked,
@@ -89,7 +91,7 @@ class _EditExercisesScreenState extends State<EditExercisesScreen> {
                                             _data[index] = newValue;
                                           }
                                         },
-                                        validator: validateExercise,
+                                        validator: validateExercise(AppLocalizations.of(context)),
                                       ))
                                     ]);
                               })),
@@ -117,7 +119,7 @@ class _EditExercisesScreenState extends State<EditExercisesScreen> {
 
                               widget.returnToStaticList();
                             },
-                            child: const Text('Save'),
+                            child: Text(l10n.saveBtn),
                           ))
                     ],
                   ))),

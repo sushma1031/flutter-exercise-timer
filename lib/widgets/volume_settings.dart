@@ -67,12 +67,13 @@ class _VolumeSettingsState extends State<VolumeSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('Timer', style: TextStyle(fontSize: 16)),
+        Text(l10n.timerScreenTitle, style: TextStyle(fontSize: 16)),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:count_up/models/workout_display.dart';
+import 'package:count_up/gen/l10n/app_localizations.dart';
 
 class WorkoutCard extends StatelessWidget {
   final WorkoutDisplay workout;
@@ -9,6 +10,7 @@ class WorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     Color primary =
         Theme.of(context).colorScheme.primary.withValues(alpha: 0.08);
     Color darkBase = Theme.of(context).colorScheme.surface;
@@ -53,7 +55,8 @@ class WorkoutCard extends StatelessWidget {
                               backgroundColor:
                                   Color.alphaBlend(primary, darkBase),
                               label: Text(
-                                "${workout.totalDuration} Min",
+                                l10n.workoutDurationMinutes(
+                                    workout.totalDuration),
                                 style: TextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
@@ -71,7 +74,8 @@ class WorkoutCard extends StatelessWidget {
                             backgroundColor:
                                 Theme.of(context).colorScheme.secondary,
                             label: Text(
-                              "${workout.noOfExercises} Sets",
+                              l10n.workoutExerciseCount(
+                                  workout.noOfExercises),
                               style: TextStyle(
                                   color: Theme.of(context)
                                       .colorScheme
