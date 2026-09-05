@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'settings_service_interface.dart';
@@ -6,6 +7,8 @@ class HiveSettingsService implements SettingsService {
   static const String _boxName = 'settings';
 
   static const String _timerVolume = 'timerVolume';
+  static const String _preWorkoutCountdownSeconds =
+      'preWorkoutCountdownSeconds';
 
   late Box settingsBox;
 
@@ -27,7 +30,26 @@ class HiveSettingsService implements SettingsService {
   }
 
   @override
+  int get preWorkoutCountdownSeconds {
+    return settingsBox.get(
+      _preWorkoutCountdownSeconds,
+      defaultValue: SettingsService.defaultPreWorkoutCountdownSeconds,
+    ) as int;
+  }
+
+  @override
   Future<void> setTimerVolume(double value) async {
     await settingsBox.put(_timerVolume, value.clamp(0.2, 1.0));
+  }
+
+  @override
+  Future<void> setPreWorkoutCountdownSeconds(int value) async {
+    await settingsBox.put(
+      _preWorkoutCountdownSeconds,
+      value.clamp(
+        SettingsService.minPreWorkoutCountdownSeconds,
+        SettingsService.maxPreWorkoutCountdownSeconds,
+      ),
+    );
   }
 }

@@ -3,6 +3,7 @@ import '../models/exercise.dart';
 import '../screens/countdown_screen.dart';
 import '../services/timer_audio_service.dart';
 import '../screens/timer_screen.dart';
+import '../state/settings_provider.dart';
 import '../utils/assets.dart';
 import '../widgets/exercise_item.dart';
 import 'package:count_up/gen/l10n/app_localizations.dart';
@@ -12,27 +13,46 @@ class StaticExerciseList extends StatelessWidget {
   const StaticExerciseList({Key? key, required this.exercises})
       : super(key: key);
 
-  void countdownAndStart(context) async {
+  void _startWorkout(BuildContext context) {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CountdownScreen(
-            textSequence:
-                List.generate(5, (i) => (5 - i).toString(), growable: false),
-            onCompleteAudioPlayer: TimerAudioService(Assets.audioWorkoutStart),
-            fontSize: 50,
+      context,
+      MaterialPageRoute(
+        builder: (context) => TimerScreen(
+          e: exercises,
+          player: TimerAudioService(Assets.audioExerciseChange),
+        ),
+      ),
+    );
+  }
+
+  Future<void> countdownAndStart(BuildContext context) async {
+    final countdownSeconds =
+        SettingsProvider.of(context).preWorkoutCountdownSeconds;
+
+    if (countdownSeconds <= 0) {
+      _startWorkout(context);
+      return;
+    }
+
+    final shouldStart = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CountdownScreen(
+          textSequence: List.generate(
+            countdownSeconds,
+            (i) => (countdownSeconds - i).toString(),
+            growable: false,
           ),
-        )).then((value) {
-      if (value == true) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TimerScreen(
-                  e: exercises,
-                  player: TimerAudioService(Assets.audioExerciseChange))),
-        );
-      }
-    });
+          stepDuration: const Duration(seconds: 1),
+          onCompleteAudioPlayer: TimerAudioService(Assets.audioWorkoutStart),
+          fontSize: 50,
+        ),
+      ),
+    );
+
+    if (shouldStart == true && context.mounted) {
+      _startWorkout(context);
+    }
   }
 
   @override

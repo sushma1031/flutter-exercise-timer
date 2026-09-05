@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:count_up/screens/exercises_screen.dart';
 import 'package:count_up/models/workout_display.dart';
 import 'package:count_up/widgets/workout_card.dart';
-import 'package:count_up/widgets/volume_settings.dart';
+import 'package:count_up/widgets/settings_dialog.dart';
 import 'package:count_up/utils/format.dart';
 import 'package:count_up/utils/errors.dart';
 import 'package:count_up/utils/serialise_workout.dart';
@@ -208,17 +208,11 @@ class WorkoutsScreen extends StatelessWidget {
                       builder: (BuildContext context) {
                         final settings = SettingsProvider.of(context);
                         return Dialog(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: VolumeSettings(
-                                initial: settings.timerVolume,
-                                onChanged: (value) =>
-                                    settings.setTimerVolume(value)),
-                          ),
+                          child: SettingsDialog(settings: settings),
                         );
                       },
                     ),
-                icon: Icon(Icons.volume_down)),
+                icon: Icon(Icons.settings)),
             PopupMenuButton<Actions>(
                 offset: Offset.fromDirection(90, 50),
                 onSelected: (value) async {
@@ -236,8 +230,7 @@ class WorkoutsScreen extends StatelessWidget {
                       var error = await _exportAllWorkouts();
                       if (error != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(l10n.exportAllGenericError)),
+                          SnackBar(content: Text(l10n.exportAllGenericError)),
                         );
                       }
                       break;
@@ -295,7 +288,8 @@ class WorkoutsScreen extends StatelessWidget {
                           padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: WorkoutCard(
                             workout: workouts[index],
-                            onTap: () => _goToWorkout(context, workouts[index].key),
+                            onTap: () =>
+                                _goToWorkout(context, workouts[index].key),
                           ));
                     },
                   ),

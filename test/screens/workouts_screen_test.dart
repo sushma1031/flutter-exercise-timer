@@ -1,6 +1,8 @@
 import 'package:count_up/screens/workouts_screen.dart';
 import 'package:count_up/state/settings_provider.dart';
 import 'package:count_up/widgets/volume_slider.dart';
+import 'package:count_up/widgets/counter.dart';
+import 'package:count_up/widgets/settings_dialog.dart';
 import 'package:count_up/widgets/workout_card.dart';
 import 'package:count_up/gen/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -78,13 +80,30 @@ void main() {
 
   testWidgets('updates timer volume from settings', (tester) async {
     await tester.pumpWidget(screen);
-    await tester.tap(find.byIcon(Icons.volume_down));
+    await tester.tap(find.byIcon(Icons.settings));
     await tester.pumpAndSettle();
 
     expect(find.byType(VolumeSlider), findsOneWidget);
 
-    await tester.drag(find.byType(Slider), const Offset(500, 0));
+    await tester.drag(find.byType(Slider).first, const Offset(500, 0));
     await tester.pumpAndSettle();
     expect(mockSettings.timerVolume, 1.0);
+  });
+
+  testWidgets('updates pre-workout countdown from settings', (tester) async {
+    await tester.pumpWidget(screen);
+    await tester.tap(find.byIcon(Icons.settings));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SettingsDialog), findsOneWidget);
+    expect(find.text('Pre-workout countdown'), findsOneWidget);
+    expect(find.byType(Counter), findsOneWidget);
+    expect(find.text('5s'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.add_circle_outline));
+    await tester.pump();
+
+    expect(mockSettings.preWorkoutCountdownSeconds, 6);
+    expect(find.text('6s'), findsOneWidget);
   });
 }

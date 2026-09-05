@@ -7,6 +7,8 @@
   "tryAgainMessage": "Please try again or come back later.",
   "retryBtn": "Retry",
   "workoutsScreenTitle": "Workouts",
+  "settingsTitle": "Settings",
+  "preWorkoutCountdownLabel": "Pre-workout countdown",
   "workoutNoLongerAvailable": "Error: Workout no longer available.",
   "dangerZoneTitle": "Danger Zone",
   "confirmDeleteWorkouts": "Are you sure you want to delete {count} workouts? This action is irreversible.",
