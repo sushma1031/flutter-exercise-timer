@@ -1,0 +1,71 @@
+name: Create Release & Tag
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'pubspec.yaml' # Only runs when pubspec.yaml is updated
+
+permissions:
+  contents: write
+
+jobs:
+  tag-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract Version from pubspec.yaml
+        id: get_version
+        run: |
+          # Extracts string after 'version: '
+          VERSION_LINE=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          VERSION=$(echo $VERSION_LINE | cut -d'+' -f1)
+
+          echo "Got version: ${VERSION}"
+          echo "VERSION=v${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Check if Tag Already Exists
+        id: check_tag
+        run: |
+          TAG_NAME="${{ steps.get_version.outputs.VERSION }}"
+          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >> $GITHUB_OUTPUT
+            echo "Tag $TAG_NAME already exists. Skipping release creation."
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_OUTPUT
+            echo "New version detected: $TAG_NAME"
+          fi
+
+      - name: Generate Commit Changelog
+        if: steps.check_tag.outputs.TAG_EXISTS == 'false'
+        id: generate_changelog
+        run: |
+          PREV_TAG=$(git describe --tags $(git rev-list --tags --max-count=1) --exclude "*-*" || "HEAD")
+
+          echo "Comparing $PREV_TAG to HEAD"
+
+           # Format: * [`hash`](link) Commit message
+          CHANGELOG=$(git log "$PREV_TAG..HEAD" --pretty=format:"* [\`%h\`](https://github.com/${GITHUB_REPOSITORY}/commit/%H) %s" --no-merges)
+
+          DELIMITER="CHANGELOG_DELIMITER_$(date +%s)"
+          echo "CHANGELOG<<$DELIMITER" >> "$GITHUB_OUTPUT"
+          echo "$CHANGELOG" >> "$GITHUB_OUTPUT"
+          echo "$DELIMITER" >> "$GITHUB_OUTPUT"
+
+      - name: Create Tag and GitHub Release
+        if: steps.check_tag.outputs.TAG_EXISTS == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          body: |
+            ## What's Changed
+
+            ${{ steps.generate_changelog.outputs.CHANGELOG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
