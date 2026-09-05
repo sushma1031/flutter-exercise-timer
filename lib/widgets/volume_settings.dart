@@ -22,7 +22,7 @@ class VolumeSettings extends StatefulWidget {
 
 class _VolumeSettingsState extends State<VolumeSettings> {
   late double _volume;
-  final _previewPlayer = TimerAudioService('audio/exercise_change.mp3');
+  final _previewPlayer = TimerAudioService(Assets.audioExerciseChange);
   bool _configured = false;
   bool _isPreviewing = false;
 
