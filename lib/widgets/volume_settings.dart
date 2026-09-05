@@ -5,6 +5,8 @@ import 'package:count_up/utils/assets.dart';
 import 'package:count_up/gen/l10n/app_localizations.dart';
 
 class VolumeSettings extends StatefulWidget {
+  static const double _sliderStep = 0.05;
+
   final double initial;
   final double min;
   final void Function(double) onChanged;
@@ -80,6 +82,7 @@ class _VolumeSettingsState extends State<VolumeSettings> {
             Expanded(
               child: VolumeSlider(
                 initial: _volume,
+                step: VolumeSettings._sliderStep,
                 min: widget.min,
                 onChanged: (value) {
                   setState(() {
@@ -91,7 +94,7 @@ class _VolumeSettingsState extends State<VolumeSettings> {
             ),
             IconButton(
               onPressed: _isPreviewing ? null : _previewVolume,
-              icon: Icon(Icons.volume_up),
+              icon: Icon(Icons.volume_down),
               iconSize: 20,
               visualDensity: VisualDensity.compact,
             ),

@@ -26,7 +26,8 @@ class _VolumeSliderState extends State<VolumeSlider> {
   late double _currentSliderValue;
 
   double _roundToStep(double value) {
-    return widget.min + ((value - widget.min) / widget.step).round();
+    final stepCount = ((value - widget.min) / widget.step).round();
+    return widget.min + (stepCount * widget.step);
   }
 
   @override
