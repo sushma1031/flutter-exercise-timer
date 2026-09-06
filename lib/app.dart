@@ -35,8 +35,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.indigo,
               colorScheme: _colorScheme,
               applyElevationOverlayColor: true,
-              snackBarTheme: SnackBarThemeData(
-                  backgroundColor: darken(_colorScheme.onSurface, 0.2))),
+              snackBarTheme: SnackBarThemeData(backgroundColor: darken(_colorScheme.onSurface, 0.2))),
           home: LifecycleWatcher(
             child: HomePage(db: db),
           )),
@@ -53,9 +52,43 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _hasShownSettingsPersistenceWarning = false;
+
   Future<void> loadDataWithDelay() async {
     await widget.db.loadData();
     await Future.delayed(Duration(seconds: 2));
+  }
+
+  void _showSettingsPersistenceWarning(BuildContext context) {
+    final settings = SettingsProvider.of(context);
+    if (_hasShownSettingsPersistenceWarning || settings.isPersistenceAvailable) {
+      return;
+    }
+
+    final warningColour = darken(Color(0xFFFFA000), 0.2);
+    final warningText = AppLocalizations.of(context).settingsNotPersistedWarning;
+
+    _hasShownSettingsPersistenceWarning = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(
+                Icons.warning_amber,
+                color: warningColour,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(warningText),
+              ),
+            ],
+          ),
+          duration: const Duration(seconds: 6),
+        ),
+      );
+    });
   }
 
   @override
@@ -65,8 +98,7 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         final l10n = AppLocalizations.of(context);
         if (snapshot.connectionState != ConnectionState.done) {
-          final gradient =
-              LinearGradient(colors: [Colors.indigo.shade200, Colors.indigo]);
+          final gradient = LinearGradient(colors: [Colors.indigo.shade200, Colors.indigo]);
           return Scaffold(
             backgroundColor: Theme.of(context).colorScheme.surface,
             body: Center(
@@ -126,8 +158,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: EdgeInsetsGeometry.symmetric(vertical: 16),
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 0)),
+                      style: ElevatedButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 0)),
                       onPressed: () {
                         setState(() {});
                       },
@@ -139,6 +170,7 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         } else {
+          _showSettingsPersistenceWarning(context);
           return WorkoutsScreen(db: widget.db);
         }
       },

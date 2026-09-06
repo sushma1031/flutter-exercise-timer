@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'settings_service_interface.dart';
@@ -7,49 +6,63 @@ class HiveSettingsService implements SettingsService {
   static const String _boxName = 'settings';
 
   static const String _timerVolume = 'timerVolume';
-  static const String _preWorkoutCountdownSeconds =
-      'preWorkoutCountdownSeconds';
+  static const String _preWorkoutCountdownSeconds = 'preWorkoutCountdownSeconds';
 
-  late Box settingsBox;
+  Box? _settingsBox;
+  double _fallbackTimerVolume = 0.5;
+  int _fallbackPreWorkoutCountdownSeconds = SettingsService.defaultPreWorkoutCountdownSeconds;
 
   Future<void> init() async {
     try {
-      settingsBox = await Hive.openBox(_boxName);
-    } on HiveError catch (e, stackTrace) {
-      debugPrint("Could not load data from Hive: Hive Error: $e\n$stackTrace");
-      rethrow;
-    } on Exception catch (e, stackTrace) {
-      debugPrint("Could not load data from Hive: Error: $e\n$stackTrace");
-      rethrow;
+      _settingsBox = await Hive.openBox<dynamic>(_boxName);
+    } catch (e, stackTrace) {
+      _settingsBox = null;
+      debugPrint(
+        'Could not open the settings box. Using in-memory defaults: '
+        '$e\n$stackTrace',
+      );
     }
   }
 
   @override
+  bool get isPersistenceAvailable => _settingsBox != null;
+
+  @override
   double get timerVolume {
-    return settingsBox.get(_timerVolume, defaultValue: 0.5) as double;
+    final settingsBox = _settingsBox;
+    if (settingsBox == null) return _fallbackTimerVolume;
+    return (settingsBox.get(
+      _timerVolume,
+      defaultValue: _fallbackTimerVolume,
+    ) as num)
+        .toDouble();
   }
 
   @override
   int get preWorkoutCountdownSeconds {
+    final settingsBox = _settingsBox;
+    if (settingsBox == null) return _fallbackPreWorkoutCountdownSeconds;
     return settingsBox.get(
       _preWorkoutCountdownSeconds,
-      defaultValue: SettingsService.defaultPreWorkoutCountdownSeconds,
+      defaultValue: _fallbackPreWorkoutCountdownSeconds,
     ) as int;
   }
 
   @override
   Future<void> setTimerVolume(double value) async {
-    await settingsBox.put(_timerVolume, value.clamp(0.2, 1.0));
+    _fallbackTimerVolume = value.clamp(0.2, 1.0);
+    await _settingsBox?.put(_timerVolume, _fallbackTimerVolume);
   }
 
   @override
   Future<void> setPreWorkoutCountdownSeconds(int value) async {
-    await settingsBox.put(
+    _fallbackPreWorkoutCountdownSeconds = value.clamp(
+      SettingsService.minPreWorkoutCountdownSeconds,
+      SettingsService.maxPreWorkoutCountdownSeconds,
+    );
+    await _settingsBox?.put(
       _preWorkoutCountdownSeconds,
-      value.clamp(
-        SettingsService.minPreWorkoutCountdownSeconds,
-        SettingsService.maxPreWorkoutCountdownSeconds,
-      ),
+      _fallbackPreWorkoutCountdownSeconds,
     );
   }
 }

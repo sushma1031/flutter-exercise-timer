@@ -8,6 +8,7 @@
   "retryBtn": "Retry",
   "workoutsScreenTitle": "Workouts",
   "settingsTitle": "Settings",
+  "settingsNotPersistedWarning": "Settings could not be loaded and won't be saved during this session.",
   "preWorkoutCountdownLabel": "Pre-workout countdown",
   "workoutNoLongerAvailable": "Error: Workout no longer available.",
   "dangerZoneTitle": "Danger Zone",

@@ -4,10 +4,13 @@ class MockSettingsService implements SettingsService {
   double _timerVolume;
   int _preWorkoutCountdownSeconds;
 
+  @override
+  final bool isPersistenceAvailable;
+
   MockSettingsService({
     double timerVolume = 0.5,
-    int preWorkoutCountdownSeconds =
-        SettingsService.defaultPreWorkoutCountdownSeconds,
+    this.isPersistenceAvailable = true,
+    int preWorkoutCountdownSeconds = SettingsService.defaultPreWorkoutCountdownSeconds,
   })  : _timerVolume = timerVolume,
         _preWorkoutCountdownSeconds = preWorkoutCountdownSeconds;
 
