@@ -7,7 +7,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:count_up/models/workout.dart';
 import 'package:count_up/screens/edit_workout_screen.dart';
 import 'package:count_up/screens/edit_exercises_screen.dart';
-import 'package:count_up/services/storage_service_interface.dart';
+import 'package:count_up/services/storage_service.dart';
 import 'package:count_up/utils/errors.dart';
 import 'package:count_up/utils/serialise_workout.dart';
 import 'package:count_up/widgets/icon_text_item.dart';
@@ -16,9 +16,9 @@ import '../widgets/exercises_form.dart';
 import '../widgets/static_exercises_list.dart';
 import 'package:count_up/gen/l10n/app_localizations.dart';
 
-enum View { staticList, add, editWorkout, editExercise }
+enum WorkoutView { staticList, add, editWorkout, editExercise }
 
-enum WorkoutActions { addEx, editWkt, editEx, delWkt, exportWkt }
+enum WorkoutAction { addExercise, editWorkout, editExercise, deleteWorkout, exportWorkout }
 
 class ExercisesScreen extends StatefulWidget {
   final int workoutKey;
@@ -32,7 +32,7 @@ class ExercisesScreen extends StatefulWidget {
 
 class _ExercisesScreenState extends State<ExercisesScreen> {
   late Workout _w;
-  var _currentView = View.staticList;
+  var _currentView = WorkoutView.staticList;
   late Widget _child;
   bool _invalid = false;
 
@@ -161,21 +161,21 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
   void _returnToStaticList() {
     setState(() {
-      _currentView = View.staticList;
+      _currentView = WorkoutView.staticList;
       _child = StaticExerciseList(exercises: _w.exercises);
     });
   }
 
-  String _getAppBarTitle(BuildContext context, View view) {
+  String _getAppBarTitle(BuildContext context, WorkoutView view) {
     final l10n = AppLocalizations.of(context);
     switch (view) {
-      case View.staticList:
+      case WorkoutView.staticList:
         return _w.name;
-      case View.add:
+      case WorkoutView.add:
         return l10n.addExercisesTitle;
-      case View.editWorkout:
+      case WorkoutView.editWorkout:
         return l10n.editWorkoutTitle;
-      case View.editExercise:
+      case WorkoutView.editExercise:
         return l10n.editExercisesTitle;
     }
   }
@@ -190,7 +190,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
         appBar: AppBar(
-            leading: _currentView == View.staticList
+            leading: _currentView == WorkoutView.staticList
                 ? BackButton()
                 : IconButton(
                     onPressed: _returnToStaticList, icon: Icon(Icons.close)),
@@ -199,15 +199,15 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
             title: Text(_getAppBarTitle(context, _currentView),
                 style: TextStyle(
                     fontFamily: "EthosNova", fontWeight: FontWeight.bold)),
-            actions: _currentView == View.staticList
+            actions: _currentView == WorkoutView.staticList
                 ? [
-                    PopupMenuButton<WorkoutActions>(
+                    PopupMenuButton<WorkoutAction>(
                         offset: Offset.fromDirection(90, 50),
                         onSelected: (value) async {
                           switch (value) {
-                            case WorkoutActions.addEx:
+                            case WorkoutAction.addExercise:
                               setState(() {
-                                _currentView = View.add;
+                                _currentView = WorkoutView.add;
                                 _child = ExercisesForm(
                                   workoutKey: widget.workoutKey,
                                   addWorkoutExercises:
@@ -217,9 +217,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                 );
                               });
                               break;
-                            case WorkoutActions.editWkt:
+                            case WorkoutAction.editWorkout:
                               setState(() {
-                                _currentView = View.editWorkout;
+                                _currentView = WorkoutView.editWorkout;
                                 _child = EditWorkoutScreen(
                                     workout: _w,
                                     workoutNames:
@@ -233,9 +233,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                     onPop: _onPop);
                               });
                               break;
-                            case WorkoutActions.editEx:
+                            case WorkoutAction.editExercise:
                               setState(() {
-                                _currentView = View.editExercise;
+                                _currentView = WorkoutView.editExercise;
                                 _child = EditExercisesScreen(
                                     exercises: _w.exercises,
                                     modifyExercise: widget.db.modifyExercises,
@@ -244,14 +244,14 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                     onPop: _onPop);
                               });
                               break;
-                            case WorkoutActions.exportWkt:
+                            case WorkoutAction.exportWorkout:
                               var error =
                                   await _exportWorkout();
                               if (error != null) {
                                 _showExportErrorSnackbar(error);
                               }
                               break;
-                            case WorkoutActions.delWkt:
+                            case WorkoutAction.deleteWorkout:
                               await _confirmAndDeleteWorkout(widget.workoutKey)
                                   .then((value) {
                                 if (value) Navigator.pop(context);
@@ -260,41 +260,41 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                           }
                         },
                         itemBuilder: (context) =>
-                            <PopupMenuEntry<WorkoutActions>>[
-                              PopupMenuItem<WorkoutActions>(
+                            <PopupMenuEntry<WorkoutAction>>[
+                              PopupMenuItem<WorkoutAction>(
                                 child: IconTextItem(
                                   icon: Icons.add,
                                   text: l10n.addExercisesTitle,
                                 ),
-                                value: WorkoutActions.addEx,
+                                value: WorkoutAction.addExercise,
                               ),
-                              PopupMenuItem<WorkoutActions>(
+                              PopupMenuItem<WorkoutAction>(
                                 child: IconTextItem(
                                   icon: Icons.reorder,
                                   text: l10n.editWorkoutTitle,
                                 ),
-                                value: WorkoutActions.editWkt,
+                                value: WorkoutAction.editWorkout,
                               ),
-                              PopupMenuItem<WorkoutActions>(
+                              PopupMenuItem<WorkoutAction>(
                                 child: IconTextItem(
                                   icon: Icons.edit,
                                   text: l10n.editExercisesTitle,
                                 ),
-                                value: WorkoutActions.editEx,
+                                value: WorkoutAction.editExercise,
                               ),
-                              PopupMenuItem<WorkoutActions>(
+                              PopupMenuItem<WorkoutAction>(
                                 child: IconTextItem(
                                   icon: Icons.download,
                                   text: l10n.exportMenuItem,
                                 ),
-                                value: WorkoutActions.exportWkt,
+                                value: WorkoutAction.exportWorkout,
                               ),
-                              PopupMenuItem<WorkoutActions>(
+                              PopupMenuItem<WorkoutAction>(
                                 child: IconTextItem(
                                   icon: Icons.delete,
                                   text: l10n.deleteWorkoutMenuItem,
                                 ),
-                                value: WorkoutActions.delWkt,
+                                value: WorkoutAction.deleteWorkout,
                               ),
                             ]),
                   ]

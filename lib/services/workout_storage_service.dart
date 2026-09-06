@@ -1,4 +1,4 @@
-import './storage_service_interface.dart';
+import './storage_service.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
 

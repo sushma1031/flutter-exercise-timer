@@ -26,7 +26,7 @@ void main() {
   );
   group('Workouts Screen loads correctly', () {
     testWidgets('display loading screen', (tester) async {
-      await tester.pumpWidget(MyApp(db: mockDB, settings: mockSettings));
+      await tester.pumpWidget(CountUpApp(db: mockDB, settings: mockSettings));
       expect(find.text('COUNT UP'), findsOneWidget);
       await tester.pump(Duration(seconds: 3));
     });

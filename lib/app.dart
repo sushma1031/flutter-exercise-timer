@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'screens/workouts_screen.dart';
-import 'services/storage_service_interface.dart';
-import 'services/settings_service_interface.dart';
-import 'state/life_cycle_watcher.dart';
+import 'services/storage_service.dart';
+import 'services/settings_service.dart';
+import 'state/lifecycle_watcher.dart';
 import 'state/settings_provider.dart';
 import 'utils/color.dart';
 import 'utils/errors.dart';
 import 'gen/l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class MyApp extends StatelessWidget {
+class CountUpApp extends StatelessWidget {
   final StorageService db;
   final SettingsService settings;
 
-  MyApp({required this.db, required this.settings});
+  CountUpApp({required this.db, required this.settings});
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import '../services/settings_service_interface.dart';
+import '../services/settings_service.dart';
 
 /// Exposes [SettingsService] to the widget tree.
 ///

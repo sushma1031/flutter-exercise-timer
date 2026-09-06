@@ -1,4 +1,4 @@
-import 'package:count_up/services/settings_service_interface.dart';
+import 'package:count_up/services/settings_service.dart';
 
 class MockSettingsService implements SettingsService {
   double _timerVolume;

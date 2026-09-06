@@ -13,11 +13,11 @@ import 'package:count_up/utils/format.dart';
 import 'package:count_up/utils/errors.dart';
 import 'package:count_up/utils/serialise_workout.dart';
 import '../widgets/workout_form.dart';
-import '../services/storage_service_interface.dart';
+import '../services/storage_service.dart';
 import '../state/settings_provider.dart';
 import 'package:count_up/gen/l10n/app_localizations.dart';
 
-enum Actions { deleteAll, importWkt, exportAll }
+enum WorkoutCollectionAction { deleteAll, importWorkout, exportAll }
 
 class WorkoutsScreen extends StatelessWidget {
   final StorageService db;
@@ -213,20 +213,20 @@ class WorkoutsScreen extends StatelessWidget {
                       },
                     ),
                 icon: Icon(Icons.settings)),
-            PopupMenuButton<Actions>(
+            PopupMenuButton<WorkoutCollectionAction>(
                 offset: Offset.fromDirection(90, 50),
                 onSelected: (value) async {
                   switch (value) {
-                    case Actions.importWkt:
+                    case WorkoutCollectionAction.importWorkout:
                       var error = await _importWorkout();
                       if (error != null) {
                         _showImportErrorSnackbar(context, error);
                       }
                       break;
-                    case Actions.deleteAll:
+                    case WorkoutCollectionAction.deleteAll:
                       _confirmAndDeleteAllWorkouts(context);
                       break;
-                    case Actions.exportAll:
+                    case WorkoutCollectionAction.exportAll:
                       var error = await _exportAllWorkouts();
                       if (error != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -236,18 +236,18 @@ class WorkoutsScreen extends StatelessWidget {
                       break;
                   }
                 },
-                itemBuilder: (context) => <PopupMenuEntry<Actions>>[
-                      PopupMenuItem<Actions>(
+                itemBuilder: (context) => <PopupMenuEntry<WorkoutCollectionAction>>[
+                      PopupMenuItem<WorkoutCollectionAction>(
                         child: Text(l10n.importWorkoutMenuItem),
-                        value: Actions.importWkt,
+                        value: WorkoutCollectionAction.importWorkout,
                       ),
-                      PopupMenuItem<Actions>(
+                      PopupMenuItem<WorkoutCollectionAction>(
                         child: Text(l10n.exportAllMenuItem),
-                        value: Actions.exportAll,
+                        value: WorkoutCollectionAction.exportAll,
                       ),
-                      PopupMenuItem<Actions>(
+                      PopupMenuItem<WorkoutCollectionAction>(
                         child: Text(l10n.deleteAllMenuItem),
-                        value: Actions.deleteAll,
+                        value: WorkoutCollectionAction.deleteAll,
                       )
                     ]),
           ],

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:count_up/services/storage_service_interface.dart';
+import 'package:count_up/services/storage_service.dart';
 import 'package:count_up/models/exercise.dart';
 import 'package:count_up/models/workout.dart';
 
