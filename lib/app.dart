@@ -22,7 +22,8 @@ class CountUpApp extends StatelessWidget {
         primaryContainer: Colors.indigo.shade700,
         secondary: Colors.deepPurple.shade200,
         secondaryContainer: Colors.deepPurple.shade200,
-        error: Color(0xFFCF6765));
+        error: AppColors.error,
+        onPrimaryContainer: Colors.white);
     return SettingsProvider(
       settings: settings,
       child: MaterialApp(
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    final warningColour = darken(Color(0xFFFFA000), 0.2);
+    final warningColour = darken(AppColors.warning);
     final warningText = AppLocalizations.of(context).settingsNotPersistedWarning;
 
     _hasShownSettingsPersistenceWarning = true;
