@@ -42,9 +42,12 @@ class WorkoutCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      workout.name,
-                      style: TextStyle(fontSize: 25, fontFamily: "EthosNova"),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        workout.name,
+                        style: TextStyle(fontSize: 25, fontFamily: "EthosNova"),
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
