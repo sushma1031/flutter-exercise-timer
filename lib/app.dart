@@ -36,7 +36,11 @@ class CountUpApp extends StatelessWidget {
               primarySwatch: Colors.indigo,
               colorScheme: _colorScheme,
               applyElevationOverlayColor: true,
-              snackBarTheme: SnackBarThemeData(backgroundColor: darken(_colorScheme.onSurface, 0.2))),
+              snackBarTheme: SnackBarThemeData(
+                  behavior: SnackBarBehavior.floating,
+                  insetPadding: const EdgeInsets.all(16),
+                  backgroundColor: darken(_colorScheme.onSurface, 0.2),
+                  elevation: 16)),
           home: LifecycleWatcher(
             child: HomePage(db: db),
           )),
@@ -77,12 +81,12 @@ class _HomePageState extends State<HomePage> {
           content: Row(
             children: [
               Icon(
-                Icons.warning_amber,
+                Icons.warning_amber_rounded,
                 color: warningColour,
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(warningText),
+                child: Text(warningText, style: TextStyle(height: 1.4)),
               ),
             ],
           ),
@@ -141,19 +145,14 @@ class _HomePageState extends State<HomePage> {
                         size: 64,
                         color: Colors.redAccent,
                       )),
-                  Text(message,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18)),
+                  Text(message, textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
                   Padding(
                       padding: EdgeInsetsGeometry.symmetric(vertical: 16),
                       child: Text(
                         l10n.tryAgainMessage,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.8),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
                         ),
                       )),
                   Padding(
